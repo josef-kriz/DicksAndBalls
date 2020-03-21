@@ -9,6 +9,7 @@
   "scripts": {
     "start": "yarn run build && yarn run serve",
     "start:watch": "nodemon -e js,ts --exec \"yarn start\" --ignore dist/ dist/server.js",
+    "heroku-postbuild": "cd client && npm install && npm run build",
     "prebuild": "rimraf dist",
     "build": "yarn run build-ts && yarn run eslint",
     "serve": "node dist/server.js",

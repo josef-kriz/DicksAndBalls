@@ -6,7 +6,10 @@ const port = process.env.SERVER_PORT || 3001
 
 const app = express()
 
-app.use(express.static('../client/build'))
+app.use(express.static('./client/build'))
+app.get('/*', (req, res) => {
+    res.sendFile('./client/build/index.html');
+})
 
 const server = app.listen(port, () => {
     console.log(`Server is up and listening on port ${port}.`)
