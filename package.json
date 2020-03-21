@@ -11,6 +11,7 @@
     "start:watch": "nodemon -e js,ts --exec \"yarn start\" --ignore dist/ dist/server.js",
     "prebuild": "rimraf dist",
     "build": "yarn run build-ts && yarn run eslint",
+    "heroku-postbuild": "cd client && npm install && npm run build",
     "serve": "node dist/server.js",
     "build-ts": "tsc",
     "eslint": "eslint . --ext .js,.ts"
