@@ -1,4 +1,5 @@
 import React, { FC, ReactElement } from 'react'
+import './Table.css'
 import { Button, Grid } from '@material-ui/core'
 import { Cards } from './Cards'
 import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
@@ -52,20 +53,20 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
 
         return (
             <>
+                <Cards cards={props.cards} playerName={props.playerName} playerOnTurn={props.playerOnTurn}
+                       deckTop={props.deckTop} sendPlayerAction={sendPlayerAction}/>
                 <Button color="primary" onClick={skipATurn}>
                     Skip a Turn
                 </Button>
-                <Cards cards={props.cards} playerName={props.playerName} playerOnTurn={props.playerOnTurn}
-                       deckTop={props.deckTop} sendPlayerAction={sendPlayerAction}/>
             </>
         )
     }
 
     return (
         <>
-            <Grid container spacing={2} justify="center">
+            <Grid className="decks" container spacing={4} justify="center">
                 <Grid item onClick={drawCard}>
-                    <img src="/cards/0.png" alt="Deck"/>
+                    <img className="deck-top-card" src="/cards/0.png" alt="Deck"/>
                 </Grid>
                 <Grid item>
                     {getDeck()}

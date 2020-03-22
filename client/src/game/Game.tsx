@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState, ReactElement } from 'react'
+import './Game.css'
 import { registerGameListener, sendGameMessage } from '../api'
 import {
     AddPlayerMessage,
@@ -116,7 +117,7 @@ export const Game: FC = (): ReactElement => {
                 </Grid>
             </Grid>
             <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName} />
-            <div>{lastMessage}</div>
+            <div className="message">{lastMessage}</div>
             {gameActive && <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn} cards={cards}/>}
             <Dialog
                 open={openWinner}

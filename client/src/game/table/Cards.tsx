@@ -56,13 +56,13 @@ export const Cards: FC<Props> = (props: Props): ReactElement | null => {
         const handleClick = () => playCard(card)
         return (
             <Grid key={`${card.suit}${card.value}`} item onClick={handleClick}>
-                <img src={`/cards/${getCardsAssetNumber(card)}.png`} alt={`${card.value} of ${card.suit}s`}/>
+                <img className="card" src={`/cards/${getCardsAssetNumber(card)}.png`} alt={`${card.value} of ${card.suit}s`}/>
             </Grid>
         )
     }
 
     return (
-        <div>
+        <div className="cards-container">
             <h2>Your cards</h2>
             <Grid container spacing={2} justify="center">
                 {props.cards.map(generateCardTile)}

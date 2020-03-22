@@ -1,3 +1,17 @@
+.cards-container {
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
+.card {
+    max-height: 10rem;
+}
+
+.card:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0.3em black;
+}
+
 .suit-buttons-container {
     display: inline-grid;
     grid-column-gap: 1em;
