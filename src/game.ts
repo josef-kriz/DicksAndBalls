@@ -220,7 +220,7 @@ class Game {
 
     private isValidMove(action: PlayerAction): void | never {
         if (isCardPlayedAction(action)) {
-            if (this.changeColorTo) {
+            if (this.changeColorTo && action.card.value !== 'T') {
                 if (action.card.suit !== this.changeColorTo) throw new Error(`The color was changed to ${this.changeColorTo}s`)
             }
             else if (this.playedCards[0].suit !== action.card.suit && this.playedCards[0].value !== action.card.value && action.card.value !== 'T') throw new Error("You can only play a card with the same color/value as the card on the deck")
