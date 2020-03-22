@@ -6,7 +6,7 @@
 
 .player-name {
     padding: 0 0.3em 0.2em;
-    opacity: 50%;
+    opacity: 0.5;
 }
 
 .player-name svg {
@@ -19,5 +19,5 @@
 
 #playerOnTurn {
     font-weight: bold;
-    opacity: 100%;
+    opacity: 1;
 }
