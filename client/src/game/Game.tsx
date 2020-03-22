@@ -28,10 +28,12 @@ export const Game: FC = (): ReactElement => {
     const [playerOnTurn, setPlayerOnTurn] = useState<string | undefined>()
     const [cards, setCards] = useState<Card[]>([])
     const [lastMessage, setLastMessage] = useState<string>('')
-    const [open, setOpen] = React.useState(false)
+    const [openWinner, setOpenWinner] = React.useState(false)
+    const [openLoser, setOpenLoser] = React.useState(false)
 
     const closeDialog = (): void => {
-        setOpen(false)
+        setOpenWinner(false)
+        setOpenLoser(false)
     }
 
     const handleMessage = (message: ServerMessage): void => {
@@ -46,7 +48,8 @@ export const Game: FC = (): ReactElement => {
             setLastMessage(message.message)
         } else if (isPlayerUpdateMessage(message)) {
             setCards(message.cards)
-            if (message.winner) setOpen(true)
+            if (message.winner) setOpenWinner(true)
+            else if (message.loser) setOpenLoser(true)
         }
     }
 
@@ -113,7 +116,7 @@ export const Game: FC = (): ReactElement => {
             <div>{lastMessage}</div>
             {gameActive && <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn} cards={cards}/>}
             <Dialog
-                open={open}
+                open={openWinner}
                 onClose={closeDialog}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
@@ -127,6 +130,26 @@ export const Game: FC = (): ReactElement => {
                 <DialogActions>
                     <Button onClick={closeDialog} color="primary">
                         I'm awesome!
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openLoser}
+                onClose={closeDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">You lost!</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        You're a loser! <span role="img" aria-label="thumb-down">👎</span>
+                        <br />
+                        Close this window to shuffle the cards and give it another try
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeDialog} color="primary">
+                        I suck
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -30,6 +30,7 @@ export function gameListener(socket: Socket): void {
                 name: message.player,
                 cards: [],
                 winner: false,
+                loser: false,
             })
 
             callback && callback(true)
@@ -65,8 +66,10 @@ export function gameListener(socket: Socket): void {
     const handlePlayersTurn = (action: PlayerAction): void => {
         try {
             const message = game.handlePlayersTurn(clientId, action)
-            io.emit('server_event', game.getGameUpdateMessage(message))
-            io.to(`${clientId}`).emit('server_event', game.getPlayerMessage(clientId))
+            if (message.gameState) io.emit('server_event', message.gameState)
+            io.emit('server_event', message.gameUpdate)
+            for (const playerMessage of message.players)
+                io.to(`${playerMessage.player}`).emit('server_event', playerMessage.playerUpdate)
         } catch (e) {
             socket.emit('server_event', getErrorMessage(e))
         }
