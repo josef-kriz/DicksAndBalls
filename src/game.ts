@@ -7,6 +7,7 @@ import {
     isSkippingTurnAction,
     PlayerAction
 } from './models/playerAction'
+import { GameMessage } from './models/gameMessage'
 
 class Game {
     private active = false
@@ -47,10 +48,11 @@ class Game {
             type: 'player_update',
             cards: player.cards,
             winner: player.winner,
+            loser: player.loser,
         }
     }
 
-    public getAllPlayerMessages(): {playerId: string; message: PlayerUpdateMessage}[] {
+    public getAllPlayerMessages(): { playerId: string; message: PlayerUpdateMessage }[] {
         return this.players.map((player) => ({
             playerId: player.id,
             message: this.getPlayerMessage(player.id),
@@ -58,6 +60,7 @@ class Game {
     }
 
     public addPlayer(newPlayer: Player): void {
+        if (this.active) throw new Error('The game is running, wait for the players to finish the current game')
         for (const player of this.players) {
             if (player.name === newPlayer.name) throw new Error('Player of this name already joined the game')
         }
@@ -89,6 +92,10 @@ class Game {
         if (shufflingPlayerIndex !== -1 && this.players[shufflingPlayerIndex + 1]) {
             this.playerOnTurn = shufflingPlayerIndex + 1
         } else this.playerOnTurn = 0
+        for (const player of this.players) {
+            player.winner = false
+            player.loser = false
+        }
 
         this.shuffle()
         this.distributeCardsToPlayers()
@@ -96,7 +103,8 @@ class Game {
         this.deck.splice(0, 1)
 
         this.drawCount = this.playedCards[0].value === '7' ? 2 : 0
-        this.skippingNextPlayer = this.playedCards[0].value === 'A';
+        this.skippingNextPlayer = this.playedCards[0].value === 'A'
+        this.changeColorTo = undefined
 
         this.active = true
         console.log('# Game started!')
@@ -108,46 +116,71 @@ class Game {
         this.active = false
     }
 
-    public handlePlayersTurn(playerId: string, action: PlayerAction): void {
+    public handlePlayersTurn(playerId: string, action: PlayerAction): GameMessage {
         const player = this.players.find((player => player.id === playerId))
-        if (!player) throw new Error("Player not found")
-        if (playerId !== this.players[this.playerOnTurn].id) throw new Error("It's not your turn")
+        if (!player) throw new Error('Player not found')
+        if (playerId !== this.players[this.playerOnTurn].id) throw new Error('It\'s not your turn')
+        let message = `${player.name}`
 
         this.isValidMove(action)
 
         if (isCardPlayedAction(action)) {
             const playersCardIndex = player.cards.findIndex(card => sameCards(card, action.card))
-            if (playersCardIndex === -1) throw new Error("You don't have this card")
-            if (action.card.value === 'T' && !action.changeColorTo) throw new Error("You have to pick a color")
+            if (playersCardIndex === -1) throw new Error('You don\'t have this card')
+            if (action.card.value === 'T' && !action.changeColorTo) throw new Error('You have to pick a color')
 
             this.playedCards.unshift(action.card)
             player.cards.splice(playersCardIndex, 1)
 
+            message += ` played ${action.card.value} of ${action.card.suit}s`
+
             if (this.changeColorTo !== null) this.changeColorTo = undefined
             if (action.card.value === '7') this.drawCount += 2
             else if (action.card.value === 'A') this.skippingNextPlayer = true
-            else if (action.card.value === 'T') this.changeColorTo = action.changeColorTo
+            else if (action.card.value === 'T') {
+                this.changeColorTo = action.changeColorTo
+                message += ` and changed the color to ${action.changeColorTo}s`
+            }
             console.log(`# Action: Player ${playerId} played ${action.card.suit} ${action.card.value}`)
 
-            if (player.cards.length === 0) player.winner = true
-        }
-        else if (isDrawAction(action)) {
+            if (player.cards.length === 0) {
+                player.winner = true
+                message += ' and won!'
+            }
+        } else if (isDrawAction(action)) {
             if (this.drawCount > 0) {
+                message += ` drew ${this.drawCount} cards`
                 for (let i = 0; i < this.drawCount; i++) this.drawCard(player)
                 this.drawCount = 0
-            } else this.drawCard(player)
+            } else {
+                message += ` drew a card`
+                this.drawCard(player)
+            }
             console.log(`# Action: Player ${playerId} drew a card`)
-        }
-        else if (isSkippingTurnAction(action)) {
+        } else if (isSkippingTurnAction(action)) {
             this.skippingNextPlayer = false
+            message += ' skipped a turn'
             console.log(`# Action: Player ${playerId} skipped a turn`)
-        }
-        else throw new Error('Unknown player action')
+        } else throw new Error('Unknown player action')
 
-        this.playerOnTurn++
-        if (this.playerOnTurn >= this.players.length) this.playerOnTurn = 0
+        this.changePlayerOnTurn()
 
         this.logGame()
+
+        const response: GameMessage = {
+            gameState: this.active ? undefined : this.getGameStateMessage(),
+            gameUpdate: this.getGameUpdateMessage(message),
+            players: [{
+                player: playerId,
+                playerUpdate: this.getPlayerMessage(playerId),
+            }],
+        }
+        // if the game stopped (because somebody lost) find the loser and send him a message too
+        if (!this.active) response.players.push({
+            player: this.players[this.playerOnTurn].id,
+            playerUpdate: this.getPlayerMessage(this.players[this.playerOnTurn].id),
+        })
+        return response
     }
 
     private drawCard(player: Player): void {
@@ -159,6 +192,25 @@ class Game {
         const card = this.deck.pop()
         if (!card) throw new Error('Cannot draw a card')
         player.cards.push(card)
+    }
+
+    private changePlayerOnTurn(): void {
+        this.nextNonWinner()
+
+        // detect if the player lost (he's the only "non-winner")
+        const winners = this.players.reduce((winnersCount, player) => winnersCount + (player.winner ? 1 : 0), 0)
+        if (winners === this.players.length - 1) {
+            this.players[this.playerOnTurn].loser = true
+            this.stopGame()
+        }
+    }
+
+    private nextNonWinner(): void {
+        for (let i = 0; i < this.players.length; i++) {
+            this.playerOnTurn++
+            if (this.playerOnTurn >= this.players.length) this.playerOnTurn = 0
+            if (!this.players[this.playerOnTurn].winner) break
+        }
     }
 
     private shuffle(): void {
@@ -184,6 +236,7 @@ class Game {
             name: player.name,
             cards: player.cards.length,
             winner: player.winner,
+            loser: player.loser,
         }))
     }
 
@@ -202,23 +255,19 @@ class Game {
 
     private isValidMove(action: PlayerAction): void | never {
         if (isCardPlayedAction(action)) {
-            if (this.changeColorTo) {
+            if (this.changeColorTo && action.card.value !== 'T') {
                 if (action.card.suit !== this.changeColorTo) throw new Error(`The color was changed to ${this.changeColorTo}s`)
-            }
-            else if (this.playedCards[0].suit !== action.card.suit && this.playedCards[0].value !== action.card.value && action.card.value !== 'T') throw new Error("You can only play a card with the same color/value as the card on the deck")
-            else if (this.skippingNextPlayer && action.card.value !== 'A') throw new Error("You cannot play a card when you're skipping a turn")
-            else if (this.drawCount > 0 && action.card.value !== '7') throw new Error("You cannot play a card when you're supposed to draw")
-        }
-        else if (isDrawAction(action)) {
-            if (this.skippingNextPlayer) throw new Error("You're skipping a turn, no need to draw")
-        }
-        else if (isSkippingTurnAction(action)) {
+            } else if (this.playedCards[0].suit !== action.card.suit && this.playedCards[0].value !== action.card.value && action.card.value !== 'T') throw new Error('You can only play a card with the same color/value as the card on the deck')
+            else if (this.skippingNextPlayer && action.card.value !== 'A') throw new Error('You cannot play a card when you\'re skipping a turn')
+            else if (this.drawCount > 0 && action.card.value !== '7') throw new Error('You cannot play a card when you\'re supposed to draw')
+        } else if (isDrawAction(action)) {
+            if (this.skippingNextPlayer) throw new Error('You\'re skipping a turn, no need to draw')
+        } else if (isSkippingTurnAction(action)) {
             if (!this.skippingNextPlayer) {
-                if (this.playedCards[0].value === 'A') throw new Error("The previous player has already skipped a turn for this ace")
-                else throw new Error("You cannot skip a turn if an ace wasn't played")
+                if (this.playedCards[0].value === 'A') throw new Error('The previous player has already skipped a turn for this ace')
+                else throw new Error('You cannot skip a turn if an ace wasn\'t played')
             }
-        }
-        else throw new Error('Unknown player action')
+        } else throw new Error('Unknown player action')
 
     }
 

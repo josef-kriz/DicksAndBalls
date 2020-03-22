@@ -7,11 +7,11 @@ socket.on('connect', () => {
     console.log('Connected to the server')
 })
 
-export const registerGameListener = (cb: Function, disconnect: Function) => {
-    socket.on('server_event', cb)
+export const registerGameListener = (callback: Function, disconnect: Function) => {
+    socket.on('server_event', callback)
     socket.on('disconnect', disconnect)
 }
 
-export const sendGameMessage = (message: ClientMessage): void => {
-    socket.emit('player_event', message)
+export const sendGameMessage = (message: ClientMessage, callback?: Function): void => {
+    socket.emit('player_event', message, callback)
 }

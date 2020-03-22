@@ -1,0 +1,11 @@
+.decks {
+    padding: 1em;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 1em;
+    box-shadow: 0 0 1.5em rgba(0, 0, 0, 0.2);
+}
+
+.deck-top-card:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0.3em black;
+}

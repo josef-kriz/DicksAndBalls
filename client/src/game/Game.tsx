@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState, ReactElement } from 'react'
+import './Game.css'
 import { registerGameListener, sendGameMessage } from '../api'
 import {
     AddPlayerMessage,
@@ -27,14 +28,20 @@ export const Game: FC = (): ReactElement => {
     const [deckTop, setDeckTop] = useState<Card>()
     const [playerOnTurn, setPlayerOnTurn] = useState<string | undefined>()
     const [cards, setCards] = useState<Card[]>([])
-    const [open, setOpen] = React.useState(false)
+    const [lastMessage, setLastMessage] = useState<string>('')
+    const [openWinner, setOpenWinner] = React.useState(false)
+    const [openLoser, setOpenLoser] = React.useState(false)
 
     const closeDialog = (): void => {
-        setOpen(false)
+        setOpenWinner(false)
+        if (openLoser) {
+            startGame()
+            setOpenLoser(false)
+        }
     }
 
     const handleMessage = (message: ServerMessage): void => {
-        if (isErrorMessage(message)) console.error('An error occurred: ', message)
+        if (isErrorMessage(message)) setLastMessage(message.message)
         else if (isGameStateMessage(message)) {
             setGameActive(message.active)
             setPlayers(message.players)
@@ -42,10 +49,11 @@ export const Game: FC = (): ReactElement => {
             setPlayers(message.players)
             setDeckTop(message.deckTop)
             setPlayerOnTurn(message.playerOnTurn)
-            console.log('message:', message.message)
+            setLastMessage(message.message)
         } else if (isPlayerUpdateMessage(message)) {
             setCards(message.cards)
-            if (message.winner) setOpen(true)
+            if (message.winner) setOpenWinner(true)
+            else if (message.loser) setOpenLoser(true)
         }
     }
 
@@ -64,8 +72,7 @@ export const Game: FC = (): ReactElement => {
             type: 'add_player',
             player,
         }
-        sendGameMessage(message)
-        setParticipating(true)
+        sendGameMessage(message, (success: boolean) => setParticipating(success))
     }
 
     const leaveGame = (): void => {
@@ -97,18 +104,23 @@ export const Game: FC = (): ReactElement => {
             <h1>Dicks and Balls</h1>
             <Grid container spacing={2} justify="center">
                 <Grid item>
-                    <JoinGameButton name={playerName} setName={setPlayerName} participating={participating}
+                    <JoinGameButton name={playerName} setName={setPlayerName} gameActive={gameActive} participating={participating}
                                     onJoin={joinGame} onLeave={leaveGame}/>
                 </Grid>
                 <Grid item>
-                    {players.length >=2 && <Button variant="contained" color="primary"
-                            onClick={gameActive ? stopGame : startGame}>{gameActive ? 'End Game' : 'Start Game'}</Button>}
+                    <Button variant="contained" color="primary"
+                            onClick={gameActive ? stopGame : startGame}
+                            disabled={players.length < 2 || !participating}
+                    >
+                        {gameActive ? 'End Game' : 'Start Game'}
+                    </Button>
                 </Grid>
             </Grid>
             <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName} />
-            {gameActive && <Table playerName={playerName} deckTop={deckTop} playerOnTurn={playerOnTurn} cards={cards}/>}
+            <div className="message">{lastMessage}</div>
+            {gameActive && <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn} cards={cards}/>}
             <Dialog
-                open={open}
+                open={openWinner}
                 onClose={closeDialog}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
@@ -122,6 +134,26 @@ export const Game: FC = (): ReactElement => {
                 <DialogActions>
                     <Button onClick={closeDialog} color="primary">
                         I'm awesome!
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openLoser}
+                onClose={closeDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">You lost!</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        You're a loser! <span role="img" aria-label="thumb-down">👎</span>
+                        <br />
+                        Close this window to shuffle the cards and give it another try
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeDialog} color="primary">
+                        I suck
                     </Button>
                 </DialogActions>
             </Dialog>

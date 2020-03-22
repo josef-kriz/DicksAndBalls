@@ -23,15 +23,17 @@ export function gameListener(socket: Socket): void {
         }
     }
 
-    const addPlayer = (message: AddPlayerMessage): void => {
+    const addPlayer = (message: AddPlayerMessage, callback?: Function): void => {
         try {
             game.addPlayer({
                 id: clientId,
                 name: message.player,
                 cards: [],
                 winner: false,
+                loser: false,
             })
 
+            callback && callback(true)
             io.emit('server_event', game.getGameStateMessage())
         } catch (e) {
             socket.emit('server_event', getErrorMessage(e))
@@ -63,9 +65,11 @@ export function gameListener(socket: Socket): void {
 
     const handlePlayersTurn = (action: PlayerAction): void => {
         try {
-            game.handlePlayersTurn(clientId, action)
-            io.emit('server_event', game.getGameUpdateMessage('Player has played'))
-            io.to(`${clientId}`).emit('server_event', game.getPlayerMessage(clientId))
+            const message = game.handlePlayersTurn(clientId, action)
+            if (message.gameState) io.emit('server_event', message.gameState)
+            io.emit('server_event', message.gameUpdate)
+            for (const playerMessage of message.players)
+                io.to(`${playerMessage.player}`).emit('server_event', playerMessage.playerUpdate)
         } catch (e) {
             socket.emit('server_event', getErrorMessage(e))
         }
@@ -76,9 +80,9 @@ export function gameListener(socket: Socket): void {
         removePlayer()
     })
 
-    socket.on('player_event', async (message: ClientMessage) => {
+    socket.on('player_event', async (message: ClientMessage, callback?: Function) => {
         console.log(`* Message received from client ${clientId}:`, message)
-        if (isAddPlayerMessage(message)) addPlayer(message)
+        if (isAddPlayerMessage(message)) addPlayer(message, callback)
         else if (isRemovePlayerMessage(message)) removePlayer()
         else if (isChangeGameMessage(message) && message.active) startGame()
         else if (isChangeGameMessage(message) && !message.active) stopGame()

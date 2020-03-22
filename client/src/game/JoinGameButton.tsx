@@ -10,6 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 interface Props {
     name: string
     setName: (name: string) => void
+    gameActive: boolean
     participating: boolean
     onJoin: (name: string) => void
     onLeave: () => void
@@ -40,7 +41,8 @@ export const JoinGameButton: FC<Props> = (props: Props): ReactElement => {
     return (
         <span>
             <Button variant="contained" color={props.participating ? 'secondary' : 'default'}
-                    onClick={props.participating ? props.onLeave : handleClickOpen}>{props.participating ? 'Leave Game' : 'Join Game'}</Button>
+                    onClick={props.participating ? props.onLeave : handleClickOpen}
+                    disabled={props.gameActive}>{props.participating ? 'Leave Game' : 'Join Game'}</Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <form>
                     <DialogTitle id="form-dialog-title">Choose a Name</DialogTitle>
