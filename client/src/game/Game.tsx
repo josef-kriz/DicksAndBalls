@@ -33,7 +33,10 @@ export const Game: FC = (): ReactElement => {
 
     const closeDialog = (): void => {
         setOpenWinner(false)
-        setOpenLoser(false)
+        if (openLoser) {
+            startGame()
+            setOpenLoser(false)
+        }
     }
 
     const handleMessage = (message: ServerMessage): void => {
