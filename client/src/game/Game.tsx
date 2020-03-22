@@ -27,6 +27,7 @@ export const Game: FC = (): ReactElement => {
     const [deckTop, setDeckTop] = useState<Card>()
     const [playerOnTurn, setPlayerOnTurn] = useState<string | undefined>()
     const [cards, setCards] = useState<Card[]>([])
+    const [lastMessage, setLastMessage] = useState<string>('')
     const [open, setOpen] = React.useState(false)
 
     const closeDialog = (): void => {
@@ -34,7 +35,7 @@ export const Game: FC = (): ReactElement => {
     }
 
     const handleMessage = (message: ServerMessage): void => {
-        if (isErrorMessage(message)) console.error('An error occurred: ', message)
+        if (isErrorMessage(message)) setLastMessage(message.message)
         else if (isGameStateMessage(message)) {
             setGameActive(message.active)
             setPlayers(message.players)
@@ -42,7 +43,7 @@ export const Game: FC = (): ReactElement => {
             setPlayers(message.players)
             setDeckTop(message.deckTop)
             setPlayerOnTurn(message.playerOnTurn)
-            console.log('message:', message.message)
+            setLastMessage(message.message)
         } else if (isPlayerUpdateMessage(message)) {
             setCards(message.cards)
             if (message.winner) setOpen(true)
@@ -64,8 +65,7 @@ export const Game: FC = (): ReactElement => {
             type: 'add_player',
             player,
         }
-        sendGameMessage(message)
-        setParticipating(true)
+        sendGameMessage(message, (success: boolean) => setParticipating(success))
     }
 
     const leaveGame = (): void => {
@@ -106,7 +106,8 @@ export const Game: FC = (): ReactElement => {
                 </Grid>
             </Grid>
             <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName} />
-            {gameActive && <Table playerName={playerName} deckTop={deckTop} playerOnTurn={playerOnTurn} cards={cards}/>}
+            <div>{lastMessage}</div>
+            {gameActive && <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn} cards={cards}/>}
             <Dialog
                 open={open}
                 onClose={closeDialog}

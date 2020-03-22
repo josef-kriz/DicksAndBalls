@@ -58,6 +58,7 @@ class Game {
     }
 
     public addPlayer(newPlayer: Player): void {
+        if (this.active) throw new Error('The game is running, wait for the players to finish the current game')
         for (const player of this.players) {
             if (player.name === newPlayer.name) throw new Error('Player of this name already joined the game')
         }
@@ -109,10 +110,11 @@ class Game {
         this.active = false
     }
 
-    public handlePlayersTurn(playerId: string, action: PlayerAction): void {
+    public handlePlayersTurn(playerId: string, action: PlayerAction): string {
         const player = this.players.find((player => player.id === playerId))
         if (!player) throw new Error("Player not found")
         if (playerId !== this.players[this.playerOnTurn].id) throw new Error("It's not your turn")
+        let message = `${player.name}`
 
         this.isValidMove(action)
 
@@ -124,23 +126,36 @@ class Game {
             this.playedCards.unshift(action.card)
             player.cards.splice(playersCardIndex, 1)
 
+            message += ` played the ${action.card.value} of ${action.card.suit}s`
+
             if (this.changeColorTo !== null) this.changeColorTo = undefined
             if (action.card.value === '7') this.drawCount += 2
             else if (action.card.value === 'A') this.skippingNextPlayer = true
-            else if (action.card.value === 'T') this.changeColorTo = action.changeColorTo
+            else if (action.card.value === 'T') {
+                this.changeColorTo = action.changeColorTo
+                message += ` and changed the color to ${action.changeColorTo}s`
+            }
             console.log(`# Action: Player ${playerId} played ${action.card.suit} ${action.card.value}`)
 
-            if (player.cards.length === 0) player.winner = true
+            if (player.cards.length === 0) {
+                player.winner = true
+                message += ' and won!'
+            }
         }
         else if (isDrawAction(action)) {
             if (this.drawCount > 0) {
+                message += ` drew ${this.drawCount} cards`
                 for (let i = 0; i < this.drawCount; i++) this.drawCard(player)
                 this.drawCount = 0
-            } else this.drawCard(player)
+            } else {
+                message += ` drew a card`
+                this.drawCard(player)
+            }
             console.log(`# Action: Player ${playerId} drew a card`)
         }
         else if (isSkippingTurnAction(action)) {
             this.skippingNextPlayer = false
+            message += ' skipped a turn'
             console.log(`# Action: Player ${playerId} skipped a turn`)
         }
         else throw new Error('Unknown player action')
@@ -149,6 +164,8 @@ class Game {
         if (this.playerOnTurn >= this.players.length) this.playerOnTurn = 0
 
         this.logGame()
+
+        return message
     }
 
     private drawCard(player: Player): void {

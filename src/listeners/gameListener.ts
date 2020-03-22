@@ -23,7 +23,7 @@ export function gameListener(socket: Socket): void {
         }
     }
 
-    const addPlayer = (message: AddPlayerMessage): void => {
+    const addPlayer = (message: AddPlayerMessage, callback?: Function): void => {
         try {
             game.addPlayer({
                 id: clientId,
@@ -32,6 +32,7 @@ export function gameListener(socket: Socket): void {
                 winner: false,
             })
 
+            callback && callback(true)
             io.emit('server_event', game.getGameStateMessage())
         } catch (e) {
             socket.emit('server_event', getErrorMessage(e))
@@ -63,8 +64,8 @@ export function gameListener(socket: Socket): void {
 
     const handlePlayersTurn = (action: PlayerAction): void => {
         try {
-            game.handlePlayersTurn(clientId, action)
-            io.emit('server_event', game.getGameUpdateMessage('Player has played'))
+            const message = game.handlePlayersTurn(clientId, action)
+            io.emit('server_event', game.getGameUpdateMessage(message))
             io.to(`${clientId}`).emit('server_event', game.getPlayerMessage(clientId))
         } catch (e) {
             socket.emit('server_event', getErrorMessage(e))
@@ -76,9 +77,9 @@ export function gameListener(socket: Socket): void {
         removePlayer()
     })
 
-    socket.on('player_event', async (message: ClientMessage) => {
+    socket.on('player_event', async (message: ClientMessage, callback?: Function) => {
         console.log(`* Message received from client ${clientId}:`, message)
-        if (isAddPlayerMessage(message)) addPlayer(message)
+        if (isAddPlayerMessage(message)) addPlayer(message, callback)
         else if (isRemovePlayerMessage(message)) removePlayer()
         else if (isChangeGameMessage(message) && message.active) startGame()
         else if (isChangeGameMessage(message) && !message.active) stopGame()
