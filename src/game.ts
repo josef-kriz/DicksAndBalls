@@ -89,6 +89,7 @@ class Game {
         if (shufflingPlayerIndex !== -1 && this.players[shufflingPlayerIndex + 1]) {
             this.playerOnTurn = shufflingPlayerIndex + 1
         } else this.playerOnTurn = 0
+        for (const player of this.players) player.winner = false
 
         this.shuffle()
         this.distributeCardsToPlayers()
