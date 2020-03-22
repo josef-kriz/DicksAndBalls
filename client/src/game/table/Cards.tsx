@@ -26,10 +26,7 @@ export const Cards: FC<Props> = (props: Props): ReactElement => {
 
     const handleClose = (changeColorTo?: Suit): void => {
         setOpen(false)
-        if (!changeColorTo || !pickedCard) {
-            console.log('ret!', changeColorTo, pickedCard)
-            return
-        }
+        if (!changeColorTo || !pickedCard) return
 
         const action: CardPlayed = {
             action: 'card_played',
