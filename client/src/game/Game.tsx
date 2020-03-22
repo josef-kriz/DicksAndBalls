@@ -34,10 +34,7 @@ export const Game: FC = (): ReactElement => {
 
     const closeDialog = (): void => {
         setOpenWinner(false)
-        if (openLoser) {
-            startGame()
-            setOpenLoser(false)
-        }
+        setOpenLoser(false)
     }
 
     const handleMessage = (message: ServerMessage): void => {
@@ -99,6 +96,13 @@ export const Game: FC = (): ReactElement => {
         sendGameMessage(message)
     }
 
+    const shouldShowTable = (): boolean => {
+        if (gameActive) return true
+        // if there is a winner/loser among the players show the latest played game
+        return players.some(player => player.winner || player.loser);
+
+    }
+
     return (
         <div>
             <h1>Dicks and Balls</h1>
@@ -118,7 +122,7 @@ export const Game: FC = (): ReactElement => {
             </Grid>
             <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName} />
             <div className="message">{lastMessage}</div>
-            {gameActive && <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn} cards={cards}/>}
+            {shouldShowTable() && <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn} cards={cards}/>}
             <Dialog
                 open={openWinner}
                 onClose={closeDialog}
@@ -148,7 +152,7 @@ export const Game: FC = (): ReactElement => {
                     <DialogContentText>
                         You're a loser! <span role="img" aria-label="thumb-down">👎</span>
                         <br />
-                        Close this window to shuffle the cards and give it another try
+                        Close this window and shuffle the cards!
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

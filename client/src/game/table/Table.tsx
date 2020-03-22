@@ -49,7 +49,7 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     }
 
     const getControls = (): ReactElement | undefined => {
-        if (!props.participating) return undefined
+        if (!props.participating || props.cards.length === 0) return undefined
 
         return (
             <>
