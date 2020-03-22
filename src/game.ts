@@ -104,6 +104,7 @@ class Game {
 
         this.drawCount = this.playedCards[0].value === '7' ? 2 : 0
         this.skippingNextPlayer = this.playedCards[0].value === 'A'
+        this.changeColorTo = undefined
 
         this.active = true
         console.log('# Game started!')

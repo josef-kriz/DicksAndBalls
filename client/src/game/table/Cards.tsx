@@ -1,4 +1,5 @@
 import React, { ReactElement, FC } from 'react'
+import './Cards.css'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -6,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { Card, getCardsAssetNumber, Suit } from '../../models/card'
 import { CardPlayed, PlayerAction } from '../../models/playerAction'
-import { Grid } from '@material-ui/core'
+import { Grid, IconButton } from '@material-ui/core'
 
 interface Props {
     cards: Card[]
@@ -74,18 +75,20 @@ export const Cards: FC<Props> = (props: Props): ReactElement | null => {
             >
                 <DialogTitle id="alert-dialog-title">Pick a Color</DialogTitle>
                 <DialogContent>
-                    <Button onClick={() => handleClose('Dick')} color="primary">
-                        Dicks
-                    </Button>
-                    <Button onClick={() => handleClose('Ball')} color="primary">
-                        Balls
-                    </Button>
-                    <Button onClick={() => handleClose('Heart')} color="primary">
-                        Hearts
-                    </Button>
-                    <Button onClick={() => handleClose('Green')} color="primary">
-                        Greens
-                    </Button>
+                    <div className="suit-buttons-container">
+                        <IconButton className="suit-icon-button" aria-label="dicks" onClick={() => handleClose('Dick')}>
+                            <img className="suit-icon" src="/suits/dick.svg" alt="dicks" />
+                        </IconButton>
+                        <IconButton className="suit-icon-button" aria-label="balls" onClick={() => handleClose('Ball')}>
+                            <img className="suit-icon" src="/suits/ball.svg" alt="balls" />
+                        </IconButton>
+                        <IconButton className="suit-icon-button" aria-label="hearts" onClick={() => handleClose('Heart')}>
+                            <img className="suit-icon" src="/suits/heart.svg" alt="hearts" />
+                        </IconButton>
+                        <IconButton className="suit-icon-button" aria-label="greens" onClick={() => handleClose('Green')}>
+                            <img className="suit-icon" src="/suits/green.svg" alt="greens" />
+                        </IconButton>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => handleClose()} color="secondary">
