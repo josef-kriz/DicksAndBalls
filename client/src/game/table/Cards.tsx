@@ -37,19 +37,15 @@ export const Cards: FC<Props> = (props: Props): ReactElement => {
     }
 
     const playCard = (card: Card): void => {
-        if (props.playerName !== props.playerOnTurn) console.error('it is not your turn')
-        else {
-            if (card.value === 'T') {
-                setPickedCard(card)
-                askForColor()
+        if (card.value === 'T') {
+            setPickedCard(card)
+            askForColor()
+        } else {
+            const action: CardPlayed = {
+                action: 'card_played',
+                card,
             }
-            else {
-                const action: CardPlayed = {
-                    action: 'card_played',
-                    card,
-                }
-                props.sendPlayerAction(action)
-            }
+            props.sendPlayerAction(action)
         }
     }
 
@@ -57,7 +53,7 @@ export const Cards: FC<Props> = (props: Props): ReactElement => {
         const handleClick = () => playCard(card)
         return (
             <Grid key={`${card.suit}${card.value}`} item onClick={handleClick}>
-                <img src={`/cards/${getCardsAssetNumber(card)}.png`} alt={`${card.value} of ${card.suit}s`} />
+                <img src={`/cards/${getCardsAssetNumber(card)}.png`} alt={`${card.value} of ${card.suit}s`}/>
             </Grid>
         )
     }

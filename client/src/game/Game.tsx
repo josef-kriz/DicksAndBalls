@@ -97,12 +97,16 @@ export const Game: FC = (): ReactElement => {
             <h1>Dicks and Balls</h1>
             <Grid container spacing={2} justify="center">
                 <Grid item>
-                    <JoinGameButton name={playerName} setName={setPlayerName} participating={participating}
+                    <JoinGameButton name={playerName} setName={setPlayerName} gameActive={gameActive} participating={participating}
                                     onJoin={joinGame} onLeave={leaveGame}/>
                 </Grid>
                 <Grid item>
-                    {players.length >=2 && <Button variant="contained" color="primary"
-                            onClick={gameActive ? stopGame : startGame}>{gameActive ? 'End Game' : 'Start Game'}</Button>}
+                    <Button variant="contained" color="primary"
+                            onClick={gameActive ? stopGame : startGame}
+                            disabled={players.length < 2 || !participating}
+                    >
+                        {gameActive ? 'End Game' : 'Start Game'}
+                    </Button>
                 </Grid>
             </Grid>
             <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName} />
