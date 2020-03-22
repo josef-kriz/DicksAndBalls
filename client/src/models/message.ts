@@ -63,6 +63,7 @@ export interface GameUpdateMessage extends Message {
     players: Opponent[]
     deckTop: Card
     message: string
+    cardsInDeck: string
     playerOnTurn?: string
     changeColorTo?: Suit
 }

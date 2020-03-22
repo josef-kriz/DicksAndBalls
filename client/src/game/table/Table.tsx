@@ -14,6 +14,7 @@ interface Props {
     playerOnTurn?: string
     cards: Card[]
     colorChangedTo?: Suit
+    cardsInDeck: string
 }
 
 export const Table: FC<Props> = (props: Props): ReactElement => {
@@ -43,7 +44,7 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
         sendPlayerAction(action)
     }
 
-    const getDeck = (): ReactElement => {
+    const getPlayedCards = (): ReactElement => {
         if (props.deckTop) return <img src={`/cards/${getCardsAssetNumber(props.deckTop)}.png`}
                                        alt={`${props.deckTop.value} of ${props.deckTop.suit}s`}/>
         else return <img src="/cards/0.png" alt="Deck"/>
@@ -59,6 +60,16 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
                 <Button color="primary" onClick={skipATurn}>
                     Skip a Turn
                 </Button>
+            </>
+        )
+    }
+
+    const getDeck = (): ReactElement => {
+        if (props.cardsInDeck === '0') return <img className="deck-top-card" src="/cards/gray.png" alt="deck placeholder"/>
+        else return (
+            <>
+                <img className="deck-top-card" src="/cards/0.png" alt="deck"/>
+                <div className="card-count">{props.cardsInDeck}</div>
             </>
         )
     }
@@ -79,11 +90,11 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     return (
         <>
             <Grid className="decks" container spacing={4} justify="center">
-                <Grid item onClick={drawCard}>
-                    <img className="deck-top-card" src="/cards/0.png" alt="Deck"/>
+                <Grid className="deck-overlay-container" item onClick={drawCard}>
+                    {getDeck()}
                 </Grid>
                 <Grid className="color-overlay-container" item>
-                    {getDeck()}
+                    {getPlayedCards()}
                     {props.colorChangedTo && <div className="color-overlay">{getSuitIcon(props.colorChangedTo)}</div>}
                 </Grid>
             </Grid>

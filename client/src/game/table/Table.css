@@ -10,8 +10,21 @@
     box-shadow: 0 0 0.3em black;
 }
 
+.deck-overlay-container,
 .color-overlay-container {
     position: relative;
+}
+
+.card-count {
+    position: absolute;
+    bottom: 32px;
+    right: 32px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 0.1em;
+    border-radius: 0.5em;
+    box-shadow: 0 0 0.4em white;
+    min-width: 1em;
+    pointer-events: none;
 }
 
 .color-overlay {

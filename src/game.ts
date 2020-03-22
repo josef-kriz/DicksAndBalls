@@ -35,6 +35,7 @@ class Game {
             players: this.getOpponents(),
             deckTop: this.playedCards[0],
             message,
+            cardsInDeck: this.deck.length > 3 ? '3+' : `${this.deck.length}`,
             playerOnTurn: this.players[this.playerOnTurn].name,
             changeColorTo: this.changeColorTo,
         }
@@ -184,7 +185,8 @@ class Game {
     }
 
     private drawCard(player: Player): void {
-        if (this.deck.length === 0) { // TODO co kdyz dojdou karty
+        if (this.deck.length === 0) {
+            if (this.playedCards.length === 1) throw new Error('Out of cards!')
             console.log('# The deck was refilled')
             this.deck = [...(this.playedCards.slice(1))]
             this.playedCards = [this.playedCards[0]]
