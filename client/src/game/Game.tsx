@@ -11,7 +11,7 @@ import {
 import { Button, Grid } from '@material-ui/core'
 import { Opponent } from '../models/opponent'
 import { JoinGameButton } from './JoinGameButton'
-import { Card } from '../models/card'
+import { Card, Suit } from '../models/card'
 import { Table } from './table/Table'
 import { Players } from './Players'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -29,6 +29,7 @@ export const Game: FC = (): ReactElement => {
     const [playerOnTurn, setPlayerOnTurn] = useState<string | undefined>()
     const [cards, setCards] = useState<Card[]>([])
     const [lastMessage, setLastMessage] = useState<string>('')
+    const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
     const [openWinner, setOpenWinner] = React.useState(false)
     const [openLoser, setOpenLoser] = React.useState(false)
 
@@ -59,6 +60,7 @@ export const Game: FC = (): ReactElement => {
             setDeckTop(message.deckTop)
             setPlayerOnTurn(message.playerOnTurn)
             setLastMessage(message.message)
+            setColorChangedTo(message.changeColorTo)
         } else if (isPlayerUpdateMessage(message)) {
             setCards(message.cards)
             if (message.winner) handleWin()
@@ -137,7 +139,7 @@ export const Game: FC = (): ReactElement => {
             <div className="message">{lastMessage}</div>
             {shouldShowTable() &&
             <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn}
-                   cards={cards}/>}
+                   cards={cards} colorChangedTo={colorChangedTo}/>}
             <Dialog
                 open={openWinner}
                 onClose={closeDialog}

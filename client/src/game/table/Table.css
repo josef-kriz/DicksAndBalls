@@ -9,3 +9,22 @@
     cursor: pointer;
     box-shadow: 0 0 0.3em black;
 }
+
+.color-overlay-container {
+    position: relative;
+}
+
+.color-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.overlay-suit-icon {
+    max-height: 3em;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.5em;
+    box-shadow: 0 0 0.8em black;
+    border-radius: 40%;
+}

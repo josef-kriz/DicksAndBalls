@@ -5,7 +5,7 @@ import { Cards } from './Cards'
 import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
 import { PlayersTurnMessage } from '../../models/message'
 import { sendGameMessage } from '../../api'
-import { Card, getCardsAssetNumber } from '../../models/card'
+import { Card, getCardsAssetNumber, Suit } from '../../models/card'
 
 interface Props {
     playerName: string
@@ -13,6 +13,7 @@ interface Props {
     deckTop?: Card
     playerOnTurn?: string
     cards: Card[]
+    colorChangedTo?: Suit
 }
 
 export const Table: FC<Props> = (props: Props): ReactElement => {
@@ -62,14 +63,28 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
         )
     }
 
+    const getSuitIcon = (suit: Suit): ReactElement => {
+        switch (suit) {
+            case 'Ball':
+                return <img className="overlay-suit-icon" src="/suits/ball.svg" alt="balls" />
+            case 'Dick':
+                return <img className="overlay-suit-icon" src="/suits/dick.svg" alt="dicks" />
+            case 'Green':
+                return <img className="overlay-suit-icon" src="/suits/green.svg" alt="greens" />
+            case 'Heart':
+                return <img className="overlay-suit-icon" src="/suits/heart.svg" alt="hearts" />
+        }
+    }
+
     return (
         <>
             <Grid className="decks" container spacing={4} justify="center">
                 <Grid item onClick={drawCard}>
                     <img className="deck-top-card" src="/cards/0.png" alt="Deck"/>
                 </Grid>
-                <Grid item>
+                <Grid className="color-overlay-container" item>
                     {getDeck()}
+                    {props.colorChangedTo && <div className="color-overlay">{getSuitIcon(props.colorChangedTo)}</div>}
                 </Grid>
             </Grid>
             {getControls()}
