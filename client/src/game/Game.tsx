@@ -11,7 +11,7 @@ import {
 import { Button, Grid } from '@material-ui/core'
 import { Opponent } from '../models/opponent'
 import { JoinGameButton } from './JoinGameButton'
-import { Card } from '../models/card'
+import { Card, Suit } from '../models/card'
 import { Table } from './table/Table'
 import { Players } from './Players'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -29,15 +29,26 @@ export const Game: FC = (): ReactElement => {
     const [playerOnTurn, setPlayerOnTurn] = useState<string | undefined>()
     const [cards, setCards] = useState<Card[]>([])
     const [lastMessage, setLastMessage] = useState<string>('')
+    const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
+    const [cardsInDeck, setCardsInDeck] = useState<string>('')
     const [openWinner, setOpenWinner] = React.useState(false)
     const [openLoser, setOpenLoser] = React.useState(false)
 
     const closeDialog = (): void => {
         setOpenWinner(false)
-        if (openLoser) {
-            startGame()
-            setOpenLoser(false)
-        }
+        setOpenLoser(false)
+    }
+
+    const handleWin = (): void => {
+        setOpenWinner(true)
+        const audio = new Audio('/sounds/win31.mp3')
+        audio.play().then()
+    }
+
+    const handleLoss = (): void => {
+        setOpenLoser(true)
+        const audio = new Audio('/sounds/sadTrombone.mp3')
+        audio.play().then()
     }
 
     const handleMessage = (message: ServerMessage): void => {
@@ -50,10 +61,12 @@ export const Game: FC = (): ReactElement => {
             setDeckTop(message.deckTop)
             setPlayerOnTurn(message.playerOnTurn)
             setLastMessage(message.message)
+            setColorChangedTo(message.changeColorTo)
+            setCardsInDeck(message.cardsInDeck)
         } else if (isPlayerUpdateMessage(message)) {
             setCards(message.cards)
-            if (message.winner) setOpenWinner(true)
-            else if (message.loser) setOpenLoser(true)
+            if (message.winner) handleWin()
+            else if (message.loser) handleLoss()
         }
     }
 
@@ -99,12 +112,20 @@ export const Game: FC = (): ReactElement => {
         sendGameMessage(message)
     }
 
+    const shouldShowTable = (): boolean => {
+        if (gameActive) return true
+        // if there is a winner/loser among the players show the latest played game
+        return players.some(player => player.winner || player.loser)
+
+    }
+
     return (
         <div>
             <h1>Dicks and Balls</h1>
             <Grid container spacing={2} justify="center">
                 <Grid item>
-                    <JoinGameButton name={playerName} setName={setPlayerName} gameActive={gameActive} participating={participating}
+                    <JoinGameButton name={playerName} setName={setPlayerName} gameActive={gameActive}
+                                    participating={participating}
                                     onJoin={joinGame} onLeave={leaveGame}/>
                 </Grid>
                 <Grid item>
@@ -116,9 +137,11 @@ export const Game: FC = (): ReactElement => {
                     </Button>
                 </Grid>
             </Grid>
-            <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName} />
+            <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName}/>
             <div className="message">{lastMessage}</div>
-            {gameActive && <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn} cards={cards}/>}
+            {shouldShowTable() &&
+            <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn}
+                   cards={cards} colorChangedTo={colorChangedTo} cardsInDeck={cardsInDeck}/>}
             <Dialog
                 open={openWinner}
                 onClose={closeDialog}
@@ -147,8 +170,8 @@ export const Game: FC = (): ReactElement => {
                 <DialogContent>
                     <DialogContentText>
                         You're a loser! <span role="img" aria-label="thumb-down">👎</span>
-                        <br />
-                        Close this window to shuffle the cards and give it another try
+                        <br/>
+                        Close this window and shuffle the cards!
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

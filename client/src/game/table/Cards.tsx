@@ -17,11 +17,9 @@ interface Props {
     sendPlayerAction: (action: PlayerAction) => void
 }
 
-export const Cards: FC<Props> = (props: Props): ReactElement | null => {
+export const Cards: FC<Props> = (props: Props): ReactElement => {
     const [open, setOpen] = React.useState(false)
     const [pickedCard, setPickedCard] = React.useState<Card | undefined>()
-
-    if (props.cards.length === 0) return null
 
     const askForColor = (): void => {
         setOpen(true)

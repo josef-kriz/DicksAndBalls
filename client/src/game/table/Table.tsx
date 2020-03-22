@@ -5,7 +5,7 @@ import { Cards } from './Cards'
 import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
 import { PlayersTurnMessage } from '../../models/message'
 import { sendGameMessage } from '../../api'
-import { Card, getCardsAssetNumber } from '../../models/card'
+import { Card, getCardsAssetNumber, Suit } from '../../models/card'
 
 interface Props {
     playerName: string
@@ -13,6 +13,8 @@ interface Props {
     deckTop?: Card
     playerOnTurn?: string
     cards: Card[]
+    colorChangedTo?: Suit
+    cardsInDeck: string
 }
 
 export const Table: FC<Props> = (props: Props): ReactElement => {
@@ -42,14 +44,14 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
         sendPlayerAction(action)
     }
 
-    const getDeck = (): ReactElement => {
+    const getPlayedCards = (): ReactElement => {
         if (props.deckTop) return <img src={`/cards/${getCardsAssetNumber(props.deckTop)}.png`}
                                        alt={`${props.deckTop.value} of ${props.deckTop.suit}s`}/>
         else return <img src="/cards/0.png" alt="Deck"/>
     }
 
     const getControls = (): ReactElement | undefined => {
-        if (!props.participating) return undefined
+        if (!props.participating || props.cards.length === 0) return undefined
 
         return (
             <>
@@ -62,14 +64,38 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
         )
     }
 
+    const getDeck = (): ReactElement => {
+        if (props.cardsInDeck === '0') return <img className="deck-top-card" src="/cards/gray.png" alt="deck placeholder"/>
+        else return (
+            <>
+                <img className="deck-top-card" src="/cards/0.png" alt="deck"/>
+                <div className="card-count">{props.cardsInDeck}</div>
+            </>
+        )
+    }
+
+    const getSuitIcon = (suit: Suit): ReactElement => {
+        switch (suit) {
+            case 'Ball':
+                return <img className="overlay-suit-icon" src="/suits/ball.svg" alt="balls" />
+            case 'Dick':
+                return <img className="overlay-suit-icon" src="/suits/dick.svg" alt="dicks" />
+            case 'Green':
+                return <img className="overlay-suit-icon" src="/suits/green.svg" alt="greens" />
+            case 'Heart':
+                return <img className="overlay-suit-icon" src="/suits/heart.svg" alt="hearts" />
+        }
+    }
+
     return (
         <>
             <Grid className="decks" container spacing={4} justify="center">
-                <Grid item onClick={drawCard}>
-                    <img className="deck-top-card" src="/cards/0.png" alt="Deck"/>
-                </Grid>
-                <Grid item>
+                <Grid className="deck-overlay-container" item onClick={drawCard}>
                     {getDeck()}
+                </Grid>
+                <Grid className="color-overlay-container" item>
+                    {getPlayedCards()}
+                    {props.colorChangedTo && <div className="color-overlay">{getSuitIcon(props.colorChangedTo)}</div>}
                 </Grid>
             </Grid>
             {getControls()}
