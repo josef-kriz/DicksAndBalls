@@ -16,7 +16,7 @@
 
 .deck-top-card:hover {
     cursor: pointer;
-    box-shadow: 0 0 1em white;
+    filter: drop-shadow(0 0 1em white)
 }
 
 .deck-overlay-container,
