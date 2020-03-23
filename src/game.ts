@@ -261,9 +261,9 @@ class Game {
         if (isCardPlayedAction(action)) {
             if (this.changeColorTo && action.card.value !== 'T') {
                 if (action.card.suit !== this.changeColorTo) throw new Error(`The color was changed to ${this.changeColorTo}s`)
-            } else if (this.playedCards[0].suit !== action.card.suit && this.playedCards[0].value !== action.card.value && action.card.value !== 'T') throw new Error('You can only play a card with the same color/value as the card on the deck')
-            else if (this.skippingNextPlayer && action.card.value !== 'A') throw new Error('You cannot play a card when you\'re skipping a turn')
+            } else if (this.skippingNextPlayer && action.card.value !== 'A') throw new Error('You cannot play a card when you\'re skipping a turn')
             else if (this.drawCount > 0 && action.card.value !== '7') throw new Error('You cannot play a card when you\'re supposed to draw')
+            else if (this.playedCards[0].suit !== action.card.suit && this.playedCards[0].value !== action.card.value && action.card.value !== 'T') throw new Error('You can only play a card with the same color/value as the card on the deck')
         } else if (isDrawAction(action)) {
             if (this.skippingNextPlayer) throw new Error('You\'re skipping a turn, no need to draw')
         } else if (isSkippingTurnAction(action)) {

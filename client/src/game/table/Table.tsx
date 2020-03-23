@@ -15,7 +15,7 @@ interface Props {
     playerOnTurn?: string
     cards: Card[]
     colorChangedTo?: Suit
-    skippingNextPlayer: boolean
+    skippingPlayer: boolean
     cardsInDeck: string
 }
 
@@ -29,7 +29,7 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     }
 
     const handleDeckClick = (): void => {
-        if (isSkippingTurn()) skipATurn()
+        if (props.skippingPlayer) skipATurn()
         else drawCard()
     }
 
@@ -57,17 +57,13 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
         else return <img className="deck-card" src="/cards/0.png" alt="Deck"/>
     }
 
-    const isSkippingTurn = (): boolean => {
-        return props.skippingNextPlayer && props.playerOnTurn === props.playerName
-    }
-
     const getDeck = (): ReactElement => {
         if (props.cardsInDeck === '0') return <img className="deck-card deck-top-card" src="/cards/gray.png" alt="deck placeholder"/>
         else return (
             <>
                 <img className="deck-card deck-top-card" src="/cards/0.png" alt="deck"/>
                 <div className="card-count">{props.cardsInDeck}</div>
-                {isSkippingTurn() && <div className="skipping-overlay">SKIP <RedoIcon /></div>}
+                {props.skippingPlayer && <div className="skipping-overlay">SKIP <RedoIcon /></div>}
             </>
         )
     }

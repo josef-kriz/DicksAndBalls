@@ -30,7 +30,7 @@ export const Game: FC = (): ReactElement => {
     const [cards, setCards] = useState<Card[]>([])
     const [lastMessage, setLastMessage] = useState<string>('')
     const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
-    const [skippingNextPlayer, setSkippingNextPlayer] = useState<boolean>(false)
+    const [skippingPlayer, setSkippingPlayer] = useState<boolean>(false)
     const [cardsInDeck, setCardsInDeck] = useState<string>('')
     const [openNameTaken, setOpenNameTaken] = React.useState(false)
     const [openWinner, setOpenWinner] = React.useState(false)
@@ -65,7 +65,7 @@ export const Game: FC = (): ReactElement => {
             setPlayerOnTurn(message.playerOnTurn)
             setLastMessage(message.message)
             setColorChangedTo(message.changeColorTo)
-            setSkippingNextPlayer(message.skippingNextPlayer)
+            setSkippingPlayer(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
             setCardsInDeck(message.cardsInDeck)
         } else if (isPlayerUpdateMessage(message)) {
             setCards(message.cards)
@@ -148,7 +148,7 @@ export const Game: FC = (): ReactElement => {
             {shouldShowTable() && <div className="message">{lastMessage}</div>}
             {shouldShowTable() &&
             <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn}
-                   cards={cards} colorChangedTo={colorChangedTo} skippingNextPlayer={skippingNextPlayer} cardsInDeck={cardsInDeck}/>}
+                   cards={cards} colorChangedTo={colorChangedTo} skippingPlayer={skippingPlayer} cardsInDeck={cardsInDeck}/>}
             <Dialog
                 open={openWinner}
                 onClose={closeDialog}
