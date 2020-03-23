@@ -138,7 +138,7 @@ export const Game: FC = (): ReactElement => {
                 </Grid>
             </Grid>
             <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName}/>
-            <div className="message">{lastMessage}</div>
+            {gameActive && <div className="message">{lastMessage}</div>}
             {shouldShowTable() &&
             <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn}
                    cards={cards} colorChangedTo={colorChangedTo} cardsInDeck={cardsInDeck}/>}
