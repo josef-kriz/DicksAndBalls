@@ -78,7 +78,7 @@ export const Game: FC = (): ReactElement => {
 
     useEffect(() => {
         registerGameListener(handleMessage, onServerDisconnect)
-    }, [])
+    }, [handleMessage, onServerDisconnect])
 
     const joinGame = (player: string): void => {
         const message: AddPlayerMessage = {
