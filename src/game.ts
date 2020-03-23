@@ -121,6 +121,7 @@ class Game {
         const player = this.players.find((player => player.id === playerId))
         if (!player) throw new Error('Player not found')
         if (playerId !== this.players[this.playerOnTurn].id) throw new Error('It\'s not your turn')
+        if (!this.active && !(isCardPlayedAction(action) && action.card.value === '7' && action.card.suit === 'Heart')) throw new Error('The game is over')
         let message = `${player.name}`
 
         this.isValidMove(action)
