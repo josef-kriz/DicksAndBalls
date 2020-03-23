@@ -33,6 +33,7 @@ export const Game: FC = (): ReactElement => {
     const [isSkippingTurn, setIsSkippingTurn] = useState<boolean>(false)
     const [cardsInDeck, setCardsInDeck] = useState<string>('')
     const [openNameTaken, setOpenNameTaken] = React.useState(false)
+    const [isWinner, setIsWinner] = React.useState(false)
     const [openWinner, setOpenWinner] = React.useState(false)
     const [openLoser, setOpenLoser] = React.useState(false)
 
@@ -69,6 +70,7 @@ export const Game: FC = (): ReactElement => {
             setCardsInDeck(message.cardsInDeck)
         } else if (isPlayerUpdateMessage(message)) {
             setCards(message.cards)
+            setIsWinner(message.winner)
             if (message.winner) handleWin()
             else if (message.loser) handleLoss()
         }
@@ -132,7 +134,7 @@ export const Game: FC = (): ReactElement => {
             <Grid container spacing={2} justify="center">
                 <Grid item>
                     <JoinGameButton name={playerName} setName={setPlayerName} gameActive={gameActive}
-                                    participating={participating}
+                                    participating={participating} isWinner={isWinner}
                                     onJoin={joinGame} onLeave={leaveGame}/>
                 </Grid>
                 <Grid item>
