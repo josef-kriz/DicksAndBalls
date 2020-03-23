@@ -61,7 +61,6 @@ export const Cards: FC<Props> = (props: Props): ReactElement => {
 
     return (
         <div className="cards-container">
-            <h2>Your cards</h2>
             <Grid container spacing={2} justify="center">
                 {props.cards.map(generateCardTile)}
             </Grid>

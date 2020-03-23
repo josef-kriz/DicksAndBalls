@@ -55,9 +55,10 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
 
         return (
             <>
+                <hr />
                 <Cards cards={props.cards} playerName={props.playerName} playerOnTurn={props.playerOnTurn}
                        deckTop={props.deckTop} sendPlayerAction={sendPlayerAction}/>
-                <Button color="primary" onClick={skipATurn}>
+                <Button variant="contained" onClick={skipATurn}>
                     Skip a Turn
                 </Button>
             </>
@@ -88,7 +89,7 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     }
 
     return (
-        <>
+        <div id="table">
             <Grid className="decks" container spacing={4} justify="center">
                 <Grid className="deck-overlay-container" item onClick={drawCard}>
                     {getDeck()}
@@ -99,6 +100,6 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
                 </Grid>
             </Grid>
             {getControls()}
-        </>
+        </div>
     )
 }
