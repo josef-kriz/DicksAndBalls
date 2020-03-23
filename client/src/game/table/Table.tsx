@@ -58,11 +58,10 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     }
 
     const getDeck = (): ReactElement => {
-        if (props.cardsInDeck === '0') return <img className="deck-card deck-top-card" src="/cards/gray.png" alt="deck placeholder"/>
-        else return (
+        return (
             <>
-                <img className="deck-card deck-top-card" src="/cards/0.png" alt="deck"/>
-                <div className="card-count">{props.cardsInDeck}</div>
+                <img className="deck-card deck-top-card" src={props.cardsInDeck === '0' ? '/cards/gray.png' : '/cards/0.png'} alt="deck"/>
+                {props.cardsInDeck !== '' && <div className="card-count">{props.cardsInDeck}</div>}
                 {props.isSkippingTurn && <div className="skipping-overlay">SKIP <RedoIcon /></div>}
             </>
         )
