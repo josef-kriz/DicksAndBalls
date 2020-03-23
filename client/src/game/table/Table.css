@@ -5,6 +5,10 @@
     box-shadow: 0 0 1.5em rgba(0, 0, 0, 0.2);
 }
 
+.deck-card {
+    max-height: 11rem;
+}
+
 .deck-top-card:hover {
     cursor: pointer;
     box-shadow: 0 0 0.3em black;

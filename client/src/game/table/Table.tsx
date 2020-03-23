@@ -45,9 +45,9 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     }
 
     const getPlayedCards = (): ReactElement => {
-        if (props.deckTop) return <img src={`/cards/${getCardsAssetNumber(props.deckTop)}.png`}
+        if (props.deckTop) return <img className="deck-card" src={`/cards/${getCardsAssetNumber(props.deckTop)}.png`}
                                        alt={`${props.deckTop.value} of ${props.deckTop.suit}s`}/>
-        else return <img src="/cards/0.png" alt="Deck"/>
+        else return <img className="deck-card" src="/cards/0.png" alt="Deck"/>
     }
 
     const getControls = (): ReactElement | undefined => {
@@ -65,10 +65,10 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     }
 
     const getDeck = (): ReactElement => {
-        if (props.cardsInDeck === '0') return <img className="deck-top-card" src="/cards/gray.png" alt="deck placeholder"/>
+        if (props.cardsInDeck === '0') return <img className="deck-card deck-top-card" src="/cards/gray.png" alt="deck placeholder"/>
         else return (
             <>
-                <img className="deck-top-card" src="/cards/0.png" alt="deck"/>
+                <img className="deck-card deck-top-card" src="/cards/0.png" alt="deck"/>
                 <div className="card-count">{props.cardsInDeck}</div>
             </>
         )
