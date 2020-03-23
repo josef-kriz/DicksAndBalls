@@ -94,7 +94,7 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     }
 
     return (
-        <div id="table">
+        <div id="table" className={props.playerOnTurn === props.playerName ? 'active-table' : undefined}>
             <Grid className="decks" container spacing={4} justify="center">
                 <Grid className="deck-overlay-container" item onClick={handleDeckClick}>
                     {getDeck()}
