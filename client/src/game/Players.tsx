@@ -9,6 +9,7 @@ interface Props {
     gameActive: boolean
     playerOnTurn?: string
     playerName: string
+    participating: boolean
 }
 
 export const Players: FC<Props> = (props: Props): ReactElement => {
@@ -33,7 +34,7 @@ export const Players: FC<Props> = (props: Props): ReactElement => {
                 <div className="player-container">
                     <div className="player-name"
                          id={player.name === props.playerOnTurn && props.gameActive ? 'playerOnTurn' : undefined}>
-                        <PersonIcon/> {player.name}{player.name === props.playerName && ' (you)'}
+                        <PersonIcon/> {player.name}{player.name === props.playerName && props.participating && ' (you)'}
                     </div>
                     <div>
                         {props.gameActive && getCardCount(player.cards)}
