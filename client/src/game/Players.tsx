@@ -17,12 +17,18 @@ export const Players: FC<Props> = (props: Props): ReactElement => {
         return <img key={`${i}`} className="card-shell" src="/cards/0.png" alt="card back"/>
     }
 
-    const getCardCount = (count: number): ReactElement => {
-        if (count === 0) return (
+    const getCardCount = (player: Opponent): ReactElement | undefined => {
+        if (!props.gameActive && !props.players.some(player => player.winner)) return undefined
+
+        if (player.winner) return (
             <span role="img" aria-label="ta-da">🎉</span>
         )
+        else if (player.loser) return (
+            <span role="img" aria-label="loser">👎</span>
+        )
+
         const cards: ReactElement[] = []
-        for (let i = 0; i < count; i++) cards.push(getCard(i))
+        for (let i = 0; i < player.cards; i++) cards.push(getCard(i))
         return (
             <span>{cards}</span>
         )
@@ -37,7 +43,7 @@ export const Players: FC<Props> = (props: Props): ReactElement => {
                         <PersonIcon/> {player.name}{player.name === props.playerName && props.participating && ' (you)'}
                     </div>
                     <div>
-                        {props.gameActive && getCardCount(player.cards)}
+                        {getCardCount(player)}
                     </div>
                 </div>
             </Grid>
