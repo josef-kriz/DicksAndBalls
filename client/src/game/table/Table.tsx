@@ -62,7 +62,7 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
             <>
                 <img className="deck-card deck-top-card" src={props.cardsInDeck === '0' ? '/cards/gray.png' : '/cards/0.png'} alt="deck"/>
                 {props.cardsInDeck !== '' && <div className="card-count">{props.cardsInDeck}</div>}
-                {props.isSkippingTurn && <div className="skipping-overlay">SKIP <RedoIcon /></div>}
+                {props.isSkippingTurn && <div className="skipping-overlay">SKIP<br /><RedoIcon /></div>}
             </>
         )
     }
