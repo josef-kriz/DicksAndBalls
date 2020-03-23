@@ -36,6 +36,7 @@ export function gameListener(socket: Socket): void {
             callback && callback(true)
             io.emit('server_event', game.getGameStateMessage())
         } catch (e) {
+            callback && callback(false)
             socket.emit('server_event', getErrorMessage(e))
         }
     }

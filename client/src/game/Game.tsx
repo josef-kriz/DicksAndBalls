@@ -31,12 +31,14 @@ export const Game: FC = (): ReactElement => {
     const [lastMessage, setLastMessage] = useState<string>('')
     const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
     const [cardsInDeck, setCardsInDeck] = useState<string>('')
+    const [openNameTaken, setOpenNameTaken] = React.useState(false)
     const [openWinner, setOpenWinner] = React.useState(false)
     const [openLoser, setOpenLoser] = React.useState(false)
 
     const closeDialog = (): void => {
         setOpenWinner(false)
         setOpenLoser(false)
+        setOpenNameTaken(false)
     }
 
     const handleWin = (): void => {
@@ -85,7 +87,10 @@ export const Game: FC = (): ReactElement => {
             type: 'add_player',
             player,
         }
-        sendGameMessage(message, (success: boolean) => setParticipating(success))
+        sendGameMessage(message, (success: boolean) => {
+            setParticipating(success)
+            if (!success) setOpenNameTaken(true)
+        })
     }
 
     const leaveGame = (): void => {
@@ -145,10 +150,10 @@ export const Game: FC = (): ReactElement => {
             <Dialog
                 open={openWinner}
                 onClose={closeDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
+                aria-labelledby="You won"
+                aria-describedby="You won the game dialog"
             >
-                <DialogTitle id="alert-dialog-title">You won!</DialogTitle>
+                <DialogTitle>You won!</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         You're a winner! <span role="img" aria-label="ta-da">🎉</span>
@@ -163,10 +168,10 @@ export const Game: FC = (): ReactElement => {
             <Dialog
                 open={openLoser}
                 onClose={closeDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
+                aria-labelledby="You lost"
+                aria-describedby="You lost the game dialog"
             >
-                <DialogTitle id="alert-dialog-title">You lost!</DialogTitle>
+                <DialogTitle>You lost!</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         You're a loser! <span role="img" aria-label="thumb-down">👎</span>
@@ -177,6 +182,24 @@ export const Game: FC = (): ReactElement => {
                 <DialogActions>
                     <Button onClick={closeDialog} color="primary">
                         I suck
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openNameTaken}
+                onClose={closeDialog}
+                aria-labelledby="This name is already taken"
+                aria-describedby="This name is already taken dialog"
+            >
+                <DialogTitle>This name is already taken</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please choose a different one
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeDialog} color="primary">
+                        Close
                     </Button>
                 </DialogActions>
             </Dialog>
