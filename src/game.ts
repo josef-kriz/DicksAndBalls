@@ -38,6 +38,7 @@ class Game {
             cardsInDeck: this.deck.length > 3 ? '3+' : `${this.deck.length}`,
             playerOnTurn: this.players[this.playerOnTurn].name,
             changeColorTo: this.changeColorTo,
+            skippingNextPlayer: this.skippingNextPlayer,
         }
     }
 
