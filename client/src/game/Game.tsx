@@ -30,13 +30,17 @@ export const Game: FC = (): ReactElement => {
     const [cards, setCards] = useState<Card[]>([])
     const [lastMessage, setLastMessage] = useState<string>('')
     const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
+    const [isSkippingTurn, setIsSkippingTurn] = useState<boolean>(false)
     const [cardsInDeck, setCardsInDeck] = useState<string>('')
+    const [openNameTaken, setOpenNameTaken] = React.useState(false)
+    const [isWinner, setIsWinner] = React.useState(false)
     const [openWinner, setOpenWinner] = React.useState(false)
     const [openLoser, setOpenLoser] = React.useState(false)
 
     const closeDialog = (): void => {
         setOpenWinner(false)
         setOpenLoser(false)
+        setOpenNameTaken(false)
     }
 
     const handleWin = (): void => {
@@ -62,9 +66,11 @@ export const Game: FC = (): ReactElement => {
             setPlayerOnTurn(message.playerOnTurn)
             setLastMessage(message.message)
             setColorChangedTo(message.changeColorTo)
+            setIsSkippingTurn(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
             setCardsInDeck(message.cardsInDeck)
         } else if (isPlayerUpdateMessage(message)) {
             setCards(message.cards)
+            setIsWinner(message.winner)
             if (message.winner) handleWin()
             else if (message.loser) handleLoss()
         }
@@ -78,14 +84,17 @@ export const Game: FC = (): ReactElement => {
 
     useEffect(() => {
         registerGameListener(handleMessage, onServerDisconnect)
-    }, [])
+    }, [handleMessage, onServerDisconnect])
 
     const joinGame = (player: string): void => {
         const message: AddPlayerMessage = {
             type: 'add_player',
             player,
         }
-        sendGameMessage(message, (success: boolean) => setParticipating(success))
+        sendGameMessage(message, (success: boolean) => {
+            setParticipating(success)
+            if (!success) setOpenNameTaken(true)
+        })
     }
 
     const leaveGame = (): void => {
@@ -125,7 +134,7 @@ export const Game: FC = (): ReactElement => {
             <Grid container spacing={2} justify="center">
                 <Grid item>
                     <JoinGameButton name={playerName} setName={setPlayerName} gameActive={gameActive}
-                                    participating={participating}
+                                    participating={participating} isWinner={isWinner}
                                     onJoin={joinGame} onLeave={leaveGame}/>
                 </Grid>
                 <Grid item>
@@ -137,18 +146,18 @@ export const Game: FC = (): ReactElement => {
                     </Button>
                 </Grid>
             </Grid>
-            <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName}/>
-            <div className="message">{lastMessage}</div>
+            <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName} participating={participating}/>
+            {shouldShowTable() && <div className="message">{lastMessage}</div>}
             {shouldShowTable() &&
             <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn}
-                   cards={cards} colorChangedTo={colorChangedTo} cardsInDeck={cardsInDeck}/>}
+                   cards={cards} colorChangedTo={colorChangedTo} isSkippingTurn={isSkippingTurn} cardsInDeck={cardsInDeck}/>}
             <Dialog
                 open={openWinner}
                 onClose={closeDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
+                aria-labelledby="You won"
+                aria-describedby="You won the game dialog"
             >
-                <DialogTitle id="alert-dialog-title">You won!</DialogTitle>
+                <DialogTitle>You won!</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         You're a winner! <span role="img" aria-label="ta-da">🎉</span>
@@ -163,10 +172,10 @@ export const Game: FC = (): ReactElement => {
             <Dialog
                 open={openLoser}
                 onClose={closeDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
+                aria-labelledby="You lost"
+                aria-describedby="You lost the game dialog"
             >
-                <DialogTitle id="alert-dialog-title">You lost!</DialogTitle>
+                <DialogTitle>You lost!</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         You're a loser! <span role="img" aria-label="thumb-down">👎</span>
@@ -177,6 +186,24 @@ export const Game: FC = (): ReactElement => {
                 <DialogActions>
                     <Button onClick={closeDialog} color="primary">
                         I suck
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openNameTaken}
+                onClose={closeDialog}
+                aria-labelledby="This name is already taken"
+                aria-describedby="This name is already taken dialog"
+            >
+                <DialogTitle>This name is already taken</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please choose a different one
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeDialog} color="primary">
+                        Close
                     </Button>
                 </DialogActions>
             </Dialog>

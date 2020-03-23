@@ -15,6 +15,7 @@ interface Props {
     playerOnTurn?: string
     deckTop?: Card
     sendPlayerAction: (action: PlayerAction) => void
+    isSkippingTurn: boolean
 }
 
 export const Cards: FC<Props> = (props: Props): ReactElement => {
@@ -38,7 +39,7 @@ export const Cards: FC<Props> = (props: Props): ReactElement => {
     }
 
     const playCard = (card: Card): void => {
-        if (card.value === 'T') {
+        if (!props.isSkippingTurn && card.value === 'T') {
             setPickedCard(card)
             askForColor()
         } else {
@@ -61,7 +62,6 @@ export const Cards: FC<Props> = (props: Props): ReactElement => {
 
     return (
         <div className="cards-container">
-            <h2>Your cards</h2>
             <Grid container spacing={2} justify="center">
                 {props.cards.map(generateCardTile)}
             </Grid>

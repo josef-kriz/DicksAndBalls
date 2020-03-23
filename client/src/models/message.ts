@@ -66,6 +66,7 @@ export interface GameUpdateMessage extends Message {
     cardsInDeck: string
     playerOnTurn?: string
     changeColorTo?: Suit
+    skippingNextPlayer: boolean
 }
 
 export interface PlayerUpdateMessage extends Message {

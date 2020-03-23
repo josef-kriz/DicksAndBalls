@@ -1,11 +1,12 @@
 import React, { FC, ReactElement } from 'react'
 import './Table.css'
-import { Button, Grid } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { Cards } from './Cards'
 import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
 import { PlayersTurnMessage } from '../../models/message'
 import { sendGameMessage } from '../../api'
 import { Card, getCardsAssetNumber, Suit } from '../../models/card'
+import RedoIcon from '@material-ui/icons/Redo';
 
 interface Props {
     playerName: string
@@ -14,6 +15,7 @@ interface Props {
     playerOnTurn?: string
     cards: Card[]
     colorChangedTo?: Suit
+    isSkippingTurn: boolean
     cardsInDeck: string
 }
 
@@ -24,6 +26,11 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
             action,
         }
         sendGameMessage(message)
+    }
+
+    const handleDeckClick = (): void => {
+        if (props.isSkippingTurn) skipATurn()
+        else drawCard()
     }
 
     const drawCard = (): void => {
@@ -50,26 +57,25 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
         else return <img className="deck-card" src="/cards/0.png" alt="Deck"/>
     }
 
-    const getControls = (): ReactElement | undefined => {
-        if (!props.participating || props.cards.length === 0) return undefined
-
-        return (
-            <>
-                <Cards cards={props.cards} playerName={props.playerName} playerOnTurn={props.playerOnTurn}
-                       deckTop={props.deckTop} sendPlayerAction={sendPlayerAction}/>
-                <Button color="primary" onClick={skipATurn}>
-                    Skip a Turn
-                </Button>
-            </>
-        )
-    }
-
     const getDeck = (): ReactElement => {
         if (props.cardsInDeck === '0') return <img className="deck-card deck-top-card" src="/cards/gray.png" alt="deck placeholder"/>
         else return (
             <>
                 <img className="deck-card deck-top-card" src="/cards/0.png" alt="deck"/>
                 <div className="card-count">{props.cardsInDeck}</div>
+                {props.isSkippingTurn && <div className="skipping-overlay">SKIP <RedoIcon /></div>}
+            </>
+        )
+    }
+
+    const getControls = (): ReactElement | undefined => {
+        if (!props.participating || props.cards.length === 0) return undefined
+
+        return (
+            <>
+                <hr />
+                <Cards cards={props.cards} playerName={props.playerName} playerOnTurn={props.playerOnTurn}
+                       deckTop={props.deckTop} sendPlayerAction={sendPlayerAction} isSkippingTurn={props.isSkippingTurn}/>
             </>
         )
     }
@@ -88,9 +94,9 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     }
 
     return (
-        <>
+        <div id="table" className={props.playerOnTurn === props.playerName ? 'active-table' : undefined}>
             <Grid className="decks" container spacing={4} justify="center">
-                <Grid className="deck-overlay-container" item onClick={drawCard}>
+                <Grid className="deck-overlay-container" item onClick={handleDeckClick}>
                     {getDeck()}
                 </Grid>
                 <Grid className="color-overlay-container" item>
@@ -99,6 +105,6 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
                 </Grid>
             </Grid>
             {getControls()}
-        </>
+        </div>
     )
 }

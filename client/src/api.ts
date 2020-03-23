@@ -8,6 +8,10 @@ socket.on('connect', () => {
 })
 
 export const registerGameListener = (callback: Function, disconnect: Function) => {
+    // make sure no other listeners are registered
+    socket.off('server_event')
+    socket.off('disconnect')
+
     socket.on('server_event', callback)
     socket.on('disconnect', disconnect)
 }
