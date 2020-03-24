@@ -28,63 +28,104 @@ export const Game: FC = (): ReactElement => {
     const [deckTop, setDeckTop] = useState<Card>()
     const [playerOnTurn, setPlayerOnTurn] = useState<string | undefined>()
     const [cards, setCards] = useState<Card[]>([])
-    const [lastMessage, setLastMessage] = useState<string>('')
+    const [lastMessage, setLastMessage] = useState<{
+        error: boolean
+        text: string
+    }>({
+        error: false,
+        text: '',
+    })
     const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
     const [isSkippingTurn, setIsSkippingTurn] = useState<boolean>(false)
     const [cardsInDeck, setCardsInDeck] = useState<string>('')
-    const [openNameTaken, setOpenNameTaken] = React.useState(false)
-    const [isWinner, setIsWinner] = React.useState(false)
-    const [openWinner, setOpenWinner] = React.useState(false)
-    const [openLoser, setOpenLoser] = React.useState(false)
+    const [openNameTaken, setOpenNameTaken] = React.useState<boolean>(false)
+    const [isWinner, setIsWinner] = React.useState<boolean>(false)
+    const [openWinner, setOpenWinner] = React.useState<boolean>(false)
+    const [openLoser, setOpenLoser] = React.useState<boolean>(false)
+    const [openBroughtBack, setOpenBroughtBack] = React.useState<boolean>(false)
 
     const closeDialog = (): void => {
         setOpenWinner(false)
         setOpenLoser(false)
         setOpenNameTaken(false)
-    }
-
-    const handleWin = (): void => {
-        setOpenWinner(true)
-        const audio = new Audio('/sounds/win31.mp3')
-        audio.play().then()
-    }
-
-    const handleLoss = (): void => {
-        setOpenLoser(true)
-        const audio = new Audio('/sounds/sadTrombone.mp3')
-        audio.play().then()
-    }
-
-    const handleMessage = (message: ServerMessage): void => {
-        if (isErrorMessage(message)) setLastMessage(message.message)
-        else if (isGameStateMessage(message)) {
-            setGameActive(message.active)
-            setPlayers(message.players)
-        } else if (isGameUpdateMessage(message)) {
-            setPlayers(message.players)
-            setDeckTop(message.deckTop)
-            setPlayerOnTurn(message.playerOnTurn)
-            setLastMessage(message.message)
-            setColorChangedTo(message.changeColorTo)
-            setIsSkippingTurn(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
-            setCardsInDeck(message.cardsInDeck)
-        } else if (isPlayerUpdateMessage(message)) {
-            setCards(message.cards)
-            setIsWinner(message.winner)
-            if (message.winner) handleWin()
-            else if (message.loser) handleLoss()
-        }
-    }
-
-    const onServerDisconnect = (): void => {
-        setParticipating(false)
-        setGameActive(false)
-        setPlayers([])
+        setOpenBroughtBack(false)
     }
 
     useEffect(() => {
+        const handleWin = (): void => {
+            setOpenWinner(true)
+            const audio = new Audio('/sounds/win31.mp3')
+            audio.play().then()
+        }
+
+        const handleLoss = (): void => {
+            setOpenLoser(true)
+            const audio = new Audio('/sounds/sadTrombone.mp3')
+            audio.play().then()
+        }
+
+        const handleBroughtBackToGame = (): void => {
+            setOpenBroughtBack(true)
+            const audio = new Audio('/sounds/airHorn.mp3')
+            audio.play().then()
+        }
+
+        const playDrawCardSound = (cards: number): void => {
+            let audioFile: string
+            switch (cards) {
+                case 4:
+                    audioFile = '/sounds/crack_the_whip.mp3'
+                    break
+                case 6:
+                    audioFile = '/sounds/badumtss.mp3'
+                    break
+                case 8:
+                    audioFile = '/sounds/holy_shit.mp3'
+                    break
+                default:
+                    return
+            }
+            const audio = new Audio(audioFile)
+            audio.play().then()
+        }
+
+        const handleMessage = (message: ServerMessage): void => {
+            if (isErrorMessage(message)) setLastMessage({
+                error: true,
+                text: message.message
+            })
+            else if (isGameStateMessage(message)) {
+                setGameActive(message.active)
+                setPlayers(message.players)
+            } else if (isGameUpdateMessage(message)) {
+                setPlayers(message.players)
+                setDeckTop(message.deckTop)
+                setPlayerOnTurn(message.playerOnTurn)
+                setLastMessage({
+                    error: false,
+                    text: message.message,
+                })
+                setColorChangedTo(message.changeColorTo)
+                setIsSkippingTurn(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
+                setCardsInDeck(message.cardsInDeck)
+                if (message.broughtBackToGame === playerName) handleBroughtBackToGame()
+                playDrawCardSound(message.drewCards)
+            } else if (isPlayerUpdateMessage(message)) {
+                setCards(message.cards)
+                setIsWinner(message.winner)
+                if (message.winner) handleWin()
+                else if (message.loser) handleLoss()
+            }
+        }
+
+        const onServerDisconnect = (): void => {
+            setParticipating(false)
+            setGameActive(false)
+            setPlayers([])
+        }
+
         registerGameListener(handleMessage, onServerDisconnect)
-    }, [handleMessage, onServerDisconnect])
+    }, [participating, playerName])
 
     const joinGame = (player: string): void => {
         const message: AddPlayerMessage = {
@@ -125,7 +166,6 @@ export const Game: FC = (): ReactElement => {
         if (gameActive) return true
         // if there is a winner/loser among the players show the latest played game
         return players.some(player => player.winner || player.loser)
-
     }
 
     return (
@@ -142,12 +182,12 @@ export const Game: FC = (): ReactElement => {
                             onClick={gameActive ? stopGame : startGame}
                             disabled={players.length < 2 || !participating}
                     >
-                        {gameActive ? 'End Game' : 'Start Game'}
+                        {gameActive ? 'End Game' : 'New Game'}
                     </Button>
                 </Grid>
             </Grid>
             <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName} participating={participating}/>
-            {shouldShowTable() && <div className="message">{lastMessage}</div>}
+            {shouldShowTable() && <div className={`message ${lastMessage.error ? 'error-message' : ''}`}>{lastMessage.text}</div>}
             {shouldShowTable() &&
             <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn}
                    cards={cards} colorChangedTo={colorChangedTo} isSkippingTurn={isSkippingTurn} cardsInDeck={cardsInDeck}/>}
@@ -204,6 +244,24 @@ export const Game: FC = (): ReactElement => {
                 <DialogActions>
                     <Button onClick={closeDialog} color="primary">
                         Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openBroughtBack}
+                onClose={closeDialog}
+                aria-labelledby="You've been brought back to the game!"
+                aria-describedby="You've been brought back to the game dialog"
+            >
+                <DialogTitle>You've been brought back to the game!</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Another player has brought you back to the game with a 7 of Hearts!
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeDialog} color="primary">
+                        Back to Game
                     </Button>
                 </DialogActions>
             </Dialog>

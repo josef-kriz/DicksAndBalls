@@ -6,7 +6,7 @@ import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
 import { PlayersTurnMessage } from '../../models/message'
 import { sendGameMessage } from '../../api'
 import { Card, getCardsAssetNumber, Suit } from '../../models/card'
-import RedoIcon from '@material-ui/icons/Redo';
+import RedoIcon from '@material-ui/icons/Redo'
 
 interface Props {
     playerName: string
@@ -58,12 +58,13 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     }
 
     const getDeck = (): ReactElement => {
-        if (props.cardsInDeck === '0') return <img className="deck-card deck-top-card" src="/cards/gray.png" alt="deck placeholder"/>
-        else return (
+        return (
             <>
-                <img className="deck-card deck-top-card" src="/cards/0.png" alt="deck"/>
-                <div className="card-count">{props.cardsInDeck}</div>
-                {props.isSkippingTurn && <div className="skipping-overlay">SKIP <RedoIcon /></div>}
+                <img className="deck-card deck-top-card"
+                     src={props.cardsInDeck === '0' ? '/cards/gray.png' : '/cards/0.png'} alt="deck"
+                     onClick={handleDeckClick}/>
+                {props.cardsInDeck !== '' && <div className="card-count">{props.cardsInDeck}</div>}
+                {props.isSkippingTurn && <div className="skipping-overlay">SKIP<br/><RedoIcon/></div>}
             </>
         )
     }
@@ -73,9 +74,10 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
 
         return (
             <>
-                <hr />
+                <hr/>
                 <Cards cards={props.cards} playerName={props.playerName} playerOnTurn={props.playerOnTurn}
-                       deckTop={props.deckTop} sendPlayerAction={sendPlayerAction} isSkippingTurn={props.isSkippingTurn}/>
+                       deckTop={props.deckTop} sendPlayerAction={sendPlayerAction}
+                       isSkippingTurn={props.isSkippingTurn}/>
             </>
         )
     }
@@ -83,20 +85,20 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     const getSuitIcon = (suit: Suit): ReactElement => {
         switch (suit) {
             case 'Ball':
-                return <img className="overlay-suit-icon" src="/suits/ball.svg" alt="balls" />
+                return <img className="overlay-suit-icon" src="/suits/ball.svg" alt="balls"/>
             case 'Dick':
-                return <img className="overlay-suit-icon" src="/suits/dick.svg" alt="dicks" />
+                return <img className="overlay-suit-icon" src="/suits/dick.svg" alt="dicks"/>
             case 'Green':
-                return <img className="overlay-suit-icon" src="/suits/green.svg" alt="greens" />
+                return <img className="overlay-suit-icon" src="/suits/green.svg" alt="greens"/>
             case 'Heart':
-                return <img className="overlay-suit-icon" src="/suits/heart.svg" alt="hearts" />
+                return <img className="overlay-suit-icon" src="/suits/heart.svg" alt="hearts"/>
         }
     }
 
     return (
         <div id="table" className={props.playerOnTurn === props.playerName ? 'active-table' : undefined}>
             <Grid className="decks" container spacing={4} justify="center">
-                <Grid className="deck-overlay-container" item onClick={handleDeckClick}>
+                <Grid className="deck-overlay-container" item>
                     {getDeck()}
                 </Grid>
                 <Grid className="color-overlay-container" item>
