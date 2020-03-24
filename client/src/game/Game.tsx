@@ -28,7 +28,13 @@ export const Game: FC = (): ReactElement => {
     const [deckTop, setDeckTop] = useState<Card>()
     const [playerOnTurn, setPlayerOnTurn] = useState<string | undefined>()
     const [cards, setCards] = useState<Card[]>([])
-    const [lastMessage, setLastMessage] = useState<string>('')
+    const [lastMessage, setLastMessage] = useState<{
+        error: boolean
+        text: string
+    }>({
+        error: false,
+        text: '',
+    })
     const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
     const [isSkippingTurn, setIsSkippingTurn] = useState<boolean>(false)
     const [cardsInDeck, setCardsInDeck] = useState<string>('')
@@ -84,7 +90,10 @@ export const Game: FC = (): ReactElement => {
         }
 
         const handleMessage = (message: ServerMessage): void => {
-            if (isErrorMessage(message)) setLastMessage(message.message)
+            if (isErrorMessage(message)) setLastMessage({
+                error: true,
+                text: message.message
+            })
             else if (isGameStateMessage(message)) {
                 setGameActive(message.active)
                 setPlayers(message.players)
@@ -92,7 +101,10 @@ export const Game: FC = (): ReactElement => {
                 setPlayers(message.players)
                 setDeckTop(message.deckTop)
                 setPlayerOnTurn(message.playerOnTurn)
-                setLastMessage(message.message)
+                setLastMessage({
+                    error: false,
+                    text: message.message,
+                })
                 setColorChangedTo(message.changeColorTo)
                 setIsSkippingTurn(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
                 setCardsInDeck(message.cardsInDeck)
@@ -175,7 +187,7 @@ export const Game: FC = (): ReactElement => {
                 </Grid>
             </Grid>
             <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName} participating={participating}/>
-            {shouldShowTable() && <div className="message">{lastMessage}</div>}
+            {shouldShowTable() && <div className={`message ${lastMessage.error ? 'error-message' : ''}`}>{lastMessage.text}</div>}
             {shouldShowTable() &&
             <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn}
                    cards={cards} colorChangedTo={colorChangedTo} isSkippingTurn={isSkippingTurn} cardsInDeck={cardsInDeck}/>}

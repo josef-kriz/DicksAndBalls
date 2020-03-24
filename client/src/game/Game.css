@@ -3,3 +3,8 @@
     margin-bottom: 1em;
     font-style: italic;
 }
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}
