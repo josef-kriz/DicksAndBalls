@@ -43,48 +43,48 @@ export const Game: FC = (): ReactElement => {
         setOpenNameTaken(false)
     }
 
-    const handleWin = (): void => {
-        setOpenWinner(true)
-        const audio = new Audio('/sounds/win31.mp3')
-        audio.play().then()
-    }
-
-    const handleLoss = (): void => {
-        setOpenLoser(true)
-        const audio = new Audio('/sounds/sadTrombone.mp3')
-        audio.play().then()
-    }
-
-    const handleMessage = (message: ServerMessage): void => {
-        if (isErrorMessage(message)) setLastMessage(message.message)
-        else if (isGameStateMessage(message)) {
-            setGameActive(message.active)
-            setPlayers(message.players)
-        } else if (isGameUpdateMessage(message)) {
-            setPlayers(message.players)
-            setDeckTop(message.deckTop)
-            setPlayerOnTurn(message.playerOnTurn)
-            setLastMessage(message.message)
-            setColorChangedTo(message.changeColorTo)
-            setIsSkippingTurn(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
-            setCardsInDeck(message.cardsInDeck)
-        } else if (isPlayerUpdateMessage(message)) {
-            setCards(message.cards)
-            setIsWinner(message.winner)
-            if (message.winner) handleWin()
-            else if (message.loser) handleLoss()
-        }
-    }
-
-    const onServerDisconnect = (): void => {
-        setParticipating(false)
-        setGameActive(false)
-        setPlayers([])
-    }
-
     useEffect(() => {
+        const handleWin = (): void => {
+            setOpenWinner(true)
+            const audio = new Audio('/sounds/win31.mp3')
+            audio.play().then()
+        }
+
+        const handleLoss = (): void => {
+            setOpenLoser(true)
+            const audio = new Audio('/sounds/sadTrombone.mp3')
+            audio.play().then()
+        }
+
+        const handleMessage = (message: ServerMessage): void => {
+            if (isErrorMessage(message)) setLastMessage(message.message)
+            else if (isGameStateMessage(message)) {
+                setGameActive(message.active)
+                setPlayers(message.players)
+            } else if (isGameUpdateMessage(message)) {
+                setPlayers(message.players)
+                setDeckTop(message.deckTop)
+                setPlayerOnTurn(message.playerOnTurn)
+                setLastMessage(message.message)
+                setColorChangedTo(message.changeColorTo)
+                setIsSkippingTurn(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
+                setCardsInDeck(message.cardsInDeck)
+            } else if (isPlayerUpdateMessage(message)) {
+                setCards(message.cards)
+                setIsWinner(message.winner)
+                if (message.winner) handleWin()
+                else if (message.loser) handleLoss()
+            }
+        }
+
+        const onServerDisconnect = (): void => {
+            setParticipating(false)
+            setGameActive(false)
+            setPlayers([])
+        }
+
         registerGameListener(handleMessage, onServerDisconnect)
-    }, [handleMessage, onServerDisconnect])
+    }, [participating, playerName])
 
     const joinGame = (player: string): void => {
         const message: AddPlayerMessage = {
@@ -142,7 +142,7 @@ export const Game: FC = (): ReactElement => {
                             onClick={gameActive ? stopGame : startGame}
                             disabled={players.length < 2 || !participating}
                     >
-                        {gameActive ? 'End Game' : 'Start Game'}
+                        {gameActive ? 'End Game' : 'New Game'}
                     </Button>
                 </Grid>
             </Grid>
