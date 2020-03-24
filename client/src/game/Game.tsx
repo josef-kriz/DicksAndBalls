@@ -32,15 +32,17 @@ export const Game: FC = (): ReactElement => {
     const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
     const [isSkippingTurn, setIsSkippingTurn] = useState<boolean>(false)
     const [cardsInDeck, setCardsInDeck] = useState<string>('')
-    const [openNameTaken, setOpenNameTaken] = React.useState(false)
-    const [isWinner, setIsWinner] = React.useState(false)
-    const [openWinner, setOpenWinner] = React.useState(false)
-    const [openLoser, setOpenLoser] = React.useState(false)
+    const [openNameTaken, setOpenNameTaken] = React.useState<boolean>(false)
+    const [isWinner, setIsWinner] = React.useState<boolean>(false)
+    const [openWinner, setOpenWinner] = React.useState<boolean>(false)
+    const [openLoser, setOpenLoser] = React.useState<boolean>(false)
+    const [openBroughtBack, setOpenBroughtBack] = React.useState<boolean>(false)
 
     const closeDialog = (): void => {
         setOpenWinner(false)
         setOpenLoser(false)
         setOpenNameTaken(false)
+        setOpenBroughtBack(false)
     }
 
     useEffect(() => {
@@ -53,6 +55,31 @@ export const Game: FC = (): ReactElement => {
         const handleLoss = (): void => {
             setOpenLoser(true)
             const audio = new Audio('/sounds/sadTrombone.mp3')
+            audio.play().then()
+        }
+
+        const handleBroughtBackToGame = (): void => {
+            setOpenBroughtBack(true)
+            const audio = new Audio('/sounds/airHorn.mp3')
+            audio.play().then()
+        }
+
+        const playDrawCardSound = (cards: number): void => {
+            let audioFile: string
+            switch (cards) {
+                case 4:
+                    audioFile = '/sounds/crack_the_whip.mp3'
+                    break
+                case 6:
+                    audioFile = '/sounds/badumtss.mp3'
+                    break
+                case 8:
+                    audioFile = '/sounds/holy_shit.mp3'
+                    break
+                default:
+                    return
+            }
+            const audio = new Audio(audioFile)
             audio.play().then()
         }
 
@@ -69,6 +96,8 @@ export const Game: FC = (): ReactElement => {
                 setColorChangedTo(message.changeColorTo)
                 setIsSkippingTurn(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
                 setCardsInDeck(message.cardsInDeck)
+                if (message.broughtBackToGame === playerName) handleBroughtBackToGame()
+                playDrawCardSound(message.drewCards)
             } else if (isPlayerUpdateMessage(message)) {
                 setCards(message.cards)
                 setIsWinner(message.winner)
@@ -203,6 +232,24 @@ export const Game: FC = (): ReactElement => {
                 <DialogActions>
                     <Button onClick={closeDialog} color="primary">
                         Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openBroughtBack}
+                onClose={closeDialog}
+                aria-labelledby="You've been brought back to the game!"
+                aria-describedby="You've been brought back to the game dialog"
+            >
+                <DialogTitle>You've been brought back to the game!</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Another player has brought you back to the game with a 7 of Hearts!
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeDialog} color="primary">
+                        Back to Game
                     </Button>
                 </DialogActions>
             </Dialog>

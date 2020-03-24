@@ -30,7 +30,7 @@ class Game {
         }
     }
 
-    public getGameUpdateMessage(message: string): GameUpdateMessage {
+    public getGameUpdateMessage(message: string, broughtBackToGame?: string, drewCards = 0): GameUpdateMessage {
         return {
             type: 'game_update',
             players: this.getOpponents(),
@@ -40,6 +40,8 @@ class Game {
             playerOnTurn: this.players[this.playerOnTurn].name,
             changeColorTo: this.changeColorTo,
             skippingNextPlayer: this.skippingNextPlayer,
+            broughtBackToGame,
+            drewCards,
         }
     }
 
@@ -132,6 +134,7 @@ class Game {
         if (!this.active && !(isCardPlayedAction(action) && action.card.value === '7' && action.card.suit === 'Heart')) throw new Error('The game is over')
         let message = `${player.name}`
         let returnedPlayer: Player| undefined
+        let drewCards = 0
 
         this.isValidMove(action)
 
@@ -168,9 +171,11 @@ class Game {
             if (this.drawCount > 0) {
                 message += ` drew ${this.drawCount} cards`
                 for (let i = 0; i < this.drawCount; i++) this.drawCard(player)
+                drewCards = this.drawCount
                 this.drawCount = 0
             } else {
                 message += ` drew a card`
+                drewCards++
                 this.drawCard(player)
             }
             console.log(`# Action: Player ${playerId} drew a card`)
@@ -188,7 +193,7 @@ class Game {
 
         const response: GameMessage = {
             gameState: this.getGameStateMessage(),
-            gameUpdate: this.getGameUpdateMessage(message),
+            gameUpdate: this.getGameUpdateMessage(message, returnedPlayer && returnedPlayer.name, drewCards),
             players: [{
                 player: playerId,
                 playerUpdate: this.getPlayerMessage(playerId),
