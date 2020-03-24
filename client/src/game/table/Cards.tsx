@@ -39,7 +39,7 @@ export const Cards: FC<Props> = (props: Props): ReactElement => {
     }
 
     const playCard = (card: Card): void => {
-        if (!props.isSkippingTurn && card.value === 'T') {
+        if (!props.isSkippingTurn && props.playerOnTurn === props.playerName && card.value === 'T') {
             setPickedCard(card)
             askForColor()
         } else {
