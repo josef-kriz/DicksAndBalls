@@ -15,6 +15,7 @@ class Game {
     private playedCards: Card[] = []
     private players: Player[] = []
     private playerOnTurn = 0
+    private moveCount = 0
 
     private drawCount = 0 // keeps track of how many cards to draw when seven is played
     private skippingNextPlayer = false // keeps track whether the next player should skip a turn (if an ace is played)
@@ -90,14 +91,20 @@ class Game {
         if (this.players.length < 2) throw new Error('Not enough players')
         if (this.players.length > 6) throw new Error('Too many players')
 
+        // find the player on turn that starts the game
         const shufflingPlayerIndex = this.players.findIndex((player => player.id === playerId))
         if (shufflingPlayerIndex !== -1 && this.players[shufflingPlayerIndex + 1]) {
             this.playerOnTurn = shufflingPlayerIndex + 1
         } else this.playerOnTurn = 0
+
+        // reset winners and losers
         for (const player of this.players) {
             player.winner = false
+            player.wonAtMove = 0
             player.loser = false
         }
+
+        this.moveCount = 0
 
         this.shuffle()
         this.distributeCardsToPlayers()
@@ -124,6 +131,7 @@ class Game {
         if (playerId !== this.players[this.playerOnTurn].id) throw new Error('It\'s not your turn')
         if (!this.active && !(isCardPlayedAction(action) && action.card.value === '7' && action.card.suit === 'Heart')) throw new Error('The game is over')
         let message = `${player.name}`
+        let returnedPlayer: Player| undefined
 
         this.isValidMove(action)
 
@@ -138,16 +146,22 @@ class Game {
             message += ` played ${action.card.value} of ${action.card.suit}s`
 
             if (this.changeColorTo !== null) this.changeColorTo = undefined
-            if (action.card.value === '7') this.drawCount += 2
+            if (action.card.value === '7') {
+                returnedPlayer = this.check7ofHeartsRule()
+                if (returnedPlayer) message += ` and brought ${returnedPlayer.name} back to the game`
+                else this.drawCount += 2
+            }
             else if (action.card.value === 'A') this.skippingNextPlayer = true
             else if (action.card.value === 'T') {
                 this.changeColorTo = action.changeColorTo
                 message += ` and changed the color to ${action.changeColorTo}s`
             }
+
             console.log(`# Action: Player ${playerId} played ${action.card.suit} ${action.card.value}`)
 
             if (player.cards.length === 0) {
                 player.winner = true
+                player.wonAtMove = this.moveCount
                 message += ' and won!'
             }
         } else if (isDrawAction(action)) {
@@ -170,20 +184,48 @@ class Game {
 
         this.logGame()
 
+        this.moveCount++
+
         const response: GameMessage = {
-            gameState: this.active ? undefined : this.getGameStateMessage(),
+            gameState: this.active || !returnedPlayer ? undefined : this.getGameStateMessage(),
             gameUpdate: this.getGameUpdateMessage(message),
             players: [{
                 player: playerId,
                 playerUpdate: this.getPlayerMessage(playerId),
             }],
         }
+        // if a player was brought back to the game with 7 of hearts
+        if (returnedPlayer) response.players.push({
+            player: returnedPlayer.id,
+            playerUpdate: this.getPlayerMessage(returnedPlayer.id),
+        })
         // if the game stopped (because somebody lost) find the loser and send him a message too
         if (!this.active) response.players.push({
             player: this.players[this.playerOnTurn].id,
             playerUpdate: this.getPlayerMessage(this.players[this.playerOnTurn].id),
         })
+
         return response
+    }
+
+    private check7ofHeartsRule(): Player | undefined {
+        // gets the next player, even if he's a winner
+        const getNextPlayer = (): Player => this.playerOnTurn + 1 >= this.players.length ? this.players[0] : this.players[this.playerOnTurn + 1]
+        let nextPlayer = getNextPlayer()
+
+        while (nextPlayer.winner) {
+            const wonRoundsAgo = (this.moveCount - nextPlayer.wonAtMove) / this.players.length
+            if (wonRoundsAgo < 1) {
+                this.players[this.playerOnTurn].loser = false
+                nextPlayer.winner = false
+                nextPlayer.wonAtMove = 0
+                for (let i = 0; i < this.drawCount + 2; i++) this.drawCard(nextPlayer)
+                this.drawCount = 0
+                if (this.players[this.playerOnTurn].cards.length !== 0) this.active = true
+                return nextPlayer
+            }
+            nextPlayer = getNextPlayer()
+        }
     }
 
     private drawCard(player: Player): void {
@@ -276,7 +318,7 @@ class Game {
     }
 
     private logGame(): void {
-        console.log('# Game changed:', `on turn: ${this.players[this.playerOnTurn].name}`, `drawCount: ${this.drawCount}`, `skippingTurn: ${this.skippingNextPlayer}`, this.players, this.deck, this.playedCards)
+        console.log(`# Move ${this.moveCount}:`, `on turn: ${this.players[this.playerOnTurn].name}`, `drawCount: ${this.drawCount}`, `skippingTurn: ${this.skippingNextPlayer}`, this.players, this.deck, this.playedCards)
     }
 }
 

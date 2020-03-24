@@ -5,6 +5,7 @@ export interface Player {
     name: string
     cards: Card[]
     winner: boolean
+    wonAtMove: number
     loser: boolean
 }
 

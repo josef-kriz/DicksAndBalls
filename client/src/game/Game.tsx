@@ -125,7 +125,6 @@ export const Game: FC = (): ReactElement => {
         if (gameActive) return true
         // if there is a winner/loser among the players show the latest played game
         return players.some(player => player.winner || player.loser)
-
     }
 
     return (
