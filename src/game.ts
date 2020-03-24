@@ -187,7 +187,7 @@ class Game {
         this.moveCount++
 
         const response: GameMessage = {
-            gameState: this.active || !returnedPlayer ? undefined : this.getGameStateMessage(),
+            gameState: this.getGameStateMessage(),
             gameUpdate: this.getGameUpdateMessage(message),
             players: [{
                 player: playerId,

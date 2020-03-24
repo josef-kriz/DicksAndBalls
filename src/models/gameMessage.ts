@@ -5,7 +5,7 @@
 import { GameStateMessage, GameUpdateMessage, PlayerUpdateMessage } from './message'
 
 export interface GameMessage {
-    gameState?: GameStateMessage
+    gameState: GameStateMessage
     gameUpdate: GameUpdateMessage
     players: {
         player: string
