@@ -52,7 +52,7 @@ class Game {
         return {
             type: 'player_update',
             cards: player.cards,
-            winner: player.winner,
+            place: player.place,
             loser: player.loser,
         }
     }
@@ -79,6 +79,7 @@ class Game {
         if (playerIndex !== -1) {
             console.log('# Player removed:', this.players[playerIndex])
             this.players.splice(playerIndex, 1)
+            if (playerIndex < this.playerOnTurn) this.playerOnTurn--
             if (this.players.length < 2) this.stopGame()
         }
     }
@@ -101,7 +102,7 @@ class Game {
 
         // reset winners and losers
         for (const player of this.players) {
-            player.winner = false
+            player.place = 0
             player.wonAtMove = 0
             player.loser = false
         }
@@ -127,17 +128,26 @@ class Game {
         this.active = false
     }
 
+    /**
+     * This is the core function that handles player's turn
+     * @param playerId
+     * @param action
+     */
     public handlePlayersTurn(playerId: string, action: PlayerAction): GameMessage {
+        // first check if all the required parameters were sent and are correct
         const player = this.players.find((player => player.id === playerId))
         if (!player) throw new Error('Player not found')
-        if (playerId !== this.players[this.playerOnTurn].id) throw new Error('It\'s not your turn')
         if (!this.active && !(isCardPlayedAction(action) && action.card.value === '7' && action.card.suit === 'Heart')) throw new Error('The game is over')
+        if (playerId !== this.players[this.playerOnTurn].id) throw new Error('It\'s not your turn')
+
+        // values that we could send to the player are stored here
         let message = `${player.name}`
-        let returnedPlayer: Player| undefined
+        let returnedPlayer: Player | undefined
         let drewCards = 0
 
         this.isValidMove(action)
 
+        // do different things based on the type of player's action
         if (isCardPlayedAction(action)) {
             const playersCardIndex = player.cards.findIndex(card => sameCards(card, action.card))
             if (playersCardIndex === -1) throw new Error('You don\'t have this card')
@@ -150,7 +160,7 @@ class Game {
 
             if (this.changeColorTo !== null) this.changeColorTo = undefined
             if (action.card.value === '7') {
-                returnedPlayer = this.check7ofHeartsRule()
+                if (action.card.suit === 'Heart') returnedPlayer = this.check7ofHeartsRule()
                 if (returnedPlayer) message += ` and brought ${returnedPlayer.name} back to the game`
                 else this.drawCount += 2
             }
@@ -163,7 +173,7 @@ class Game {
             console.log(`# Action: Player ${playerId} played ${action.card.suit} ${action.card.value}`)
 
             if (player.cards.length === 0) {
-                player.winner = true
+                player.place = this.getWinnersCount() + 1
                 player.wonAtMove = this.moveCount
                 message += ' and won!'
             }
@@ -213,27 +223,38 @@ class Game {
         return response
     }
 
+    /**
+     * The 7 of hearts rule: When this card is played, it can revive a player that has already won
+     * if the revived player won in the last round
+     */
     private check7ofHeartsRule(): Player | undefined {
         // gets the next player, even if he's a winner
-        const getNextPlayer = (): Player => this.playerOnTurn + 1 >= this.players.length ? this.players[0] : this.players[this.playerOnTurn + 1]
-        let nextPlayer = getNextPlayer()
+        const getNextPlayer = (fromPlayer: Player): Player => {
+            const playerIndex = this.players.indexOf(fromPlayer)
+            return playerIndex + 1 >= this.players.length ? this.players[0] : this.players[playerIndex + 1]
+        }
+        let nextPlayer = getNextPlayer(this.players[this.playerOnTurn])
 
-        while (nextPlayer.winner) {
+        // loop through all the winners playing after the player on turn
+        while (nextPlayer.place > 0) {
+            // compute how many rounds ago did the winner won
             const wonRoundsAgo = (this.moveCount - nextPlayer.wonAtMove) / this.players.length
             if (wonRoundsAgo < 1) {
                 this.players[this.playerOnTurn].loser = false
-                nextPlayer.winner = false
+                nextPlayer.place = 0
+                for (const player of this.players) if (player.place > 0 && (this.moveCount - player.wonAtMove) / this.players.length < 1) player.place--
                 nextPlayer.wonAtMove = 0
                 for (let i = 0; i < this.drawCount + 2; i++) this.drawCard(nextPlayer)
                 this.drawCount = 0
                 if (this.players[this.playerOnTurn].cards.length !== 0) this.active = true
                 return nextPlayer
             }
-            nextPlayer = getNextPlayer()
+            nextPlayer = getNextPlayer(nextPlayer)
         }
     }
 
     private drawCard(player: Player): void {
+        // Check if there are cards left in the deck. If not, create the deck from the deck of played cards
         if (this.deck.length === 0) {
             if (this.playedCards.length === 1) throw new Error('Out of cards!')
             console.log('# The deck was refilled')
@@ -245,25 +266,35 @@ class Game {
         player.cards.push(card)
     }
 
+    private getWinnersCount(): number {
+        return this.players.reduce((winnersCount, player) => winnersCount + (player.place > 0 ? 1 : 0), 0)
+    }
+
     private changePlayerOnTurn(): void {
         this.nextNonWinner()
 
         // detect if the player lost (he's the only "non-winner")
-        const winners = this.players.reduce((winnersCount, player) => winnersCount + (player.winner ? 1 : 0), 0)
+        const winners = this.getWinnersCount()
         if (winners === this.players.length - 1) {
             this.players[this.playerOnTurn].loser = true
             this.stopGame()
         }
     }
 
+    /**
+     * Change the playerOnTurn property to next player that had not won yet
+     */
     private nextNonWinner(): void {
         for (let i = 0; i < this.players.length; i++) {
             this.playerOnTurn++
             if (this.playerOnTurn >= this.players.length) this.playerOnTurn = 0
-            if (!this.players[this.playerOnTurn].winner) break
+            if (this.players[this.playerOnTurn].place === 0) break
         }
     }
 
+    /**
+     * Shuffle the deck using the Fisher–Yates algorithm
+     */
     private shuffle(): void {
         this.deck = getUnshuffledDeck()
         let currentIndex = this.deck.length, temporaryValue, randomIndex
@@ -286,7 +317,7 @@ class Game {
         return this.players.map((player) => ({
             name: player.name,
             cards: player.cards.length,
-            winner: player.winner,
+            place: player.place,
             loser: player.loser,
         }))
     }
@@ -304,6 +335,10 @@ class Game {
         console.log('# Cards distributed to players', this.players, this.deck)
     }
 
+    /**
+     * Checks whether the move is valid. Throws an error if not
+     * @param action
+     */
     private isValidMove(action: PlayerAction): void | never {
         if (isCardPlayedAction(action)) {
             if (this.changeColorTo && action.card.value !== 'T') {

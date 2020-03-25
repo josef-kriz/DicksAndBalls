@@ -37,9 +37,9 @@ export const Game: FC = (): ReactElement => {
     })
     const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
     const [isSkippingTurn, setIsSkippingTurn] = useState<boolean>(false)
+    const [isWinner, setIsWinner] = React.useState<boolean>(false)
     const [cardsInDeck, setCardsInDeck] = useState<string>('')
     const [openNameTaken, setOpenNameTaken] = React.useState<boolean>(false)
-    const [isWinner, setIsWinner] = React.useState<boolean>(false)
     const [openWinner, setOpenWinner] = React.useState<boolean>(false)
     const [openLoser, setOpenLoser] = React.useState<boolean>(false)
     const [openBroughtBack, setOpenBroughtBack] = React.useState<boolean>(false)
@@ -112,8 +112,8 @@ export const Game: FC = (): ReactElement => {
                 playDrawCardSound(message.drewCards)
             } else if (isPlayerUpdateMessage(message)) {
                 setCards(message.cards)
-                setIsWinner(message.winner)
-                if (message.winner) handleWin()
+                setIsWinner(message.place > 0)
+                if (message.place > 0) handleWin()
                 else if (message.loser) handleLoss()
             }
         }
@@ -165,7 +165,7 @@ export const Game: FC = (): ReactElement => {
     const shouldShowTable = (): boolean => {
         if (gameActive) return true
         // if there is a winner/loser among the players show the latest played game
-        return players.some(player => player.winner || player.loser)
+        return players.some(player => player.place > 0 || player.loser)
     }
 
     return (
@@ -186,11 +186,15 @@ export const Game: FC = (): ReactElement => {
                     </Button>
                 </Grid>
             </Grid>
-            <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName} participating={participating}/>
-            {shouldShowTable() && <div className={`message ${lastMessage.error ? 'error-message' : ''}`}>{lastMessage.text}</div>}
+            <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName}
+                     participating={participating}/>
             {shouldShowTable() &&
-            <Table playerName={playerName} participating={participating} deckTop={deckTop} playerOnTurn={playerOnTurn}
-                   cards={cards} colorChangedTo={colorChangedTo} isSkippingTurn={isSkippingTurn} cardsInDeck={cardsInDeck}/>}
+            <div className={`message ${lastMessage.error ? 'error-message' : ''}`}>{lastMessage.text}</div>}
+            {shouldShowTable() &&
+            <Table gameActive={gameActive} playerName={playerName} participating={participating} deckTop={deckTop}
+                   playerOnTurn={playerOnTurn}
+                   cards={cards} colorChangedTo={colorChangedTo} isSkippingTurn={isSkippingTurn}
+                   cardsInDeck={cardsInDeck}/>}
             <Dialog
                 open={openWinner}
                 onClose={closeDialog}

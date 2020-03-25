@@ -18,12 +18,25 @@ export const Players: FC<Props> = (props: Props): ReactElement => {
     }
 
     const getCardCount = (player: Opponent): ReactElement | undefined => {
-        if (!props.gameActive && !props.players.some(player => player.winner)) return undefined
+        if (!props.gameActive && !props.players.some(player => player.place > 0)) return undefined
 
-        if (player.winner) return (
-            <span role="img" aria-label="ta-da">🎉</span>
-        )
-        else if (player.loser) return (
+        if (player.place === 1) {
+            return (
+                <span role="img" aria-label="first place">🥇</span>
+            )
+        } else if (player.place === 2) {
+            return (
+                <span role="img" aria-label="second place">🥈</span>
+            )
+        } else if (player.place === 3) {
+            return (
+                <span role="img" aria-label="third place">🥉</span>
+            )
+        } else if (player.place > 3) {
+            return (
+                <span role="img" aria-label="ta-da">🎉</span>
+            )
+        } else if (player.loser) return (
             <span role="img" aria-label="loser">👎</span>
         )
 
