@@ -52,7 +52,7 @@ class Game {
         return {
             type: 'player_update',
             cards: player.cards,
-            winner: player.winner,
+            place: player.place,
             loser: player.loser,
         }
     }
@@ -102,7 +102,7 @@ class Game {
 
         // reset winners and losers
         for (const player of this.players) {
-            player.winner = false
+            player.place = 0
             player.wonAtMove = 0
             player.loser = false
         }
@@ -173,7 +173,7 @@ class Game {
             console.log(`# Action: Player ${playerId} played ${action.card.suit} ${action.card.value}`)
 
             if (player.cards.length === 0) {
-                player.winner = true
+                player.place = this.getWinnersCount() + 1
                 player.wonAtMove = this.moveCount
                 message += ' and won!'
             }
@@ -236,12 +236,13 @@ class Game {
         let nextPlayer = getNextPlayer(this.players[this.playerOnTurn])
 
         // loop through all the winners playing after the player on turn
-        while (nextPlayer.winner) {
+        while (nextPlayer.place > 0) {
             // compute how many rounds ago did the winner won
             const wonRoundsAgo = (this.moveCount - nextPlayer.wonAtMove) / this.players.length
             if (wonRoundsAgo < 1) {
                 this.players[this.playerOnTurn].loser = false
-                nextPlayer.winner = false
+                nextPlayer.place = 0
+                for (const player of this.players) if (player.place > 0 && (this.moveCount - player.wonAtMove) / this.players.length < 1) player.place--
                 nextPlayer.wonAtMove = 0
                 for (let i = 0; i < this.drawCount + 2; i++) this.drawCard(nextPlayer)
                 this.drawCount = 0
@@ -265,11 +266,15 @@ class Game {
         player.cards.push(card)
     }
 
+    private getWinnersCount(): number {
+        return this.players.reduce((winnersCount, player) => winnersCount + (player.place > 0 ? 1 : 0), 0)
+    }
+
     private changePlayerOnTurn(): void {
         this.nextNonWinner()
 
         // detect if the player lost (he's the only "non-winner")
-        const winners = this.players.reduce((winnersCount, player) => winnersCount + (player.winner ? 1 : 0), 0)
+        const winners = this.getWinnersCount()
         if (winners === this.players.length - 1) {
             this.players[this.playerOnTurn].loser = true
             this.stopGame()
@@ -283,7 +288,7 @@ class Game {
         for (let i = 0; i < this.players.length; i++) {
             this.playerOnTurn++
             if (this.playerOnTurn >= this.players.length) this.playerOnTurn = 0
-            if (!this.players[this.playerOnTurn].winner) break
+            if (this.players[this.playerOnTurn].place === 0) break
         }
     }
 
@@ -312,7 +317,7 @@ class Game {
         return this.players.map((player) => ({
             name: player.name,
             cards: player.cards.length,
-            winner: player.winner,
+            place: player.place,
             loser: player.loser,
         }))
     }

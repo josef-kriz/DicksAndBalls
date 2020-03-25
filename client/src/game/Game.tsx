@@ -112,8 +112,8 @@ export const Game: FC = (): ReactElement => {
                 playDrawCardSound(message.drewCards)
             } else if (isPlayerUpdateMessage(message)) {
                 setCards(message.cards)
-                setIsWinner(message.winner)
-                if (message.winner) handleWin()
+                setIsWinner(message.place > 0)
+                if (message.place > 0) handleWin()
                 else if (message.loser) handleLoss()
             }
         }
@@ -165,7 +165,7 @@ export const Game: FC = (): ReactElement => {
     const shouldShowTable = (): boolean => {
         if (gameActive) return true
         // if there is a winner/loser among the players show the latest played game
-        return players.some(player => player.winner || player.loser)
+        return players.some(player => player.place > 0 || player.loser)
     }
 
     return (

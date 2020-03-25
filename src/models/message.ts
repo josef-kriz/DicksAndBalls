@@ -74,7 +74,7 @@ export interface GameUpdateMessage extends Message {
 export interface PlayerUpdateMessage extends Message {
     type: 'player_update'
     cards: Card[]
-    winner: boolean
+    place: number
     loser: boolean
 }
 
