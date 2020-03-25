@@ -79,6 +79,7 @@ class Game {
         if (playerIndex !== -1) {
             console.log('# Player removed:', this.players[playerIndex])
             this.players.splice(playerIndex, 1)
+            if (playerIndex < this.playerOnTurn) this.playerOnTurn--
             if (this.players.length < 2) this.stopGame()
         }
     }
