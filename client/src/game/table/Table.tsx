@@ -9,6 +9,7 @@ import { Card, getCardsAssetNumber, Suit } from '../../models/card'
 import RedoIcon from '@material-ui/icons/Redo'
 
 interface Props {
+    gameActive: boolean
     playerName: string
     participating: boolean
     deckTop?: Card
@@ -94,7 +95,8 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
                 </Grid>
             </Grid>
             <hr/>
-            <Cards cards={props.cards} playerName={props.playerName} playerOnTurn={props.playerOnTurn}
+            <Cards gameActive={props.gameActive} cards={props.cards} playerName={props.playerName}
+                   playerOnTurn={props.playerOnTurn}
                    deckTop={props.deckTop} sendPlayerAction={sendPlayerAction}
                    isSkippingTurn={props.isSkippingTurn}/>
         </div>

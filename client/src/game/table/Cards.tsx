@@ -10,6 +10,7 @@ import { CardPlayed, PlayerAction } from '../../models/playerAction'
 import { Grid, IconButton } from '@material-ui/core'
 
 interface Props {
+    gameActive: boolean
     cards: Card[]
     playerName: string
     playerOnTurn?: string
@@ -39,7 +40,12 @@ export const Cards: FC<Props> = (props: Props): ReactElement => {
     }
 
     const playCard = (card: Card): void => {
-        if (!props.isSkippingTurn && props.playerOnTurn === props.playerName && card.value === 'T') {
+        if (
+            props.gameActive &&
+            !props.isSkippingTurn &&
+            props.playerOnTurn === props.playerName &&
+            card.value === 'T'
+        ) {
             setPickedCard(card)
             askForColor()
         } else {
