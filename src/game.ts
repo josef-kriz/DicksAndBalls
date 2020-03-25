@@ -136,8 +136,8 @@ class Game {
         // first check if all the required parameters were sent and are correct
         const player = this.players.find((player => player.id === playerId))
         if (!player) throw new Error('Player not found')
-        if (playerId !== this.players[this.playerOnTurn].id) throw new Error('It\'s not your turn')
         if (!this.active && !(isCardPlayedAction(action) && action.card.value === '7' && action.card.suit === 'Heart')) throw new Error('The game is over')
+        if (playerId !== this.players[this.playerOnTurn].id) throw new Error('It\'s not your turn')
 
         // values that we could send to the player are stored here
         let message = `${player.name}`
