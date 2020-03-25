@@ -69,19 +69,6 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
         )
     }
 
-    const getControls = (): ReactElement | undefined => {
-        if (!props.participating || props.cards.length === 0) return undefined
-
-        return (
-            <>
-                <hr/>
-                <Cards cards={props.cards} playerName={props.playerName} playerOnTurn={props.playerOnTurn}
-                       deckTop={props.deckTop} sendPlayerAction={sendPlayerAction}
-                       isSkippingTurn={props.isSkippingTurn}/>
-            </>
-        )
-    }
-
     const getSuitIcon = (suit: Suit): ReactElement => {
         switch (suit) {
             case 'Ball':
@@ -106,7 +93,10 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
                     {props.colorChangedTo && <div className="color-overlay">{getSuitIcon(props.colorChangedTo)}</div>}
                 </Grid>
             </Grid>
-            {getControls()}
+            <hr/>
+            <Cards cards={props.cards} playerName={props.playerName} playerOnTurn={props.playerOnTurn}
+                   deckTop={props.deckTop} sendPlayerAction={sendPlayerAction}
+                   isSkippingTurn={props.isSkippingTurn}/>
         </div>
     )
 }
