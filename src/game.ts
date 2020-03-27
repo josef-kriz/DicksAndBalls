@@ -155,10 +155,10 @@ class Game {
 
             this.playedCards.unshift(action.card)
             player.cards.splice(playersCardIndex, 1)
+            this.changeColorTo = undefined
 
             message += ` played ${action.card.value} of ${action.card.suit}s`
 
-            if (this.changeColorTo !== null) this.changeColorTo = undefined
             if (action.card.value === '7') {
                 if (action.card.suit === 'Heart') returnedPlayer = this.check7ofHeartsRule()
                 if (returnedPlayer) message += ` and brought ${returnedPlayer.name} back to the game`
