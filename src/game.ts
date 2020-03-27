@@ -196,6 +196,7 @@ class Game {
         } else throw new Error('Unknown player action')
 
         this.changePlayerOnTurn()
+        if (returnedPlayer) this.changePlayerOnTurn()
 
         this.logGame()
 
