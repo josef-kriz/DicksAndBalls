@@ -64,8 +64,8 @@ export const Game: FC = (): ReactElement => {
             audio.play().then()
         }
 
-        const handleBroughtBackToGame = (): void => {
-            setOpenBroughtBack(true)
+        const handleBroughtBackToGame = (me: boolean = false): void => {
+            if (me) setOpenBroughtBack(true)
             const audio = new Audio('/sounds/airHorn.mp3')
             audio.play().then()
         }
@@ -108,7 +108,7 @@ export const Game: FC = (): ReactElement => {
                 setColorChangedTo(message.changeColorTo)
                 setIsSkippingTurn(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
                 setCardsInDeck(message.cardsInDeck)
-                if (message.broughtBackToGame === playerName) handleBroughtBackToGame()
+                if (message.broughtBackToGame) handleBroughtBackToGame(message.broughtBackToGame === playerName)
                 playDrawCardSound(message.drewCards)
             } else if (isPlayerUpdateMessage(message)) {
                 setCards(message.cards)
