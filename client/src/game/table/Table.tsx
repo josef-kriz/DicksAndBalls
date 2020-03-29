@@ -100,7 +100,7 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
             <Cards gameActive={props.gameActive} cards={props.cards} playerName={props.playerName}
                    playerOnTurn={props.playerOnTurn}
                    deckTop={props.deckTop} sendPlayerAction={sendPlayerAction}
-                   isSkippingTurn={props.isSkippingTurn}/>
+                   isSkippingTurn={props.isSkippingTurn} shouldDraw={props.shouldDraw}/>
         </div>
     )
 }
