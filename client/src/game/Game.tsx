@@ -1,12 +1,15 @@
-import React, { FC, useEffect, useState, ReactElement } from 'react'
+import React, { FC, ReactElement, useEffect, useReducer, useState } from 'react'
 import './Game.css'
 import { registerGameListener, sendGameMessage } from '../api'
 import {
     AddPlayerMessage,
-    isGameStateMessage,
-    ServerMessage,
     ChangeGameStateMessage,
-    RemovePlayerMessage, isErrorMessage, isGameUpdateMessage, isPlayerUpdateMessage
+    isErrorMessage,
+    isGameStateMessage,
+    isGameUpdateMessage,
+    isPlayerUpdateMessage,
+    RemovePlayerMessage,
+    ServerMessage
 } from '../models/message'
 import { Button, Grid } from '@material-ui/core'
 import { Opponent } from '../models/opponent'
@@ -19,30 +22,85 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContentText from '@material-ui/core/DialogContentText'
+import inactivityDetection from '../helpers/inactivityDetection'
 
-export const Game: FC = (): ReactElement => {
-    const [playerName, setPlayerName] = useState<string>('')
-    const [participating, setParticipating] = useState<boolean>(false)
-    const [gameActive, setGameActive] = useState<boolean>(false)
-    const [players, setPlayers] = useState<Opponent[]>([])
-    const [deckTop, setDeckTop] = useState<Card>()
-    const [playerOnTurn, setPlayerOnTurn] = useState<string | undefined>()
-    const [cards, setCards] = useState<Card[]>([])
-    const [lastMessage, setLastMessage] = useState<{
+interface GameState {
+    active: boolean
+    players: Opponent[],
+    deckTop: Card[],
+    playerOnTurn?: string,
+    cards: Card[],
+    lastMessage: {
         error: boolean
         text: string
-    }>({
-        error: false,
-        text: '',
-    })
-    const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
-    const [isSkippingTurn, setIsSkippingTurn] = useState<boolean>(false)
-    const [isWinner, setIsWinner] = React.useState<boolean>(false)
-    const [cardsInDeck, setCardsInDeck] = useState<string>('')
+    },
+    colorChangedTo?: Suit
+    isSkippingTurn: boolean
+    shouldDraw: number
+    isWinner: boolean
+    cardsInDeck: string
+}
+
+export const Game: FC = (): ReactElement => {
+    const initialState = {
+        active: false,
+        players: [],
+        deckTop: [],
+        cards: [],
+        lastMessage: {
+            error: false,
+            text: '',
+        },
+        isSkippingTurn: false,
+        shouldDraw: 0,
+        isWinner: false,
+        cardsInDeck: ''
+    }
+
+    const [error, setError] = useState<boolean>(false)
+    const [playerName, setPlayerName] = useState<string>('')
+    const [participating, setParticipating] = useState<boolean>(false)
     const [openNameTaken, setOpenNameTaken] = React.useState<boolean>(false)
     const [openWinner, setOpenWinner] = React.useState<boolean>(false)
     const [openLoser, setOpenLoser] = React.useState<boolean>(false)
     const [openBroughtBack, setOpenBroughtBack] = React.useState<boolean>(false)
+
+    const handleWin = (): void => {
+        setOpenWinner(true)
+        const audio = new Audio('/sounds/win31.mp3')
+        audio.play().then()
+    }
+
+    const handleLoss = (): void => {
+        setOpenLoser(true)
+        const audio = new Audio('/sounds/sadTrombone.mp3')
+        audio.play().then()
+    }
+
+    const handleBroughtBackToGame = (me: boolean = false): void => {
+        if (me) setOpenBroughtBack(true)
+        const audio = new Audio('/sounds/airHorn.mp3')
+        audio.play().then()
+    }
+
+    const playDrawCardSound = (cards: number): void => {
+        let audioFile: string
+        switch (cards) {
+            case 4:
+                audioFile = '/sounds/crack_the_whip.mp3'
+                break
+            case 6:
+                audioFile = '/sounds/badumtss.mp3'
+                break
+            case 8:
+                audioFile = '/sounds/holy_shit.mp3'
+                break
+            default:
+                return
+        }
+        const audio = new Audio(audioFile)
+        audio.play().then()
+    }
 
     const closeDialog = (): void => {
         setOpenWinner(false)
@@ -51,81 +109,68 @@ export const Game: FC = (): ReactElement => {
         setOpenBroughtBack(false)
     }
 
-    useEffect(() => {
-        const handleWin = (): void => {
-            setOpenWinner(true)
-            const audio = new Audio('/sounds/win31.mp3')
-            audio.play().then()
-        }
-
-        const handleLoss = (): void => {
-            setOpenLoser(true)
-            const audio = new Audio('/sounds/sadTrombone.mp3')
-            audio.play().then()
-        }
-
-        const handleBroughtBackToGame = (me: boolean = false): void => {
-            if (me) setOpenBroughtBack(true)
-            const audio = new Audio('/sounds/airHorn.mp3')
-            audio.play().then()
-        }
-
-        const playDrawCardSound = (cards: number): void => {
-            let audioFile: string
-            switch (cards) {
-                case 4:
-                    audioFile = '/sounds/crack_the_whip.mp3'
-                    break
-                case 6:
-                    audioFile = '/sounds/badumtss.mp3'
-                    break
-                case 8:
-                    audioFile = '/sounds/holy_shit.mp3'
-                    break
-                default:
-                    return
+    const reducer = (state: GameState, message: ServerMessage) => {
+        if (isErrorMessage(message)) return {
+            ...state, ...{
+                lastMessage: {
+                    error: true,
+                    text: message.message
+                }
             }
-            const audio = new Audio(audioFile)
-            audio.play().then()
         }
+        else if (isGameStateMessage(message)) {
+            const {active, players} = message
 
-        const handleMessage = (message: ServerMessage): void => {
-            if (isErrorMessage(message)) setLastMessage({
-                error: true,
-                text: message.message
-            })
-            else if (isGameStateMessage(message)) {
-                setGameActive(message.active)
-                setPlayers(message.players)
-            } else if (isGameUpdateMessage(message)) {
-                setPlayers(message.players)
-                setDeckTop(message.deckTop)
-                setPlayerOnTurn(message.playerOnTurn)
-                setLastMessage({
+            return {
+                ...state,
+                active,
+                players,
+            }
+        } else if (isGameUpdateMessage(message)) {
+            const {players, colorChangedTo, deckTop, playerOnTurn, skippingNextPlayer, shouldDraw, cardsInDeck, broughtBackToGame, drewCards} = message
+            if (playerOnTurn === playerName && state.active) inactivityDetection.startDetecting()
+            if (broughtBackToGame) handleBroughtBackToGame(broughtBackToGame === playerName)
+            playDrawCardSound(drewCards)
+
+            return {
+                ...state,
+                players,
+                colorChangedTo,
+                deckTop,
+                playerOnTurn,
+                lastMessage: {
                     error: false,
                     text: message.message,
-                })
-                setColorChangedTo(message.changeColorTo)
-                setIsSkippingTurn(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
-                setCardsInDeck(message.cardsInDeck)
-                if (message.broughtBackToGame) handleBroughtBackToGame(message.broughtBackToGame === playerName)
-                playDrawCardSound(message.drewCards)
-            } else if (isPlayerUpdateMessage(message)) {
-                setCards(message.cards)
-                setIsWinner(message.place > 0)
-                if (message.place > 0) handleWin()
-                else if (message.loser) handleLoss()
+                },
+                isSkippingTurn: participating && skippingNextPlayer && playerOnTurn === playerName,
+                shouldDraw: playerOnTurn === playerName ? shouldDraw : 0,
+                cardsInDeck,
+
+            }
+        } else if (isPlayerUpdateMessage(message)) {
+            const {cards, place, loser} = message
+            if (place > 0) handleWin()
+            else if (loser) handleLoss()
+
+            return {
+                ...state,
+                cards,
+                isWinner: place > 0
             }
         }
+        return state
+    }
 
+    const [gameState, setGameState] = useReducer(reducer, initialState)
+
+    useEffect(() => {
         const onServerDisconnect = (): void => {
             setParticipating(false)
-            setGameActive(false)
-            setPlayers([])
+            setError(true)
         }
 
-        registerGameListener(handleMessage, onServerDisconnect)
-    }, [participating, playerName])
+        registerGameListener(setGameState, onServerDisconnect)
+    }, [])
 
     const joinGame = (player: string): void => {
         const message: AddPlayerMessage = {
@@ -163,9 +208,10 @@ export const Game: FC = (): ReactElement => {
     }
 
     const shouldShowTable = (): boolean => {
-        if (gameActive) return true
+        if (error) return false
+        if (gameState.active) return true
         // if there is a winner/loser among the players show the latest played game
-        return players.some(player => player.place > 0 || player.loser)
+        return gameState.players.some(player => player.place > 0 || player.loser)
     }
 
     return (
@@ -173,28 +219,32 @@ export const Game: FC = (): ReactElement => {
             <h1>Dicks and Balls</h1>
             <Grid container spacing={2} justify="center">
                 <Grid item>
-                    <JoinGameButton name={playerName} setName={setPlayerName} gameActive={gameActive}
-                                    participating={participating} isWinner={isWinner}
+                    <JoinGameButton name={playerName} setName={setPlayerName} gameActive={gameState.active}
+                                    participating={participating} isWinner={gameState.isWinner}
                                     onJoin={joinGame} onLeave={leaveGame}/>
                 </Grid>
                 <Grid item>
                     <Button variant="contained" color="primary"
-                            onClick={gameActive ? stopGame : startGame}
-                            disabled={players.length < 2 || !participating}
+                            onClick={gameState.active ? stopGame : startGame}
+                            disabled={gameState.players.length < 2 || !participating}
                     >
-                        {gameActive ? 'End Game' : 'New Game'}
+                        {gameState.active ? 'End Game' : 'New Game'}
                     </Button>
                 </Grid>
             </Grid>
-            <Players players={players} gameActive={gameActive} playerOnTurn={playerOnTurn} playerName={playerName}
+            <Players players={gameState.players} gameActive={gameState.active} playerOnTurn={gameState.playerOnTurn}
+                     playerName={playerName}
                      participating={participating}/>
             {shouldShowTable() &&
-            <div className={`message ${lastMessage.error ? 'error-message' : ''}`}>{lastMessage.text}</div>}
+            <div
+                className={`message ${gameState.lastMessage.error ? 'error-message' : ''}`}>{gameState.lastMessage.text}</div>}
             {shouldShowTable() &&
-            <Table gameActive={gameActive} playerName={playerName} participating={participating} deckTop={deckTop}
-                   playerOnTurn={playerOnTurn}
-                   cards={cards} colorChangedTo={colorChangedTo} isSkippingTurn={isSkippingTurn}
-                   cardsInDeck={cardsInDeck}/>}
+            <Table gameActive={gameState.active} playerName={playerName} participating={participating}
+                   deckTop={gameState.deckTop}
+                   playerOnTurn={gameState.playerOnTurn}
+                   cards={gameState.cards} colorChangedTo={gameState.colorChangedTo}
+                   isSkippingTurn={gameState.isSkippingTurn} shouldDraw={gameState.shouldDraw}
+                   cardsInDeck={gameState.cardsInDeck}/>}
             <Dialog
                 open={openWinner}
                 onClose={closeDialog}

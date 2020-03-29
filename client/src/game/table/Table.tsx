@@ -5,18 +5,20 @@ import { Cards } from './Cards'
 import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
 import { PlayersTurnMessage } from '../../models/message'
 import { sendGameMessage } from '../../api'
-import { Card, getCardsAssetNumber, Suit } from '../../models/card'
+import { Card, Suit } from '../../models/card'
 import RedoIcon from '@material-ui/icons/Redo'
+import { DeckCard } from './DeckCard'
 
 interface Props {
     gameActive: boolean
     playerName: string
     participating: boolean
-    deckTop?: Card
+    deckTop: Card[]
     playerOnTurn?: string
     cards: Card[]
     colorChangedTo?: Suit
     isSkippingTurn: boolean
+    shouldDraw: number
     cardsInDeck: string
 }
 
@@ -53,8 +55,15 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
     }
 
     const getPlayedCards = (): ReactElement => {
-        if (props.deckTop) return <img className="deck-card" src={`/cards/${getCardsAssetNumber(props.deckTop)}.png`}
-                                       alt={`${props.deckTop.value} of ${props.deckTop.suit}s`}/>
+        if (props.deckTop.length > 0) {
+            const reversed = [...props.deckTop].reverse()
+            return (
+                <div>
+                    {reversed.map((card) => <DeckCard key={`${card.suit}${card.value}`} card={card} noTransform={reversed.length === 1} colorChangedTo={card.value === 'T' ? props.colorChangedTo : undefined}/>)}
+                    <img src="/cards/transparent.png" alt="deck background"/>
+                </div>
+            )
+        }
         else return <img className="deck-card" src="/cards/0.png" alt="Deck"/>
     }
 
@@ -65,40 +74,26 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
                      src={props.cardsInDeck === '0' ? '/cards/gray.png' : '/cards/0.png'} alt="deck"
                      onClick={handleDeckClick}/>
                 {props.cardsInDeck !== '' && <div className="card-count">{props.cardsInDeck}</div>}
-                {props.isSkippingTurn && <div className="skipping-overlay">SKIP<br/><RedoIcon/></div>}
+                {props.isSkippingTurn && <div className="action-overlay">SKIP<br/><RedoIcon/></div>}
+                {props.shouldDraw !== 0 && <div className="action-overlay">DRAW<br/>{props.shouldDraw}</div>}
             </>
         )
     }
 
-    const getSuitIcon = (suit: Suit): ReactElement => {
-        switch (suit) {
-            case 'Ball':
-                return <img className="overlay-suit-icon" src="/suits/ball.svg" alt="balls"/>
-            case 'Dick':
-                return <img className="overlay-suit-icon" src="/suits/dick.svg" alt="dicks"/>
-            case 'Green':
-                return <img className="overlay-suit-icon" src="/suits/green.svg" alt="greens"/>
-            case 'Heart':
-                return <img className="overlay-suit-icon" src="/suits/heart.svg" alt="hearts"/>
-        }
-    }
-
     return (
         <div id="table" className={props.playerOnTurn === props.playerName ? 'active-table' : undefined}>
-            <Grid className="decks" container spacing={4} justify="center">
+            <Grid className="decks" container spacing={8} justify="center">
                 <Grid className="deck-overlay-container" item>
                     {getDeck()}
                 </Grid>
-                <Grid className="color-overlay-container" item>
+                <Grid item>
                     {getPlayedCards()}
-                    {props.colorChangedTo && <div className="color-overlay">{getSuitIcon(props.colorChangedTo)}</div>}
                 </Grid>
             </Grid>
             <hr/>
             <Cards gameActive={props.gameActive} cards={props.cards} playerName={props.playerName}
-                   playerOnTurn={props.playerOnTurn}
-                   deckTop={props.deckTop} sendPlayerAction={sendPlayerAction}
-                   isSkippingTurn={props.isSkippingTurn}/>
+                   playerOnTurn={props.playerOnTurn} sendPlayerAction={sendPlayerAction}
+                   isSkippingTurn={props.isSkippingTurn} shouldDraw={props.shouldDraw}/>
         </div>
     )
 }

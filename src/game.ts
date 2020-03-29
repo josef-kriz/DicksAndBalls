@@ -34,14 +34,15 @@ class Game {
         return {
             type: 'game_update',
             players: this.getOpponents(),
-            deckTop: this.playedCards[0],
+            deckTop: this.playedCards.slice(0, 3),
             message,
             cardsInDeck: this.deck.length > 3 ? '3+' : `${this.deck.length}`,
             playerOnTurn: this.players[this.playerOnTurn].name,
-            changeColorTo: this.changeColorTo,
+            colorChangedTo: this.changeColorTo,
             skippingNextPlayer: this.skippingNextPlayer,
             broughtBackToGame,
             drewCards,
+            shouldDraw: this.drawCount,
         }
     }
 
@@ -78,9 +79,10 @@ class Game {
         const playerIndex = this.players.findIndex((player) => player.id === playerId)
         if (playerIndex !== -1) {
             console.log('# Player removed:', this.players[playerIndex])
+            // stop the game if there are less that 2 players or the player was in game (his cards would be lost)
+            if (this.players[playerIndex].place === 0 || this.players.length < 2) this.stopGame()
             this.players.splice(playerIndex, 1)
             if (playerIndex < this.playerOnTurn) this.playerOnTurn--
-            if (this.players.length < 2) this.stopGame()
         }
     }
 

@@ -14,9 +14,9 @@ interface Props {
     cards: Card[]
     playerName: string
     playerOnTurn?: string
-    deckTop?: Card
     sendPlayerAction: (action: PlayerAction) => void
     isSkippingTurn: boolean
+    shouldDraw: number
 }
 
 export const Cards: FC<Props> = (props: Props): ReactElement => {
@@ -44,6 +44,7 @@ export const Cards: FC<Props> = (props: Props): ReactElement => {
             props.gameActive &&
             !props.isSkippingTurn &&
             props.playerOnTurn === props.playerName &&
+            props.shouldDraw === 0 &&
             card.value === 'T'
         ) {
             setPickedCard(card)
