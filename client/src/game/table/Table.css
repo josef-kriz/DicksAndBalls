@@ -41,7 +41,7 @@
     pointer-events: none;
 }
 
-.skipping-overlay {
+.action-overlay {
     position: absolute;
     color: white;
     font-weight: bold;

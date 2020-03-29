@@ -42,6 +42,7 @@ class Game {
             skippingNextPlayer: this.skippingNextPlayer,
             broughtBackToGame,
             drewCards,
+            shouldDraw: this.drawCount,
         }
     }
 

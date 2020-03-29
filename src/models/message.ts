@@ -69,6 +69,7 @@ export interface GameUpdateMessage extends Message {
     skippingNextPlayer: boolean
     broughtBackToGame?: string
     drewCards: number
+    shouldDraw: number
 }
 
 export interface PlayerUpdateMessage extends Message {

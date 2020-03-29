@@ -17,6 +17,7 @@ interface Props {
     cards: Card[]
     colorChangedTo?: Suit
     isSkippingTurn: boolean
+    shouldDraw: number
     cardsInDeck: string
 }
 
@@ -65,7 +66,8 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
                      src={props.cardsInDeck === '0' ? '/cards/gray.png' : '/cards/0.png'} alt="deck"
                      onClick={handleDeckClick}/>
                 {props.cardsInDeck !== '' && <div className="card-count">{props.cardsInDeck}</div>}
-                {props.isSkippingTurn && <div className="skipping-overlay">SKIP<br/><RedoIcon/></div>}
+                {props.isSkippingTurn && <div className="action-overlay">SKIP<br/><RedoIcon/></div>}
+                {props.shouldDraw !== 0 && <div className="action-overlay">DRAW<br/>{props.shouldDraw}</div>}
             </>
         )
     }

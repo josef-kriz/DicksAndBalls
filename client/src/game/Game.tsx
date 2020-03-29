@@ -38,6 +38,7 @@ export const Game: FC = (): ReactElement => {
     })
     const [colorChangedTo, setColorChangedTo] = useState<Suit | undefined>()
     const [isSkippingTurn, setIsSkippingTurn] = useState<boolean>(false)
+    const [shouldDraw, setShouldDraw] = useState<number>(0)
     const [isWinner, setIsWinner] = React.useState<boolean>(false)
     const [cardsInDeck, setCardsInDeck] = useState<string>('')
     const [openNameTaken, setOpenNameTaken] = React.useState<boolean>(false)
@@ -109,6 +110,8 @@ export const Game: FC = (): ReactElement => {
                 })
                 setColorChangedTo(message.changeColorTo)
                 setIsSkippingTurn(participating && message.skippingNextPlayer && message.playerOnTurn === playerName)
+                if (message.playerOnTurn === playerName) setShouldDraw(message.shouldDraw)
+                else setShouldDraw(0)
                 setCardsInDeck(message.cardsInDeck)
                 if (message.broughtBackToGame) handleBroughtBackToGame(message.broughtBackToGame === playerName)
                 playDrawCardSound(message.drewCards)
@@ -195,7 +198,7 @@ export const Game: FC = (): ReactElement => {
             {shouldShowTable() &&
             <Table gameActive={gameActive} playerName={playerName} participating={participating} deckTop={deckTop}
                    playerOnTurn={playerOnTurn}
-                   cards={cards} colorChangedTo={colorChangedTo} isSkippingTurn={isSkippingTurn}
+                   cards={cards} colorChangedTo={colorChangedTo} isSkippingTurn={isSkippingTurn} shouldDraw={shouldDraw}
                    cardsInDeck={cardsInDeck}/>}
             <Dialog
                 open={openWinner}
