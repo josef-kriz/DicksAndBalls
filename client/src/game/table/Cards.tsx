@@ -14,7 +14,6 @@ interface Props {
     cards: Card[]
     playerName: string
     playerOnTurn?: string
-    deckTop?: Card
     sendPlayerAction: (action: PlayerAction) => void
     isSkippingTurn: boolean
     shouldDraw: number

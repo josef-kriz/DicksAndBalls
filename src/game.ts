@@ -34,11 +34,11 @@ class Game {
         return {
             type: 'game_update',
             players: this.getOpponents(),
-            deckTop: this.playedCards[0],
+            deckTop: this.playedCards.slice(0, 3),
             message,
             cardsInDeck: this.deck.length > 3 ? '3+' : `${this.deck.length}`,
             playerOnTurn: this.players[this.playerOnTurn].name,
-            changeColorTo: this.changeColorTo,
+            colorChangedTo: this.changeColorTo,
             skippingNextPlayer: this.skippingNextPlayer,
             broughtBackToGame,
             drewCards,
