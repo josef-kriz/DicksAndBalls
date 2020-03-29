@@ -19,6 +19,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContentText from '@material-ui/core/DialogContentText'
+import inactivityDetection from '../helpers/inactivityDetection'
 
 export const Game: FC = (): ReactElement => {
     const [playerName, setPlayerName] = useState<string>('')
@@ -101,6 +102,7 @@ export const Game: FC = (): ReactElement => {
                 setPlayers(message.players)
                 setDeckTop(message.deckTop)
                 setPlayerOnTurn(message.playerOnTurn)
+                if (message.playerOnTurn === playerName) inactivityDetection.startDetecting()
                 setLastMessage({
                     error: false,
                     text: message.message,
