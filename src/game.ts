@@ -80,7 +80,7 @@ class Game {
         if (playerIndex !== -1) {
             console.log('# Player removed:', this.players[playerIndex])
             // stop the game if there are less that 2 players or the player was in game (his cards would be lost)
-            if (this.players[playerIndex].place === 0 || this.players.length < 2) this.stopGame()
+            if (this.active && (this.players[playerIndex].place === 0 || this.players.length < 2)) this.stopGame()
             this.players.splice(playerIndex, 1)
             if (playerIndex < this.playerOnTurn) this.playerOnTurn--
         }
@@ -94,7 +94,7 @@ class Game {
     public startGame(playerId?: string): void {
         if (this.active) throw new Error('The game has already started')
         if (this.players.length < 2) throw new Error('Not enough players')
-        if (this.players.length > 6) throw new Error('Too many players')
+        if (this.players.length > 7) throw new Error('Too many players')
 
         // find the player on turn that starts the game
         const shufflingPlayerIndex = this.players.findIndex((player => player.id === playerId))

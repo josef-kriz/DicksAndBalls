@@ -169,8 +169,13 @@ export const Game: FC = (): ReactElement => {
             setError(true)
         }
 
-        registerGameListener(setGameState, onServerDisconnect)
-    }, [])
+        const onServerMessage = (message: ServerMessage): void => {
+            if (error) setError(false)
+            setGameState(message)
+        }
+
+        registerGameListener(onServerMessage, onServerDisconnect)
+    }, [error])
 
     const joinGame = (player: string): void => {
         const message: AddPlayerMessage = {
