@@ -15,24 +15,19 @@
     padding: 1em;
 }
 
-.deck-card {
-    max-height: 11rem;
-}
-
 .deck-top-card:hover {
     cursor: pointer;
     filter: drop-shadow(0 0 1em white)
 }
 
-.deck-overlay-container,
-.color-overlay-container {
+.deck-overlay-container {
     position: relative;
 }
 
 .card-count {
     position: absolute;
-    bottom: 32px;
-    right: 32px;
+    bottom: 51px;
+    right: 43px;
     background: rgba(255, 255, 255, 0.8);
     padding: 0.1em;
     border-radius: 0.5em;
@@ -41,7 +36,7 @@
     pointer-events: none;
 }
 
-.skipping-overlay {
+.action-overlay {
     position: absolute;
     color: white;
     font-weight: bold;
@@ -60,12 +55,4 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
-
-.overlay-suit-icon {
-    max-height: 3em;
-    background: rgba(255, 255, 255, 0.6);
-    padding: 0.5em;
-    box-shadow: 0 0 0.6em white;
-    border-radius: 40%;
 }

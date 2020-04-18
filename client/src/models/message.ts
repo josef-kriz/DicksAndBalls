@@ -61,20 +61,21 @@ export interface GameStateMessage extends Message {
 export interface GameUpdateMessage extends Message {
     type: 'game_update'
     players: Opponent[]
-    deckTop: Card
+    deckTop: Card[]
     message: string
     cardsInDeck: string
     playerOnTurn?: string
-    changeColorTo?: Suit
+    colorChangedTo?: Suit
     skippingNextPlayer: boolean
     broughtBackToGame?: string
     drewCards: number
+    shouldDraw: number
 }
 
 export interface PlayerUpdateMessage extends Message {
     type: 'player_update'
     cards: Card[]
-    winner: boolean
+    place: number
     loser: boolean
 }
 
