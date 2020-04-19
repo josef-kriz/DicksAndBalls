@@ -1,0 +1,6 @@
+<ion-button
+        [color]="participating ? 'danger' : 'light'"
+        [disabled]="gameActive && !this.isWinner"
+        (click)="participating ? leaveGame() : joinGame()">
+    {{participating ? 'Leave Game' : 'Join Game'}}
+</ion-button>

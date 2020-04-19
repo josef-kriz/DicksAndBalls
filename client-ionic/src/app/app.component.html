@@ -1,0 +1,26 @@
+<ion-app>
+    <ion-split-pane contentId="main-content">
+        <ion-menu contentId="main-content" type="overlay">
+            <ion-content>
+                <ion-list id="tables-list">
+                    <ion-list-header>
+                        <ion-label>Tables</ion-label>
+                    </ion-list-header>
+
+                    <ion-menu-toggle auto-hide="false" *ngFor="let p of tables; let i = index">
+                        <ion-item (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url]" lines="none"
+                                  detail="false" [class.selected]="selectedIndex == i">
+                            <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                            <ion-label>{{ p.title }}</ion-label>
+                        </ion-item>
+                    </ion-menu-toggle>
+                    <ion-item button lines="none" detail="false">
+                        <ion-icon slot="start" ios="add-outline" md="add-sharp"></ion-icon>
+                        <ion-label>Add Table</ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </ion-menu>
+        <ion-router-outlet id="main-content"></ion-router-outlet>
+    </ion-split-pane>
+</ion-app>
