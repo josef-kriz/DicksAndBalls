@@ -14,5 +14,4 @@ export class PlayersComponent {
   @Input() readonly participating?: boolean
 
   constructor() { }
-
 }

@@ -1,7 +1,13 @@
-#table {
+#game {
   text-align: center;
 }
 
 #game-buttons {
   --ion-grid-width: 300px;
 }
+
+.message {
+  margin-bottom: 1em;
+  font-style: italic;
+}
+

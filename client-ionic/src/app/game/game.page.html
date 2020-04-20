@@ -1,4 +1,4 @@
-<ion-content id="table">
+<ion-content id="game">
   <h1>Dicks and Balls</h1>
   <ion-grid id="game-buttons" fixed>
     <ion-row>
@@ -26,7 +26,9 @@
           [playerName]="playerName"
           [playerOnTurn]="playerOnTurn"
   ></app-players>
-  <div>message</div>
+  <div class="message">
+    <ion-text *ngIf="lastMessage" [color]="lastMessage.error ? 'danger' : null">{{lastMessage.text}}</ion-text>
+  </div>
   <div>table</div>
   <ion-fab class="ion-hide-lg-up" vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="light">
