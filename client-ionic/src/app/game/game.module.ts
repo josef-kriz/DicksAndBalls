@@ -9,12 +9,14 @@ import { GameSocket } from './helpers/socket/game.socket'
 import { GameService } from './game.service'
 import { JoinGameButtonComponent } from './components/join-game-button/join-game-button.component'
 import { StartGameButtonComponent } from './components/start-game-button/start-game-button.component'
+import { PlayersComponent } from './components/players/players.component'
 
 @NgModule({
   declarations: [
     GamePage,
     JoinGameButtonComponent,
     StartGameButtonComponent,
+    PlayersComponent,
   ],
     imports: [
         CommonModule,

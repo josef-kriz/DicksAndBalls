@@ -1,0 +1,24 @@
+<ion-grid>
+    <ion-row class="ion-justify-content-center">
+        <ion-col *ngFor="let player of players" class="ion-padding-horizontal player-container" size="auto">
+            <div
+                    class="player-name"
+                    [attr.id]="player.name === playerOnTurn && gameActive ? 'playerOnTurn' : null">
+                <ion-icon name="person"></ion-icon>
+                <span class="player-text">{{player.name}}</span>
+                <ion-badge *ngIf="player.name === playerName && participating" color="medium">you</ion-badge>
+            </div>
+            <div class="cards">
+                <span *ngIf="player.place === 1" role="img" aria-label="first place">🥇</span>
+                <span *ngIf="player.place === 2" role="img" aria-label="second place">🥈</span>
+                <span *ngIf="player.place === 3" role="img" aria-label="third place">🥉</span>
+                <span *ngIf="player.place > 3" role="img" aria-label="ta-da">🎉</span>
+                <span *ngIf="player.loser" role="img" aria-label="loser">👎</span>
+                <span *ngIf="gameActive">
+                    <img *ngFor="let card of [].constructor(player.cards)" class="card-shell" src="assets/cards/0.svg"
+                         alt="card back"/>
+                </span>
+            </div>
+        </ion-col>
+    </ion-row>
+</ion-grid>

@@ -1,7 +1,7 @@
 <ion-content id="table">
   <h1>Dicks and Balls</h1>
   <ion-grid id="game-buttons" fixed>
-    <ion-row class="ion-justify-content-around">
+    <ion-row>
       <ion-col size="6">
         <app-join-game-button
                 [participating]="participating"
@@ -19,7 +19,13 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <div>players</div>
+  <app-players
+          [players]="players"
+          [gameActive]="active"
+          [participating]="participating"
+          [playerName]="playerName"
+          [playerOnTurn]="playerOnTurn"
+  ></app-players>
   <div>message</div>
   <div>table</div>
   <ion-fab class="ion-hide-lg-up" vertical="bottom" horizontal="end" slot="fixed">
