@@ -20,7 +20,7 @@ export class JoinGameButtonComponent {
   ) {
   }
 
-  private async joinGame(): Promise<void> {
+  async joinGame(): Promise<void> {
     try {
       const playerName = await this.askForName()
       const message: AddPlayerMessage = {
@@ -39,7 +39,7 @@ export class JoinGameButtonComponent {
     }
   }
 
-  private leaveGame(): void {
+  leaveGame(): void {
     const message: RemovePlayerMessage = {
       type: 'remove_player',
     }

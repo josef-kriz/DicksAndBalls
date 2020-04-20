@@ -17,23 +17,24 @@ import inactivityDetection from './helpers/inactivityDetection'
   styleUrls: ['./game.page.scss'],
 })
 export class GamePage {
-  private error = false
-  private playerName?: string
-  private participating = false
-  private active?: boolean
-  private players?: Opponent[]
-  private deckTop?: Card[]
-  private playerOnTurn?: string
-  private cards?: Card[]
-  private lastMessage?: {
+  playerName?: string
+  participating = false
+  active?: boolean
+  players?: Opponent[]
+  deckTop?: Card[]
+  playerOnTurn?: string
+  cards?: Card[]
+  lastMessage?: {
     error: boolean
     text: string
   }
-  private colorChangedTo?: Suit
-  private isSkippingTurn = false
-  private shouldDraw = 0
-  private isWinner = false
-  private cardsInDeck?: string
+  colorChangedTo?: Suit
+  isSkippingTurn = false
+  shouldDraw = 0
+  isWinner = false
+  cardsInDeck?: string
+
+  private error = false
 
   constructor(private gameService: GameService) { }
 
@@ -50,24 +51,24 @@ export class GamePage {
     if (this.error) { return false }
     if (this.active) { return true }
     // if there is a winner/loser among the players show the latest played game
-    return this.players.some(player => player.place > 0 || player.loser)
+    return !!this.players?.some(player => player.place > 0 || player.loser)
   }
 
   private handleWin(): void {
     // TODO modal
-    const audio = new Audio('/sounds/win31.mp3')
+    const audio = new Audio('assets/sounds/win31.mp3')
     audio.play().then()
   }
 
   private handleLoss(): void {
     // TODO modal
-    const audio = new Audio('/sounds/sadTrombone.mp3')
+    const audio = new Audio('assets/sounds/sadTrombone.mp3')
     audio.play().then()
   }
 
   private handleBroughtBackToGame(me: boolean = false): void {
     // if (me) TODO modal
-    const audio = new Audio('/sounds/airHorn.mp3')
+    const audio = new Audio('assets/sounds/airHorn.mp3')
     audio.play().then()
   }
 
@@ -75,13 +76,13 @@ export class GamePage {
     let audioFile: string
     switch (cards) {
       case 4:
-        audioFile = '/sounds/crack_the_whip.mp3'
+        audioFile = 'assets/sounds/crack_the_whip.mp3'
         break
       case 6:
-        audioFile = '/sounds/badumtss.mp3'
+        audioFile = 'assets/sounds/badumtss.mp3'
         break
       case 8:
-        audioFile = '/sounds/holy_shit.mp3'
+        audioFile = 'assets/sounds/holy_shit.mp3'
         break
       default:
         return

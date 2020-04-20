@@ -9,7 +9,7 @@ export class InactivityDetection {
     }
 
     private inactive = async (): Promise<void> => {
-        const audio = new Audio('/sounds/idle.mp3')
+        const audio = new Audio('assets/sounds/idle.mp3')
         await audio.play()
     }
 

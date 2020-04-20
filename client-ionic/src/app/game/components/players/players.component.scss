@@ -5,10 +5,11 @@
 }
 
 .player-name {
-  opacity: 0.5;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  display: flex;
+  height: 24px;
+  justify-content: center;
+  opacity: 0.5;
 }
 
 .player-text {

@@ -1,29 +1,23 @@
 <div id="table" [class.active-table]="playerOnTurn === playerName">
     <ion-grid>
-        <ion-row class="decks">
-            <ion-col class="deck-overlay-container">
-                <img class="deck-card deck-top-card"
-                     [src]="cardsInDeck === '0' ? 'assets/cards/gray.png' : 'assets/cards/0.png'" alt="deck"
-                (click)="handleDeckClick($event)"/>
-                <div *ngIf="cardsInDeck !== ''" class="card-count">{{cardsInDeck}}</div>}
-                <div *ngIf="isSkippingTurn" class="action-overlay">SKIP<br/><ion-icon name="arrow-redo-sharp"></ion-icon></div>}
-                <div *ngIf="shouldDraw !== 0" class="action-overlay">DRAW<br/>{{shouldDraw}}</div>}
+        <ion-row class="ion-justify-content-center decks">
+            <ion-col class="ion-padding-end ion-margin-end" size="auto">
+                <div class="deck-overlay-container" [class.empty-deck]="cardsInDeck === '0'" role="button"
+                     (click)="handleDeckClick()">
+                    <div *ngIf="cardsInDeck !== ''" class="card-count">{{cardsInDeck}}</div>
+                    <div *ngIf="isSkippingTurn" class="action-overlay">SKIP<br/>
+                        <ion-icon name="arrow-redo-sharp"></ion-icon>
+                    </div>
+                    <div *ngIf="shouldDraw !== 0" class="action-overlay">DRAW<br/>{{shouldDraw}}</div>
+                </div>
             </ion-col>
-            <ion-col>
-
+            <ion-col class="ion-padding-start ion-margin-start" size="auto">
+                <img src="assets/cards/transparent.png" alt="deck background"/>
             </ion-col>
         </ion-row>
     </ion-grid>
-<!--<Grid className="decks" container spacing={8} justify="center">-->
-<!--  <Grid className="deck-overlay-container" item>-->
-<!--    {getDeck()}-->
-<!--  </Grid>-->
-<!--  <Grid item>-->
-<!--    {getPlayedCards()}-->
-<!--  </Grid>-->
-<!--</Grid>-->
-<hr/>
-<!--<Cards gameActive={props.gameActive} cards={props.cards} playerName={props.playerName}-->
-<!--       playerOnTurn={props.playerOnTurn} sendPlayerAction={sendPlayerAction}-->
-<!--       isSkippingTurn={props.isSkippingTurn} shouldDraw={props.shouldDraw}/>-->
+    <hr/>
+    <!--<Cards gameActive={props.gameActive} cards={props.cards} playerName={props.playerName}-->
+    <!--       playerOnTurn={props.playerOnTurn} sendPlayerAction={sendPlayerAction}-->
+    <!--       isSkippingTurn={props.isSkippingTurn} shouldDraw={props.shouldDraw}/>-->
 </div>

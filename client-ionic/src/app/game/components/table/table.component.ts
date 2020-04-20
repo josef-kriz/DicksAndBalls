@@ -1,5 +1,8 @@
 import { Component, Input } from '@angular/core'
 import { Card, Suit } from '../../models/card'
+import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
+import { PlayersTurnMessage } from '../../models/message'
+import { GameService } from '../../game.service'
 
 @Component({
   selector: 'app-table',
@@ -18,9 +21,37 @@ export class TableComponent {
   @Input() readonly shouldDraw?: number
   @Input() readonly cardsInDeck?: string
 
-  constructor() { }
+  constructor(private gameService: GameService) { }
 
-  handleDeckClick(event: MouseEvent): void {
-    console.log(event)
+  handleDeckClick(): void {
+    if (!this.participating) { return }
+
+    if (this.isSkippingTurn) {
+      this.skipATurn()
+    } else {
+      this.drawCard()
+    }
+  }
+
+  private drawCard(): void {
+    const action: Draw = {
+      action: 'draw',
+    }
+    this.sendPlayerAction(action)
+  }
+
+  private skipATurn(): void {
+    const action: SkippingTurn = {
+      action: 'skipping_turn',
+    }
+    this.sendPlayerAction(action)
+  }
+
+  private sendPlayerAction(action: PlayerAction): void {
+    const message: PlayersTurnMessage = {
+      type: 'players_turn',
+      action,
+    }
+    this.gameService.sendMessage(message)
   }
 }
