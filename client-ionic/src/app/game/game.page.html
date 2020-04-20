@@ -3,7 +3,12 @@
   <ion-grid id="game-buttons" fixed>
     <ion-row class="ion-justify-content-around">
       <ion-col size="6">
-        <app-join-game-button [participating]="participating"></app-join-game-button>
+        <app-join-game-button
+                [participating]="participating"
+                [gameActive]="active"
+                [isWinner]="isWinner"
+                (playerName)="playerName = $event"
+        ></app-join-game-button>
       </ion-col>
       <ion-col size="6">
         <ion-button>Start Game</ion-button>

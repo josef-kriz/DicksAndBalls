@@ -3,11 +3,11 @@ import { GameService } from './game.service'
 import { Opponent } from './models/opponent'
 import { Card, Suit } from './models/card'
 import {
-  AddPlayerMessage, ChangeGameStateMessage,
+  ChangeGameStateMessage,
   isErrorMessage,
   isGameStateMessage,
   isGameUpdateMessage,
-  isPlayerUpdateMessage, RemovePlayerMessage,
+  isPlayerUpdateMessage,
   ServerMessage
 } from './models/message'
 import inactivityDetection from './helpers/inactivityDetection'
@@ -95,6 +95,7 @@ export class GamePage {
       const {active, players} = message
       this.active = active
       this.players = players
+      this.participating = players.some(player => player.name === this.playerName)
     } else if (isGameUpdateMessage(message)) {
       const {
         players,
@@ -112,7 +113,7 @@ export class GamePage {
       if (broughtBackToGame) { this.handleBroughtBackToGame(broughtBackToGame === this.playerName) }
       this.playDrawCardSound(drewCards)
 
-      this.players = players
+      this.players = players // TODO why sent again when already contained in gameStateMessage?
       this.colorChangedTo = colorChangedTo
       this.deckTop = deckTop
       this.playerOnTurn = playerOnTurn
@@ -121,7 +122,7 @@ export class GamePage {
         text: message.message,
       }
       this.isSkippingTurn = this.participating && skippingNextPlayer && playerOnTurn === this.playerName
-      this.shouldDraw = playerOnTurn === this.playerName ? shouldDraw : 0,
+      this.shouldDraw = playerOnTurn === this.playerName ? shouldDraw : 0
       this.cardsInDeck = cardsInDeck
     } else if (isPlayerUpdateMessage(message)) {
       const {cards, place, loser} = message
