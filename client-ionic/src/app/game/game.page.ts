@@ -3,7 +3,6 @@ import { GameService } from './game.service'
 import { Opponent } from './models/opponent'
 import { Card, Suit } from './models/card'
 import {
-  ChangeGameStateMessage,
   isErrorMessage,
   isGameStateMessage,
   isGameUpdateMessage,
@@ -45,6 +44,13 @@ export class GamePage {
     this.gameService.onDisconnect().subscribe(
         this.handleServerDisconnect
     )
+  }
+
+  shouldShowTable(): boolean {
+    if (this.error) { return false }
+    if (this.active) { return true }
+    // if there is a winner/loser among the players show the latest played game
+    return this.players.some(player => player.place > 0 || player.loser)
   }
 
   private handleWin(): void {

@@ -29,7 +29,19 @@
   <div class="message">
     <ion-text *ngIf="lastMessage" [color]="lastMessage.error ? 'danger' : null">{{lastMessage.text}}</ion-text>
   </div>
-  <div>table</div>
+  <app-table
+          *ngIf="shouldShowTable()"
+          [gameActive]="active"
+          [playerName]="playerName"
+          [participating]="participating"
+          [deckTop]="deckTop"
+          [playerOnTurn]="playerOnTurn"
+          [cards]="cards"
+          [colorChangedTo]="colorChangedTo"
+          [isSkippingTurn]="isSkippingTurn"
+          [shouldDraw]="shouldDraw"
+          [cardsInDeck]="cardsInDeck"
+  ></app-table>
   <ion-fab class="ion-hide-lg-up" vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="light">
       <ion-menu-button></ion-menu-button>

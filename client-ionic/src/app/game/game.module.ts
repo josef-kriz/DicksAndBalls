@@ -10,6 +10,7 @@ import { GameService } from './game.service'
 import { JoinGameButtonComponent } from './components/join-game-button/join-game-button.component'
 import { StartGameButtonComponent } from './components/start-game-button/start-game-button.component'
 import { PlayersComponent } from './components/players/players.component'
+import { TableComponent } from './components/table/table.component'
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { PlayersComponent } from './components/players/players.component'
     JoinGameButtonComponent,
     StartGameButtonComponent,
     PlayersComponent,
+    TableComponent,
   ],
     imports: [
         CommonModule,
