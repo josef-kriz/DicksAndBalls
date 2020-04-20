@@ -1,0 +1,17 @@
+<div class="color-overlay-container">
+    <div *ngIf="card" [style.transform]="getRandomShift()">
+        <!--        TODO better alt/image as background -->
+        <!--        TODO match card size 100px -->
+        <img class="deck-card"
+             [src]="'assets/cards/' + getCardsAssetNumber(card) + '.png'"
+             alt="card.value + card.suit"
+        />
+        <!-- TODO test if works -->
+        <div *ngIf="colorChangedTo" class="color-overlay" [ngSwitch]="colorChangedTo">
+            <img *ngSwitchCase="'Ball'" class="overlay-suit-icon" src="assets/suits/ball.svg" alt="balls"/>
+            <img *ngSwitchCase="'Dick'" class="overlay-suit-icon" src="assets/suits/dick.svg" alt="dicks"/>
+            <img *ngSwitchCase="'Green'" class="overlay-suit-icon" src="assets/suits/green.svg" alt="greens"/>
+            <img *ngSwitchCase="'Heart'" class="overlay-suit-icon" src="assets/suits/heart.svg" alt="hearts"/>
+        </div>
+    </div>
+</div>

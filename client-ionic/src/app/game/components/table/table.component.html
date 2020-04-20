@@ -12,6 +12,13 @@
                 </div>
             </ion-col>
             <ion-col class="ion-padding-start ion-margin-start" size="auto">
+                <app-deck-card
+                        *ngFor="let card of deckTop?.reverse()"
+                        [card]="card"
+                        [noTransform]="deckTop?.length === 1"
+                        [colorChangedTo]="card.value === 'T' ? colorChangedTo : undefined"
+                ></app-deck-card>
+                <!-- TODO avoid using transparent card -->
                 <img src="assets/cards/transparent.png" alt="deck background"/>
             </ion-col>
         </ion-row>

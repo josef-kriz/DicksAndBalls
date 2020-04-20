@@ -38,6 +38,7 @@ export class GamePage {
 
   constructor(private gameService: GameService) { }
 
+  // noinspection JSUnusedGlobalSymbols
   ionViewWillEnter(): void {
     this.gameService.getMessages().subscribe(
         this.handleServerMessage,
@@ -54,25 +55,25 @@ export class GamePage {
     return !!this.players?.some(player => player.place > 0 || player.loser)
   }
 
-  private handleWin(): void {
+  private async handleWin(): Promise<void> {
     // TODO modal
     const audio = new Audio('assets/sounds/win31.mp3')
-    audio.play().then()
+    await audio.play()
   }
 
-  private handleLoss(): void {
+  private async handleLoss(): Promise<void> {
     // TODO modal
     const audio = new Audio('assets/sounds/sadTrombone.mp3')
-    audio.play().then()
+    await audio.play()
   }
 
-  private handleBroughtBackToGame(me: boolean = false): void {
+  private async handleBroughtBackToGame(me: boolean = false): Promise<void> {
     // if (me) TODO modal
     const audio = new Audio('assets/sounds/airHorn.mp3')
-    audio.play().then()
+    await audio.play()
   }
 
-  private playDrawCardSound(cards: number): void {
+  private async playDrawCardSound(cards: number): Promise<void> {
     let audioFile: string
     switch (cards) {
       case 4:
@@ -88,7 +89,7 @@ export class GamePage {
         return
     }
     const audio = new Audio(audioFile)
-    audio.play().then()
+    await audio.play()
   }
 
   // TODO split to separate handlers by message type
