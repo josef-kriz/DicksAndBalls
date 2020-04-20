@@ -146,21 +146,4 @@ export class GamePage {
     if (this.error) { this.error = false }
     this.updateGameState(message)
   }
-
-  // TODO could be merged into changeGameState() with stopGame()
-  private startGame(): void {
-    const message: ChangeGameStateMessage = {
-      type: 'change_game',
-      active: true,
-    }
-    this.gameService.sendMessage(message)
-  }
-
-  private stopGame(): void {
-    const message: ChangeGameStateMessage = {
-      type: 'change_game',
-      active: false,
-    }
-    this.gameService.sendMessage(message)
-  }
 }

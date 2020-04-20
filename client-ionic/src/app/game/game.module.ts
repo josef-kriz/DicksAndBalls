@@ -8,12 +8,14 @@ import { SocketIoModule } from 'ngx-socket-io'
 import { GameSocket } from './helpers/socket/game.socket'
 import { GameService } from './game.service'
 import { JoinGameButtonComponent } from './components/join-game-button/join-game-button.component'
+import { StartGameButtonComponent } from './components/start-game-button/start-game-button.component'
 
 @NgModule({
-    declarations: [
-        GamePage,
-        JoinGameButtonComponent,
-    ],
+  declarations: [
+    GamePage,
+    JoinGameButtonComponent,
+    StartGameButtonComponent,
+  ],
     imports: [
         CommonModule,
         FormsModule,

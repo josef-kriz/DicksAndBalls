@@ -1,0 +1,6 @@
+<ion-button
+        [disabled]="players?.length < 2 || !participating"
+        (click)="gameActive ? stopGame() : startGame()"
+>
+    {{gameActive ? 'End Game' : 'New Game'}}
+</ion-button>
