@@ -33,6 +33,15 @@ export class TableComponent {
     }
   }
 
+  /**
+   * Helps Angular decide whether to update a card in the deck by giving each card a unique key
+   * @param index not used
+   * @param card combines the value and suit to create a unique key
+   */
+  trackByCard(index: number, card: Card): string {
+    return `${card.value}${card.suit}`
+  }
+
   private drawCard(): void {
     const action: Draw = {
       action: 'draw',

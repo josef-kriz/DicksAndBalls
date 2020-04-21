@@ -1,23 +1,29 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { Card, getCardsAssetNumber, Suit } from '../../../models/card'
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser'
 
 @Component({
   selector: 'app-deck-card',
   templateUrl: './deck-card.component.html',
   styleUrls: ['./deck-card.component.scss'],
 })
-export class DeckCardComponent {
+export class DeckCardComponent implements OnInit {
   @Input() readonly card?: Card
   @Input() readonly noTransform?: boolean
   @Input() readonly colorChangedTo?: Suit
+  randomShift: string | null = null
 
-  constructor() { }
+  constructor(private sanitizer: DomSanitizer) {}
 
-  getCardsAssetNumber(card: Card): string {
-    return getCardsAssetNumber(card)
+  ngOnInit(): void {
+    this.randomShift = this.getRandomShift()
   }
 
-  getRandomShift(): string | null {
+  getCardUrl(card: Card): SafeStyle {
+    return this.sanitizer.bypassSecurityTrustStyle(`url("assets/cards/${getCardsAssetNumber(card)}.png")`)
+  }
+
+  private getRandomShift(): string | null {
     if (this.noTransform) { return null }
 
     const getRandomArbitrary = (min: number, max: number) => {

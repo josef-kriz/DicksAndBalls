@@ -7,8 +7,8 @@
 .card {
   background-size: cover;
   filter: drop-shadow(0 0 1em black);
-  width: 100px;
   height: calc(500px / 3);
+  width: 100px;
 }
 
 .card:hover {

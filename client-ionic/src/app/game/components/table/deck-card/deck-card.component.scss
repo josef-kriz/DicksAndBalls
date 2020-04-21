@@ -1,18 +1,26 @@
-.color-overlay-container {
+.deck-card-container {
   position: relative;
 }
 
-.color-overlay-container > div {
+.deck-card-container > div {
   position: absolute;
 }
 
 .deck-card {
-  max-height: 11rem;
-  filter: drop-shadow(0 0 1em black)
+  background-size: cover;
+  filter: drop-shadow(0 0 1em black);
+  height: calc(500px / 3);
+  width: 100px;
+}
+
+.color-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .overlay-suit-icon {
-  max-height: 3em;
   background: rgba(255, 255, 255, 0.6);
   padding: 0.5em;
   box-shadow: 0 0 0.6em white;

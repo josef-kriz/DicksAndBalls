@@ -35,7 +35,7 @@ export const DeckCard: FC<Props> = (props: Props): ReactElement => {
         }
 
         return (
-            <div className="color-overlay-container">
+            <div className="deck-card-container">
                 <div style={getRandomShift()}>
                     <img className="deck-card"
                          src={`/cards/${getCardsAssetNumber(props.card)}.png`}
