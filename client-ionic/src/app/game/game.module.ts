@@ -12,6 +12,8 @@ import { StartGameButtonComponent } from './components/start-game-button/start-g
 import { PlayersComponent } from './components/players/players.component'
 import { TableComponent } from './components/table/table.component'
 import { DeckCardComponent } from './components/table/deck-card/deck-card.component'
+import { CardsComponent } from './components/table/cards/cards.component'
+import { SelectSuitComponent } from './components/table/select-suit/select-suit.component'
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { DeckCardComponent } from './components/table/deck-card/deck-card.compon
     PlayersComponent,
     TableComponent,
     DeckCardComponent,
+    CardsComponent,
+    SelectSuitComponent,
   ],
     imports: [
         CommonModule,

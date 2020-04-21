@@ -1,0 +1,22 @@
+<div class="ion-padding-horizontal">
+    <ion-text color="dark">
+        <h2>Pick a Suit</h2>
+    </ion-text>
+    <ion-grid class="ion-padding">
+        <ion-row class="ion-justify-content-between ion-align-items-center">
+            <ion-col size="auto">
+                <img class="suit-icon" src="assets/suits/dick.svg" alt="dicks" (click)="selectSuit('Dick')"/>
+            </ion-col>
+            <ion-col size="auto">
+                <img class="suit-icon" src="assets/suits/ball.svg" alt="balls" (click)="selectSuit('Ball')"/>
+            </ion-col>
+            <ion-col size="auto">
+                <img class="suit-icon" src="assets/suits/heart.svg" alt="hearts" (click)="selectSuit('Heart')"/>
+            </ion-col>
+            <ion-col size="auto">
+                <img class="suit-icon" src="assets/suits/green.svg" alt="greens" (click)="selectSuit('Green')"/>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-button class="ion-float-end" color="danger" fill="clear" (click)="cancel()">Cancel</ion-button>
+</div>

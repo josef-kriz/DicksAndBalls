@@ -1,0 +1,23 @@
+.cards-container {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  min-height: 11rem;
+}
+
+.card {
+  background-size: cover;
+  filter: drop-shadow(0 0 1em black);
+  width: 100px;
+  height: calc(500px / 3);
+}
+
+.card:hover {
+  cursor: pointer;
+  filter: drop-shadow(0 0 1em white)
+}
+
+::ng-deep .select-suit-modal {
+  --max-width: 480px;
+  --max-height: 240px;
+  --border-radius: 4px;
+}

@@ -6,7 +6,7 @@
                     [attr.id]="player.name === playerOnTurn && gameActive ? 'playerOnTurn' : null">
                 <ion-icon name="person"></ion-icon>
                 <span class="player-text">{{player.name}}</span>
-                <ion-badge *ngIf="player.name === playerName && participating" color="medium">you</ion-badge>
+                <ion-badge *ngIf="player.name === playerName && participating" color="medium">me</ion-badge>
             </div>
             <div class="cards">
                 <span *ngIf="player.place === 1" role="img" aria-label="first place">🥇</span>

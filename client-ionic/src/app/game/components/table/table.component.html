@@ -24,7 +24,12 @@
         </ion-row>
     </ion-grid>
     <hr/>
-    <!--<Cards gameActive={props.gameActive} cards={props.cards} playerName={props.playerName}-->
-    <!--       playerOnTurn={props.playerOnTurn} sendPlayerAction={sendPlayerAction}-->
-    <!--       isSkippingTurn={props.isSkippingTurn} shouldDraw={props.shouldDraw}/>-->
+    <app-cards
+            [gameActive]="gameActive"
+            [cards]="cards"
+            [playerName]="playerName"
+            [playerOnTurn]="playerOnTurn"
+            [isSkippingTurn]="isSkippingTurn"
+            [shouldDraw]="shouldDraw"
+    ></app-cards>
 </div>
