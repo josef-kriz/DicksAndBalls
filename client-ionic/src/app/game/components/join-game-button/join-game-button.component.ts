@@ -12,7 +12,7 @@ export class JoinGameButtonComponent {
   @Input() readonly participating?: boolean
   @Input() readonly gameActive?: boolean
   @Input() readonly isWinner?: boolean
-  @Output() playerName: EventEmitter<string> = new EventEmitter()
+  @Output() playerName: EventEmitter<string | undefined> = new EventEmitter()
 
   constructor(
     private alertController: AlertController,
@@ -44,6 +44,7 @@ export class JoinGameButtonComponent {
       type: 'remove_player',
     }
     this.gameService.sendMessage(message)
+    this.playerName.emit(undefined)
   }
 
   private async askForName(): Promise<string> {
