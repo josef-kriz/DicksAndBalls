@@ -1,49 +1,56 @@
-<ion-content id="game">
-  <ion-grid id="game-buttons" fixed>
-    <ion-row>
-      <ion-col size="6">
-        <app-join-game-button
-                [participating]="participating"
-                [gameActive]="active"
-                [isWinner]="isWinner"
-                (playerName)="playerName = $event"
-        ></app-join-game-button>
-      </ion-col>
-      <ion-col size="6">
-        <app-start-game-button
-                [participating]="participating"
-                [gameActive]="active"
+<div id="game">
+    <ion-content id="game-content">
+        <app-players
                 [players]="players"
-        ></app-start-game-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <app-players
-          [players]="players"
-          [gameActive]="active"
-          [participating]="participating"
-          [playerName]="playerName"
-          [playerOnTurn]="playerOnTurn"
-  ></app-players>
-  <div class="message">
-    <ion-text *ngIf="lastMessage" [color]="lastMessage.error ? 'danger' : null">{{lastMessage.text}}</ion-text>
-  </div>
-  <app-table
-          *ngIf="shouldShowTable()"
-          [gameActive]="active"
-          [playerName]="playerName"
-          [participating]="participating"
-          [deckTop]="deckTop"
-          [playerOnTurn]="playerOnTurn"
-          [cards]="cards"
-          [colorChangedTo]="colorChangedTo"
-          [isSkippingTurn]="isSkippingTurn"
-          [shouldDraw]="shouldDraw"
-          [cardsInDeck]="cardsInDeck"
-  ></app-table>
-  <ion-fab class="ion-hide-lg-up" vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="light">
-      <ion-menu-button></ion-menu-button>
-    </ion-fab-button>
-  </ion-fab>
-</ion-content>
+                [gameActive]="active"
+                [participating]="participating"
+                [playerName]="playerName"
+                [playerOnTurn]="playerOnTurn"
+        ></app-players>
+        <div class="message">
+            <ion-text *ngIf="lastMessage" [color]="lastMessage.error ? 'danger' : null">{{lastMessage.text}}</ion-text>
+        </div>
+        <app-table
+                *ngIf="shouldShowTable()"
+                [gameActive]="active"
+                [playerName]="playerName"
+                [participating]="participating"
+                [deckTop]="deckTop"
+                [playerOnTurn]="playerOnTurn"
+                [cards]="cards"
+                [colorChangedTo]="colorChangedTo"
+                [isSkippingTurn]="isSkippingTurn"
+                [shouldDraw]="shouldDraw"
+                [cardsInDeck]="cardsInDeck"
+        ></app-table>
+      <ion-grid id="game-buttons" fixed>
+        <ion-row>
+          <ion-col size="6">
+            <app-join-game-button
+                    [participating]="participating"
+                    [gameActive]="active"
+                    [isWinner]="isWinner"
+                    (playerName)="playerName = $event"
+            ></app-join-game-button>
+          </ion-col>
+          <ion-col size="6">
+            <app-start-game-button
+                    [participating]="participating"
+                    [gameActive]="active"
+                    [players]="players"
+            ></app-start-game-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+        <ion-fab class="ion-hide-lg-up" vertical="bottom" horizontal="start" slot="fixed">
+            <ion-fab-button color="light">
+                <ion-menu-button></ion-menu-button>
+            </ion-fab-button>
+        </ion-fab>
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+            <ion-fab-button color="light">
+                <ion-icon name="chatbubbles-sharp"></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
+    </ion-content>
+</div>
