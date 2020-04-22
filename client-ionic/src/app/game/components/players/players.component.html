@@ -18,6 +18,10 @@
                     <img *ngFor="let card of [].constructor(player.cards)" class="card-shell" src="assets/cards/0.svg"
                          alt="card back"/>
                 </span>
+                <span *ngIf="!player.place && !player.loser && !gameActive">
+                    <span role="img" aria-label="hourglass">⏳</span>
+                    <span class="waiting">waiting...</span>
+                </span>
             </div>
         </ion-col>
     </ion-row>
