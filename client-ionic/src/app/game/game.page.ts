@@ -3,11 +3,15 @@ import { GameService } from './game.service'
 import { Opponent } from './models/opponent'
 import { Card, Suit } from './models/card'
 import {
-  ChangeGameStateMessage,
+  ErrorMessage,
+  GameStateMessage,
+  GameUpdateMessage,
   isErrorMessage,
   isGameStateMessage,
   isGameUpdateMessage,
-  isPlayerUpdateMessage, RemovePlayerMessage,
+  isPlayerUpdateMessage,
+  PlayerUpdateMessage,
+  RemovePlayerMessage,
   ServerMessage
 } from './models/message'
 import inactivityDetection from './helpers/inactivityDetection'
@@ -49,6 +53,7 @@ export class GamePage {
     )
   }
 
+  // noinspection JSUnusedGlobalSymbols
   ionViewWillLeave(): void {
     const message: RemovePlayerMessage = {
       type: 'remove_player',
@@ -64,6 +69,78 @@ export class GamePage {
     return !!this.players?.some(player => player.place > 0 || player.loser)
   }
 
+  private handleServerMessage = (message: ServerMessage): void => {
+    if (this.error) { this.error = false }
+    if (isErrorMessage(message)) {
+      this.handleErrorMessage(message)
+    } else if (isGameStateMessage(message)) {
+      this.handleGameStateUpdate(message)
+    } else if (isGameUpdateMessage(message)) {
+      this.handleGameUpdate(message)
+    } else if (isPlayerUpdateMessage(message)) {
+      this.handlePlayerUpdate(message)
+    }
+  }
+
+  private handleErrorMessage(message: ErrorMessage): void {
+    this.lastMessage = {
+      error: true,
+      text: message.message
+    }
+  }
+
+  private handleGameStateUpdate(message: GameStateMessage): void {
+    const {active, players} = message
+    this.active = active
+    this.players = players
+    this.participating = players.some(player => player.name === this.playerName)
+  }
+
+  private handleGameUpdate(message: GameUpdateMessage): void {
+    const {
+      colorChangedTo,
+      deckTop,
+      playerOnTurn,
+      skippingNextPlayer,
+      shouldDraw,
+      cardsInDeck,
+      broughtBackToGame,
+      drewCards
+    } = message
+
+    if (playerOnTurn === this.playerName && this.active) { inactivityDetection.startDetecting() }
+    if (broughtBackToGame) { this.handleBroughtBackToGame(broughtBackToGame === this.playerName) }
+    this.playDrawCardSound(drewCards)
+
+    this.colorChangedTo = colorChangedTo
+    this.deckTop = deckTop
+    this.playerOnTurn = playerOnTurn
+    this.lastMessage = {
+      error: false,
+      text: message.message,
+    }
+    this.isSkippingTurn = this.participating && skippingNextPlayer && playerOnTurn === this.playerName
+    this.shouldDraw = playerOnTurn === this.playerName ? shouldDraw : 0
+    this.cardsInDeck = cardsInDeck
+  }
+
+  private handlePlayerUpdate(message: PlayerUpdateMessage): void {
+    const {cards, place, loser} = message
+    if (place > 0) {
+      this.handleWin()
+    } else if (loser) {
+      this.handleLoss()
+    }
+
+    this.cards = cards
+    this.isWinner = place > 0
+  }
+
+  private handleServerDisconnect = (): void => {
+    this.participating = false
+    this.error = true
+  }
+
   private async handleWin(): Promise<void> {
     // TODO modal
     const audio = new Audio('assets/sounds/win31.mp3')
@@ -77,9 +154,9 @@ export class GamePage {
   }
 
   private async handleBroughtBackToGame(me: boolean = false): Promise<void> {
-    // if (me) TODO modal
     const audio = new Audio('assets/sounds/airHorn.mp3')
     await audio.play()
+    // if (me) TODO modal
   }
 
   private async playDrawCardSound(cards: number): Promise<void> {
@@ -99,66 +176,5 @@ export class GamePage {
     }
     const audio = new Audio(audioFile)
     await audio.play()
-  }
-
-  // TODO split to separate handlers by message type
-  private updateGameState(message: ServerMessage): void {
-    if (isErrorMessage(message)) {
-        this.lastMessage = {
-          error: true,
-          text: message.message
-        }
-    } else if (isGameStateMessage(message)) {
-      const {active, players} = message
-      this.active = active
-      this.players = players
-      this.participating = players.some(player => player.name === this.playerName)
-    } else if (isGameUpdateMessage(message)) {
-      const {
-        colorChangedTo,
-        deckTop,
-        playerOnTurn,
-        skippingNextPlayer,
-        shouldDraw,
-        cardsInDeck,
-        broughtBackToGame,
-        drewCards
-      } = message
-
-      if (playerOnTurn === this.playerName && this.active) { inactivityDetection.startDetecting() }
-      if (broughtBackToGame) { this.handleBroughtBackToGame(broughtBackToGame === this.playerName) }
-      this.playDrawCardSound(drewCards)
-
-      this.colorChangedTo = colorChangedTo
-      this.deckTop = deckTop
-      this.playerOnTurn = playerOnTurn
-      this.lastMessage = {
-        error: false,
-        text: message.message,
-      }
-      this.isSkippingTurn = this.participating && skippingNextPlayer && playerOnTurn === this.playerName
-      this.shouldDraw = playerOnTurn === this.playerName ? shouldDraw : 0
-      this.cardsInDeck = cardsInDeck
-    } else if (isPlayerUpdateMessage(message)) {
-      const {cards, place, loser} = message
-      if (place > 0) {
-        this.handleWin()
-      } else if (loser) {
-        this.handleLoss()
-      }
-
-      this.cards = cards
-      this.isWinner = place > 0
-    }
-  }
-
-  private handleServerDisconnect = (): void => {
-    this.participating = false
-    this.error = true
-  }
-
-  private handleServerMessage = (message: ServerMessage): void => {
-    if (this.error) { this.error = false }
-    this.updateGameState(message)
   }
 }
