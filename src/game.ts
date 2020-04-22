@@ -33,7 +33,6 @@ class Game {
     public getGameUpdateMessage(message: string, broughtBackToGame?: string, drewCards = 0): GameUpdateMessage {
         return {
             type: 'game_update',
-            players: this.getOpponents(),
             deckTop: this.playedCards.slice(0, 3),
             message,
             cardsInDeck: this.deck.length > 3 ? '3+' : `${this.deck.length}`,

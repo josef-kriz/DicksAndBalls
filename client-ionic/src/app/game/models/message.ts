@@ -36,22 +36,6 @@ export interface PlayersTurnMessage extends Message {
 
 export type ClientMessage = ErrorMessage | AddPlayerMessage | RemovePlayerMessage | ChangeGameStateMessage | PlayersTurnMessage
 
-export function isAddPlayerMessage(message: ClientMessage): message is AddPlayerMessage {
-    return message.type === 'add_player'
-}
-
-export function isRemovePlayerMessage(message: ClientMessage): message is RemovePlayerMessage {
-    return message.type === 'remove_player'
-}
-
-export function isChangeGameMessage(message: ClientMessage): message is ChangeGameStateMessage {
-    return message.type === 'change_game'
-}
-
-export function isPlayersTurnMessage(message: ClientMessage): message is PlayersTurnMessage {
-    return message.type === 'players_turn'
-}
-
 export interface GameStateMessage extends Message {
     type: 'game_state'
     active: boolean
@@ -60,7 +44,6 @@ export interface GameStateMessage extends Message {
 
 export interface GameUpdateMessage extends Message {
     type: 'game_update'
-    players: Opponent[]
     deckTop: Card[]
     message: string
     cardsInDeck: string

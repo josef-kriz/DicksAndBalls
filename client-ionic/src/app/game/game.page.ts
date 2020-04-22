@@ -115,7 +115,6 @@ export class GamePage {
       this.participating = players.some(player => player.name === this.playerName)
     } else if (isGameUpdateMessage(message)) {
       const {
-        players,
         colorChangedTo,
         deckTop,
         playerOnTurn,
@@ -130,7 +129,6 @@ export class GamePage {
       if (broughtBackToGame) { this.handleBroughtBackToGame(broughtBackToGame === this.playerName) }
       this.playDrawCardSound(drewCards)
 
-      this.players = players // TODO why sent again when already contained in gameStateMessage?
       this.colorChangedTo = colorChangedTo
       this.deckTop = deckTop
       this.playerOnTurn = playerOnTurn

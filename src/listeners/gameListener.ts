@@ -68,7 +68,7 @@ export function gameListener(socket: Socket): void {
     const handlePlayersTurn = (action: PlayerAction): void => {
         try {
             const message = game.handlePlayersTurn(clientId, action)
-            if (message.gameState) io.emit('server_event', message.gameState)
+            io.emit('server_event', message.gameState)
             io.emit('server_event', message.gameUpdate)
             for (const playerMessage of message.players)
                 io.to(`${playerMessage.player}`).emit('server_event', playerMessage.playerUpdate)

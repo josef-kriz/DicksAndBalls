@@ -11,10 +11,6 @@ export interface ErrorMessage extends Message {
     message: string
 }
 
-export function isErrorMessage(message: Message): message is ErrorMessage {
-    return message.type === 'error'
-}
-
 export interface AddPlayerMessage extends Message {
     type: 'add_player'
     player: string
@@ -60,7 +56,6 @@ export interface GameStateMessage extends Message {
 
 export interface GameUpdateMessage extends Message {
     type: 'game_update'
-    players: Opponent[]
     deckTop: Card[]
     message: string
     cardsInDeck: string
@@ -79,16 +74,3 @@ export interface PlayerUpdateMessage extends Message {
     loser: boolean
 }
 
-export type ServerMessage = ErrorMessage | GameStateMessage | GameUpdateMessage | PlayerUpdateMessage
-
-export function isGameStateMessage(message: ServerMessage): message is GameStateMessage {
-    return message.type === 'game_state'
-}
-
-export function isGameUpdateMessage(message: ServerMessage): message is GameUpdateMessage {
-    return message.type === 'game_update'
-}
-
-export function isPlayerUpdateMessage(message: ServerMessage): message is PlayerUpdateMessage {
-    return message.type === 'player_update'
-}
