@@ -3,10 +3,11 @@ import { GameService } from './game.service'
 import { Opponent } from './models/opponent'
 import { Card, Suit } from './models/card'
 import {
+  ChangeGameStateMessage,
   isErrorMessage,
   isGameStateMessage,
   isGameUpdateMessage,
-  isPlayerUpdateMessage,
+  isPlayerUpdateMessage, RemovePlayerMessage,
   ServerMessage
 } from './models/message'
 import inactivityDetection from './helpers/inactivityDetection'
@@ -46,6 +47,14 @@ export class GamePage {
     this.gameService.onDisconnect().subscribe(
         this.handleServerDisconnect
     )
+  }
+
+  ionViewWillLeave(): void {
+    const message: RemovePlayerMessage = {
+      type: 'remove_player',
+    }
+    this.gameService.sendMessage(message)
+    this.playerName = undefined
   }
 
   shouldShowTable(): boolean {
