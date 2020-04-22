@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 import { GameService } from './game.service'
 import { Opponent } from './models/opponent'
 import { Card, Suit } from './models/card'
@@ -15,6 +15,7 @@ import {
   ServerMessage
 } from './models/message'
 import inactivityDetection from './helpers/inactivityDetection'
+import { AlertController } from '@ionic/angular'
 
 @Component({
   selector: 'app-game',
@@ -41,15 +42,18 @@ export class GamePage {
 
   private error = false
 
-  constructor(private gameService: GameService) { }
+  constructor(
+    private alertController: AlertController,
+    private gameService: GameService,
+  ) {}
 
   // noinspection JSUnusedGlobalSymbols
   ionViewWillEnter(): void {
     this.gameService.getMessages().subscribe(
-        this.handleServerMessage,
-        () => this.error = true)
+      this.handleServerMessage,
+      () => this.error = true)
     this.gameService.onDisconnect().subscribe(
-        this.handleServerDisconnect
+      this.handleServerDisconnect
     )
   }
 
@@ -63,14 +67,20 @@ export class GamePage {
   }
 
   shouldShowTable(): boolean {
-    if (this.error) { return false }
-    if (this.active) { return true }
+    if (this.error) {
+      return false
+    }
+    if (this.active) {
+      return true
+    }
     // if there is a winner/loser among the players show the latest played game
     return !!this.players?.some(player => player.place > 0 || player.loser)
   }
 
   private handleServerMessage = (message: ServerMessage): void => {
-    if (this.error) { this.error = false }
+    if (this.error) {
+      this.error = false
+    }
     if (isErrorMessage(message)) {
       this.handleErrorMessage(message)
     } else if (isGameStateMessage(message)) {
@@ -108,8 +118,12 @@ export class GamePage {
       drewCards
     } = message
 
-    if (playerOnTurn === this.playerName && this.active) { inactivityDetection.startDetecting() }
-    if (broughtBackToGame) { this.handleBroughtBackToGame(broughtBackToGame === this.playerName) }
+    if (playerOnTurn === this.playerName && this.active) {
+      inactivityDetection.startDetecting()
+    }
+    if (broughtBackToGame) {
+      this.handleBroughtBackToGame(broughtBackToGame === this.playerName)
+    }
     this.playDrawCardSound(drewCards)
 
     this.colorChangedTo = colorChangedTo
@@ -142,13 +156,25 @@ export class GamePage {
   }
 
   private async handleWin(): Promise<void> {
-    // TODO modal
+    const alert = await this.alertController.create({
+      header: 'You won!',
+      message: 'You\'re a winner! <span role="img" aria-label="ta-da">🎉</span>\n',
+      buttons: ['I\'m awesome!']
+    })
+    await alert.present()
+
     const audio = new Audio('assets/sounds/win31.mp3')
     await audio.play()
   }
 
   private async handleLoss(): Promise<void> {
-    // TODO modal
+    const alert = await this.alertController.create({
+      header: 'You lost!',
+      message: 'You\'re a loser! <span role="img" aria-label="thumb-down">👎</span>',
+      buttons: ['I suck']
+    })
+    await alert.present()
+
     const audio = new Audio('assets/sounds/sadTrombone.mp3')
     await audio.play()
   }
@@ -156,7 +182,15 @@ export class GamePage {
   private async handleBroughtBackToGame(me: boolean = false): Promise<void> {
     const audio = new Audio('assets/sounds/airHorn.mp3')
     await audio.play()
-    // if (me) TODO modal
+    if (me) {
+      const alert = await this.alertController.create({
+        header: 'You\'ve been brought back to the game!',
+        message: 'Another player has brought you back to the game with a 7 of Hearts!',
+        buttons: ['Back to Game']
+      })
+
+      await alert.present()
+    }
   }
 
   private async playDrawCardSound(cards: number): Promise<void> {
