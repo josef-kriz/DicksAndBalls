@@ -1,5 +1,5 @@
 <div class="cards-container ion-padding-vertical ion-margin-vertical">
-  <ion-grid>
+  <ion-grid *ngIf="participating">
     <ion-row class="ion-justify-content-center">
       <ion-col *ngFor="let card of cards" class="card-container" size="auto">
         <div class="card" [style.background-image]="getCardUrl(card)" (click)="playCard(card)"></div>

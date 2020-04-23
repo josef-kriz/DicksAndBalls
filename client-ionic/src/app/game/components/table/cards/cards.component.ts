@@ -13,6 +13,7 @@ import { SelectSuitComponent } from '../select-suit/select-suit.component'
   styleUrls: ['./cards.component.scss'],
 })
 export class CardsComponent {
+  @Input() readonly participating?: boolean
   @Input() readonly gameActive?: boolean
   @Input() readonly cards?: Card[]
   @Input() readonly playerName?: string

@@ -1,4 +1,4 @@
-<div id="players">
+<div id="players" class="ion-padding-vertical">
     <div *ngFor="let player of players" class="ion-padding-horizontal player-container" [id]="player.name">
         <div
                 class="player-name"
@@ -18,7 +18,7 @@
                          src="assets/cards/back/1.svg"
                          alt="card back"/>
                 </span>
-            <span *ngIf="(!player.place && !player.loser && player.cards === 0) || !gameActive">
+            <span *ngIf="(!player.place && !player.loser && (player.cards === 0 || !gameActive))">
                     <span role="img" aria-label="hourglass">⏳</span>
                     <span class="waiting">waiting...</span>
                 </span>
