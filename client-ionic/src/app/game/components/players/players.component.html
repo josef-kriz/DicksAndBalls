@@ -18,7 +18,7 @@
                          src="assets/cards/back/1.svg"
                          alt="card back"/>
                 </span>
-            <span *ngIf="!player.place && !player.loser && player.cards === 0">
+            <span *ngIf="(!player.place && !player.loser && player.cards === 0) || !gameActive">
                     <span role="img" aria-label="hourglass">⏳</span>
                     <span class="waiting">waiting...</span>
                 </span>
