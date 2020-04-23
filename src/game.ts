@@ -64,8 +64,6 @@ class Game {
     }
 
     public addPlayer(newPlayer: Player): void {
-        // TODO add while active
-        if (this.active) throw new Error('The game is running, wait for the players to finish the current game')
         this.validatePlayersName(newPlayer.name)
 
         this.players.push(newPlayer)
@@ -275,12 +273,16 @@ class Game {
         return this.players.reduce((winnersCount, player) => winnersCount + (player.place > 0 ? 1 : 0), 0)
     }
 
+    private getWaitingPlayersCount(): number {
+        const isWaiting = (player: Player): boolean => player.place === 0 && !player.loser && player.cards.length === 0
+        return this.players.reduce((waitingCount, player) => waitingCount + (isWaiting(player) ? 1 : 0), 0)
+    }
+
     private changePlayerOnTurn(): void {
         this.nextNonWinner()
 
         // detect if the player lost (he's the only "non-winner")
-        const winners = this.getWinnersCount()
-        if (winners === this.players.length - 1) {
+        if (this.getWinnersCount() + this.getWaitingPlayersCount() === this.players.length - 1) {
             this.players[this.playerOnTurn].loser = true
             this.stopGame()
         }
@@ -294,7 +296,7 @@ class Game {
             this.playerOnTurn++
             if (this.playerOnTurn >= this.players.length) this.playerOnTurn = 0
             const player = this.players[this.playerOnTurn]
-            if (player.place === 0) break
+            if (player.place === 0 && player.cards.length > 0) break
             else player.canBeBroughtBack = false
         }
     }
