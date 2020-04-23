@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnChanges } from '@angular/core'
 import { Card, Suit } from '../../models/card'
 import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
 import { PlayersTurnMessage } from '../../models/message'
@@ -9,7 +9,7 @@ import { GameService } from '../../game.service'
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent {
+export class TableComponent implements OnChanges {
   @Input() readonly gameActive?: boolean
   @Input() readonly playerName?: string
   @Input() readonly participating?: boolean
@@ -20,8 +20,13 @@ export class TableComponent {
   @Input() readonly isSkippingTurn?: boolean
   @Input() readonly shouldDraw?: number
   @Input() readonly cardsInDeck?: string
+  reversedDeck?: Card[]
 
   constructor(private gameService: GameService) { }
+
+  ngOnChanges(): void {
+    this.reversedDeck = this.deckTop && [...this.deckTop].reverse()
+  }
 
   handleDeckClick(): void {
     if (!this.participating) { return }

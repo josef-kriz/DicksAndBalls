@@ -11,11 +11,11 @@
                     <div *ngIf="shouldDraw !== 0" class="action-overlay">DRAW<br/>{{shouldDraw}}</div>
                 </div>
             </ion-col>
-            <ion-col class="ion-padding-start ion-margin-start" size="auto">
+            <ion-col *ngIf="reversedDeck" class="ion-padding-start ion-margin-start" size="auto">
+                <app-deck-card [card]="reversedDeck[0]" [noTransform]="true"></app-deck-card>
                 <app-deck-card
-                        *ngFor="let card of deckTop?.reverse(); trackBy: trackByCard"
+                        *ngFor="let card of reversedDeck | slice:1; trackBy: trackByCard"
                         [card]="card"
-                        [noTransform]="deckTop?.length === 1"
                         [colorChangedTo]="card.value === 'T' ? colorChangedTo : undefined"
                 ></app-deck-card>
             </ion-col>
