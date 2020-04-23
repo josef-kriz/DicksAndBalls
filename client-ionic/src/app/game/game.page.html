@@ -8,7 +8,7 @@
                 [playerOnTurn]="playerOnTurn"
         ></app-players>
         <ng-container *ngIf="shouldShowTable()">
-            <div class="message">
+            <div class="message" [class.error-message]="lastMessage?.error">
                 <ion-text *ngIf="lastMessage"
                           [color]="lastMessage.error ? 'danger' : null">{{lastMessage.text}}</ion-text>
             </div>
