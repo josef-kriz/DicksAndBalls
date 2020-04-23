@@ -1,5 +1,9 @@
 .cards-container {
   min-height: 226px;
+
+  @media screen and (max-width: 576px) {
+    min-height: unset;
+  }
 }
 
 .card-container {
@@ -11,6 +15,11 @@
   filter: drop-shadow(0 0 8px black);
   height: calc(500px / 3);
   width: 100px;
+
+  @media screen and (max-width: 576px) {
+    height: calc(250px / 3);
+    width: 50px;
+  }
 }
 
 .card:hover {

@@ -12,6 +12,11 @@
   filter: drop-shadow(0 0 8px black);
   height: calc(500px / 3);
   width: 100px;
+
+  @media screen and (max-width: 576px) {
+    height: calc(400px / 3);
+    width: 80px;
+  }
 }
 
 .color-overlay {

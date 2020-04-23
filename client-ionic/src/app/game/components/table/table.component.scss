@@ -6,6 +6,11 @@
   box-shadow: 0 0 1.5em black;
   margin-bottom: 1em;
   padding: 1em;
+
+  @media screen and (max-width: 576px) {
+    margin: 0;
+    border-radius: 0;
+  }
 }
 
 .active-table {
@@ -22,9 +27,14 @@
   background-image: url("/assets/cards/back/1.svg");
   background-size: cover;
   filter: drop-shadow(0 0 8px black);
+  height: calc(500px / 3);
   position: relative;
   width: 100px;
-  height: calc(500px / 3);
+
+  @media screen and (max-width: 576px) {
+    height: calc(400px / 3);
+    width: 80px;
+  }
 }
 
 .deck-overlay-container:hover {
