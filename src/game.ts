@@ -116,7 +116,7 @@ class Game {
         this.deck.splice(0, 1)
 
         this.drawCount = this.playedCards[0].value === '7' ? 2 : 0
-        this.skippingNextPlayer = this.playedCards[0].value === 'A'
+        this.skippingNextPlayer = this.playedCards[0].value === 'Ace'
         this.changeColorTo = undefined
 
         this.active = true
@@ -152,7 +152,7 @@ class Game {
         if (isCardPlayedAction(action)) {
             const playersCardIndex = player.cards.findIndex(card => sameCards(card, action.card))
             if (playersCardIndex === -1) throw new Error('You don\'t have this card')
-            if (action.card.value === 'T' && !action.changeColorTo) throw new Error('You have to pick a color')
+            if (action.card.value === 'Queen' && !action.changeColorTo) throw new Error('You have to pick a color')
 
             this.playedCards.unshift(action.card)
             player.cards.splice(playersCardIndex, 1)
@@ -165,8 +165,8 @@ class Game {
                 if (returnedPlayer) message += ` and brought ${returnedPlayer.name} back to the game`
                 else this.drawCount += 2
             }
-            else if (action.card.value === 'A') this.skippingNextPlayer = true
-            else if (action.card.value === 'T') {
+            else if (action.card.value === 'Ace') this.skippingNextPlayer = true
+            else if (action.card.value === 'Queen') {
                 this.changeColorTo = action.changeColorTo
                 message += ` and changed the color to ${action.changeColorTo}s`
             }
@@ -343,16 +343,16 @@ class Game {
      */
     private isValidMove(action: PlayerAction): void | never {
         if (isCardPlayedAction(action)) {
-            if (this.changeColorTo && action.card.value !== 'T') {
+            if (this.changeColorTo && action.card.value !== 'Queen') {
                 if (action.card.suit !== this.changeColorTo) throw new Error(`The color was changed to ${this.changeColorTo}s`)
-            } else if (this.skippingNextPlayer && action.card.value !== 'A') throw new Error('You cannot play a card when you\'re skipping a turn')
+            } else if (this.skippingNextPlayer && action.card.value !== 'Ace') throw new Error('You cannot play a card when you\'re skipping a turn')
             else if (this.drawCount > 0 && action.card.value !== '7') throw new Error('You cannot play a card when you\'re supposed to draw')
-            else if (this.playedCards[0].suit !== action.card.suit && this.playedCards[0].value !== action.card.value && action.card.value !== 'T') throw new Error('You can only play a card with the same color/value as the card on the deck')
+            else if (this.playedCards[0].suit !== action.card.suit && this.playedCards[0].value !== action.card.value && action.card.value !== 'Queen') throw new Error('You can only play a card with the same color/value as the card on the deck')
         } else if (isDrawAction(action)) {
             if (this.skippingNextPlayer) throw new Error('You\'re skipping a turn, no need to draw')
         } else if (isSkippingTurnAction(action)) {
             if (!this.skippingNextPlayer) {
-                if (this.playedCards[0].value === 'A') throw new Error('The previous player has already skipped a turn for this ace')
+                if (this.playedCards[0].value === 'Ace') throw new Error('The previous player has already skipped a turn for this ace')
                 else throw new Error('You cannot skip a turn if an ace wasn\'t played')
             }
         } else throw new Error('Unknown player action')

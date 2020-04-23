@@ -16,7 +16,7 @@
                 <app-deck-card
                         *ngFor="let card of reversedDeck | slice:1; trackBy: trackByCard"
                         [card]="card"
-                        [colorChangedTo]="card.value === 'T' ? colorChangedTo : undefined"
+                        [colorChangedTo]="card.value === 'Queen' ? colorChangedTo : undefined"
                 ></app-deck-card>
             </ion-col>
         </ion-row>

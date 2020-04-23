@@ -1,13 +1,9 @@
 export type Suit = 'Heart' | 'Green' | 'Dick' | 'Ball'
-export type Value = '7' | '8' | '9' | '10' | 'B' | 'T' | 'K' | 'A'
+export type Value = '7' | '8' | '9' | '10' | 'Jack' | 'Queen' | 'King' | 'Ace'
 
 export interface Card {
     suit: Suit
     value: Value
-}
-
-export function sameCards(cardA: Card, cardB: Card): boolean {
-    return cardA.suit === cardB.suit && cardA.value === cardB.value
 }
 
 export function getCardsAssetNumber(card: Card) {
@@ -22,13 +18,13 @@ export function getCardsAssetNumber(card: Card) {
                     return '3'
                 case '10':
                     return '4'
-                case 'B':
+                case 'Jack':
                     return '5'
-                case 'T':
+                case 'Queen':
                     return '6'
-                case 'K':
+                case 'King':
                     return '7'
-                case 'A':
+                case 'Ace':
                     return '8'
             }
             break
@@ -42,13 +38,13 @@ export function getCardsAssetNumber(card: Card) {
                     return '11'
                 case '10':
                     return '12'
-                case 'B':
+                case 'Jack':
                     return '13'
-                case 'T':
+                case 'Queen':
                     return '14'
-                case 'K':
+                case 'King':
                     return '15'
-                case 'A':
+                case 'Ace':
                     return '16'
             }
             break
@@ -62,13 +58,13 @@ export function getCardsAssetNumber(card: Card) {
                     return '19'
                 case '10':
                     return '20'
-                case 'B':
+                case 'Jack':
                     return '21'
-                case 'T':
+                case 'Queen':
                     return '22'
-                case 'K':
+                case 'King':
                     return '23'
-                case 'A':
+                case 'Ace':
                     return '24'
             }
             break
@@ -82,13 +78,13 @@ export function getCardsAssetNumber(card: Card) {
                     return '27'
                 case '10':
                     return '28'
-                case 'B':
+                case 'Jack':
                     return '29'
-                case 'T':
+                case 'Queen':
                     return '30'
-                case 'K':
+                case 'King':
                     return '31'
-                case 'A':
+                case 'Ace':
                     return '32'
             }
     }

@@ -37,7 +37,7 @@ export class CardsComponent {
       !this.isSkippingTurn &&
       this.playerOnTurn === this.playerName &&
       this.shouldDraw === 0 &&
-      card.value === 'T'
+      card.value === 'Queen'
     ) {
       const changeColorTo = await this.askForSuit()
       if (changeColorTo) {
