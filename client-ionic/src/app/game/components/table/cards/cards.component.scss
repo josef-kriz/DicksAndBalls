@@ -4,16 +4,20 @@
   min-height: 11rem;
 }
 
+.card-container {
+  --ion-grid-column-padding: 8px;
+}
+
 .card {
   background-size: cover;
-  filter: drop-shadow(0 0 1em black);
+  filter: drop-shadow(0 0 8px black);
   height: calc(500px / 3);
   width: 100px;
 }
 
 .card:hover {
   cursor: pointer;
-  filter: drop-shadow(0 0 1em white)
+  filter: drop-shadow(0 0 16px white)
 }
 
 ::ng-deep .select-suit-modal {

@@ -1,7 +1,7 @@
 <div class="cards-container">
   <ion-grid>
     <ion-row class="ion-justify-content-center">
-      <ion-col *ngFor="let card of cards" size="auto">
+      <ion-col *ngFor="let card of cards" class="card-container" size="auto">
         <div class="card" [style.background-image]="getCardUrl(card)" (click)="playCard(card)"></div>
       </ion-col>
     </ion-row>

@@ -1,6 +1,5 @@
 <div class="deck-card-container">
     <div *ngIf="card" [style.transform]="randomShift">
-        <!--        TODO match card size 100px (remove transparent borders) -->
         <div class="deck-card" [style.background-image]="getCardUrl(card)"></div>
         <div *ngIf="colorChangedTo" class="color-overlay" [ngSwitch]="colorChangedTo">
             <img *ngSwitchCase="'Ball'" class="overlay-suit-icon" src="assets/suits/ball.svg" alt="balls"/>
