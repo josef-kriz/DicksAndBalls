@@ -15,7 +15,6 @@ class Game {
     private playedCards: Card[] = []
     private players: Player[] = []
     private playerOnTurn = 0
-    private moveCount = 0
 
     private drawCount = 0 // keeps track of how many cards to draw when seven is played
     private skippingNextPlayer = false // keeps track whether the next player should skip a turn (if an ace is played)
@@ -104,11 +103,9 @@ class Game {
         // reset winners and losers
         for (const player of this.players) {
             player.place = 0
-            player.wonAtMove = 0
+            player.canBeBroughtBack = false
             player.loser = false
         }
-
-        this.moveCount = 0
 
         this.shuffle()
         this.distributeCardsToPlayers()
@@ -175,7 +172,7 @@ class Game {
 
             if (player.cards.length === 0) {
                 player.place = this.getWinnersCount() + 1
-                player.wonAtMove = this.moveCount
+                player.canBeBroughtBack = true
                 message += ' and won!'
             }
         } else if (isDrawAction(action)) {
@@ -200,8 +197,6 @@ class Game {
         if (returnedPlayer) this.changePlayerOnTurn()
 
         this.logGame()
-
-        this.moveCount++
 
         const response: GameMessage = {
             gameState: this.getGameStateMessage(),
@@ -239,13 +234,11 @@ class Game {
 
         // loop through all the winners playing after the player on turn
         while (nextPlayer.place > 0) {
-            // compute how many rounds ago did the winner won
-            const wonRoundsAgo = (this.moveCount - nextPlayer.wonAtMove) / this.players.length
-            if (wonRoundsAgo < 1) {
+            if (nextPlayer.canBeBroughtBack) {
                 this.players[this.playerOnTurn].loser = false
                 nextPlayer.place = 0
-                for (const player of this.players) if (player.place > 0 && (this.moveCount - player.wonAtMove) / this.players.length < 1) player.place--
-                nextPlayer.wonAtMove = 0
+                for (const player of this.players) if (player.place > 0 && player.canBeBroughtBack) player.place--
+                nextPlayer.canBeBroughtBack = false
                 for (let i = 0; i < this.drawCount + 2; i++) this.drawCard(nextPlayer)
                 this.drawCount = 0
                 if (this.players[this.playerOnTurn].cards.length !== 0) this.active = true
@@ -290,7 +283,9 @@ class Game {
         for (let i = 0; i < this.players.length; i++) {
             this.playerOnTurn++
             if (this.playerOnTurn >= this.players.length) this.playerOnTurn = 0
-            if (this.players[this.playerOnTurn].place === 0) break
+            const player = this.players[this.playerOnTurn]
+            if (player.place === 0) break
+            else player.canBeBroughtBack = false
         }
     }
 
@@ -360,7 +355,7 @@ class Game {
     }
 
     private logGame(): void {
-        console.log(`# Move ${this.moveCount}:`, `on turn: ${this.players[this.playerOnTurn].name}`, `drawCount: ${this.drawCount}`, `skippingTurn: ${this.skippingNextPlayer}`, this.players, this.deck, this.playedCards)
+        console.log(`#Move: on turn: ${this.players[this.playerOnTurn].name}`, `drawCount: ${this.drawCount}`, `skippingTurn: ${this.skippingNextPlayer}`, this.players, this.deck, this.playedCards)
     }
 }
 

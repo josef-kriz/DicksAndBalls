@@ -30,7 +30,7 @@ export function gameListener(socket: Socket): void {
                 name: message.player,
                 cards: [],
                 place: 0,
-                wonAtMove: 0,
+                canBeBroughtBack: false,
                 loser: false,
             })
 

@@ -5,7 +5,7 @@ export interface Player {
     name: string
     cards: Card[]
     place: number
-    wonAtMove: number
+    canBeBroughtBack: boolean
     loser: boolean
 }
 
