@@ -27,10 +27,10 @@ export class JoinGameButtonComponent {
         type: 'add_player',
         player: playerName,
       }
-      // TODO callback should contain the reason of failure
-      this.gameService.sendMessage(message, (success: boolean) => {
-        if (!success) {
-          // TODO open modal
+
+      this.gameService.sendMessage(message, (result: string) => {
+        if (result !== 'success') {
+          this.showErrorAlert(result)
         } else {
           this.playerName.emit(playerName)
         }
@@ -90,12 +90,25 @@ export class JoinGameButtonComponent {
       dismiss &&
       dismiss.role === 'submit' &&
       dismiss.data &&
-      dismiss.data.values &&
-      dismiss.data.values.name
+      dismiss.data.values
     ) {
       return dismiss.data.values.name
     } else {
       throw new Error('No name given')
     }
+  }
+
+  private async showErrorAlert(message = 'The server rejected your username'): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Invalid Name',
+      message,
+      buttons: [
+        {
+          text: 'OK',
+        },
+      ]
+    })
+
+    await alert.present()
   }
 }

@@ -129,6 +129,9 @@ export class GamePage {
     this.colorChangedTo = colorChangedTo
     this.deckTop = deckTop
     this.playerOnTurn = playerOnTurn
+    if (playerOnTurn) { // scroll to player's cards (applies only when overflowing)
+      document.getElementById(playerOnTurn)?.scrollIntoView({behavior: 'smooth', inline: 'center'})
+    }
     this.lastMessage = {
       error: false,
       text: message.message,

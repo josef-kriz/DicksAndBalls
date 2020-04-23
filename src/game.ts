@@ -64,10 +64,9 @@ class Game {
     }
 
     public addPlayer(newPlayer: Player): void {
+        // TODO add while active
         if (this.active) throw new Error('The game is running, wait for the players to finish the current game')
-        for (const player of this.players) {
-            if (player.name === newPlayer.name) throw new Error('Player of this name already joined the game')
-        }
+        this.validatePlayersName(newPlayer.name)
 
         this.players.push(newPlayer)
         console.log('# Player added: ', newPlayer)
@@ -218,6 +217,17 @@ class Game {
         })
 
         return response
+    }
+
+    private validatePlayersName(name: string): void | never {
+        if (!name) throw new Error('The name must not be empty')
+        const lowCaseTrimmedName = name.toLowerCase().trim()
+        for (const player of this.players) {
+            if (player.name.toLowerCase().trim() === lowCaseTrimmedName) throw new Error('A player of this name has already joined the game')
+        }
+        const MAX_LENGTH = 50
+        if (lowCaseTrimmedName.length > MAX_LENGTH) throw new Error(`Your name is too long. The maximum is ${MAX_LENGTH} characters`)
+        if (lowCaseTrimmedName.length === 0) throw new Error('Your name must contain at least one character')
     }
 
     /**
