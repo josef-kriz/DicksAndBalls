@@ -24,4 +24,7 @@
                 </span>
         </div>
     </div>
+    <div *ngIf="!players || players.length === 0" class="no-players">
+        There are no players at this table
+    </div>
 </div>
