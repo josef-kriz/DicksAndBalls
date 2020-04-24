@@ -77,15 +77,16 @@
 }
 
 .action-overlay {
-  position: absolute;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 40%;
+  box-shadow: 0 0 0.8em black;
   color: white;
   font-weight: bold;
-  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.6);
   padding: 0.5em;
-  box-shadow: 0 0 0.8em black;
-  border-radius: 40%;
   pointer-events: none;
+  position: absolute;
+  text-transform: uppercase;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }

@@ -7,24 +7,22 @@ import { GamePage } from './game.page'
 import { SocketIoModule } from 'ngx-socket-io'
 import { GameSocket } from './helpers/socket/game.socket'
 import { GameService } from './game.service'
-import { JoinGameButtonComponent } from './components/join-game-button/join-game-button.component'
-import { StartGameButtonComponent } from './components/start-game-button/start-game-button.component'
 import { PlayersComponent } from './components/players/players.component'
 import { TableComponent } from './components/table/table.component'
 import { DeckCardComponent } from './components/table/deck-card/deck-card.component'
 import { CardsComponent } from './components/table/cards/cards.component'
 import { SelectSuitComponent } from './components/table/select-suit/select-suit.component'
+import { GameButtonComponent } from './components/game-button/game-button.component'
 
 @NgModule({
   declarations: [
     GamePage,
-    JoinGameButtonComponent,
-    StartGameButtonComponent,
     PlayersComponent,
     TableComponent,
     DeckCardComponent,
     CardsComponent,
     SelectSuitComponent,
+    GameButtonComponent,
   ],
     imports: [
         CommonModule,

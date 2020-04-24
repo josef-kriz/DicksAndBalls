@@ -22,33 +22,15 @@
                 [isSkippingTurn]="isSkippingTurn"
                 [shouldDraw]="shouldDraw"
                 [cardsInDeck]="cardsInDeck"
+                [playersCount]="players?.length"
         ></app-table>
         <div id="game-button">
-                <ion-grid id="game-buttons" fixed>
-                    <ion-row class="ion-justify-content-center">
-                        <ion-col size="auto">
-                            <app-join-game-button
-                                    [participating]="participating"
-                                    [gameActive]="active"
-                                    [isWinner]="isWinner"
-                                    (playerName)="playerName = $event"
-                            ></app-join-game-button>
-                        </ion-col>
-                        <ion-col size="auto">
-                            <app-start-game-button
-                                    [participating]="participating"
-                                    [gameActive]="active"
-                                    [players]="players"
-                            ></app-start-game-button>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
-<!--            <app-join-game-button-->
-<!--                    [participating]="participating"-->
-<!--                    [gameActive]="active"-->
-<!--                    [isWinner]="isWinner"-->
-<!--                    (playerName)="playerName = $event"-->
-<!--            ></app-join-game-button>-->
+            <app-game-button
+                    [participating]="participating"
+                    [gameActive]="active"
+                    [isWinner]="isWinner"
+                    (playerName)="playerName = $event"
+            ></app-game-button>
         </div>
         <ion-fab class="ion-hide-lg-up" vertical="bottom" horizontal="start" slot="fixed">
             <ion-fab-button color="light">

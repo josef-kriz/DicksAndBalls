@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { GameService } from '../../game.service'
-import { AddPlayerMessage, RemovePlayerMessage } from '../../models/message'
 import { AlertController } from '@ionic/angular'
+import { GameService } from '../../game.service'
+import { AddPlayerMessage, ChangeGameStateMessage, RemovePlayerMessage } from '../../models/message'
 
 @Component({
-  selector: 'app-join-game-button',
-  templateUrl: './join-game-button.component.html',
-  styleUrls: ['./join-game-button.component.scss'],
+  selector: 'app-game-button',
+  templateUrl: './game-button.component.html',
+  styleUrls: ['./game-button.component.scss'],
 })
-export class JoinGameButtonComponent {
+export class GameButtonComponent {
   @Input() readonly participating?: boolean
   @Input() readonly gameActive?: boolean
   @Input() readonly isWinner?: boolean
@@ -20,7 +20,39 @@ export class JoinGameButtonComponent {
   ) {
   }
 
-  async joinGame(): Promise<void> {
+  getButtonText(): string {
+    if (this.participating) {
+      if (this.gameActive && !this.isWinner) {
+        return 'End Game'
+      } else {
+        return 'Leave Game'
+      }
+    } else {
+      return 'Join Game'
+    }
+  }
+
+  async handleClick(): Promise<void> {
+    if (this.participating) {
+      if (this.gameActive && !this.isWinner) {
+        this.stopGame()
+      } else {
+        this.leaveGame()
+      }
+    } else {
+      await this.joinGame()
+    }
+  }
+
+  private stopGame(): void {
+    const message: ChangeGameStateMessage = {
+      type: 'change_game',
+      active: false,
+    }
+    this.gameService.sendMessage(message)
+  }
+
+  private async joinGame(): Promise<void> {
     try {
       const playerName = await this.askForName()
       const message: AddPlayerMessage = {
@@ -39,7 +71,7 @@ export class JoinGameButtonComponent {
     }
   }
 
-  leaveGame(): void {
+  private leaveGame(): void {
     const message: RemovePlayerMessage = {
       type: 'remove_player',
     }

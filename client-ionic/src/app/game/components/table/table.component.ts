@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core'
 import { Card, Suit } from '../../models/card'
 import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
-import { PlayersTurnMessage } from '../../models/message'
+import { ChangeGameStateMessage, PlayersTurnMessage } from '../../models/message'
 import { GameService } from '../../game.service'
 
 @Component({
@@ -20,6 +20,7 @@ export class TableComponent implements OnChanges {
   @Input() readonly isSkippingTurn?: boolean
   @Input() readonly shouldDraw?: number
   @Input() readonly cardsInDeck?: string
+  @Input() readonly playersCount?: number
   reversedDeck?: Card[]
 
   constructor(private gameService: GameService) { }
@@ -30,6 +31,14 @@ export class TableComponent implements OnChanges {
 
   handleDeckClick(): void {
     if (!this.participating) { return }
+
+    if (!this.gameActive && this.participating && this.playersCount && this.playersCount >= 2) {
+      const message: ChangeGameStateMessage = {
+        type: 'change_game',
+        active: true,
+      }
+      this.gameService.sendMessage(message)
+    }
 
     if (this.isSkippingTurn) {
       this.skipATurn()
