@@ -19,7 +19,11 @@
 }
 
 .decks {
-  padding: 1em;
+  padding: 16px;
+
+  @media screen and (max-width: 576px) {
+    padding: 0;
+  }
 }
 
 .deck-overlay-container {

@@ -31,4 +31,8 @@
   --max-width: 480px;
   --max-height: 240px;
   --border-radius: 4px;
+
+  @media screen and (max-width: 576px) {
+    --max-height: 320px;
+  }
 }
