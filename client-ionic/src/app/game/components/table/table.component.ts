@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core'
 import { Card, Suit } from '../../models/card'
 import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
 import { ChangeGameStateMessage, PlayersTurnMessage } from '../../models/message'
@@ -21,6 +21,7 @@ export class TableComponent implements OnChanges {
   @Input() readonly shouldDraw?: number
   @Input() readonly cardsInDeck?: string
   @Input() readonly playersCount?: number
+  @Output() nameChange: EventEmitter<string> = new EventEmitter()
   reversedDeck?: Card[]
 
   constructor(private gameService: GameService) { }

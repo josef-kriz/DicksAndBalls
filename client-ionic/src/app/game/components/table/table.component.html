@@ -35,5 +35,6 @@
             [playerOnTurn]="playerOnTurn"
             [isSkippingTurn]="isSkippingTurn"
             [shouldDraw]="shouldDraw"
+            (nameChange)="nameChange.emit($event)"
     ></app-cards>
 </div>

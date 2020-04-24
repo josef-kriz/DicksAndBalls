@@ -6,4 +6,8 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+  <ion-button *ngIf="!participating" class="join-button" color="medium" (click)="joinGame()">
+    <ion-icon slot="start" name="person-add"></ion-icon>
+    Join Game
+  </ion-button>
 </div>

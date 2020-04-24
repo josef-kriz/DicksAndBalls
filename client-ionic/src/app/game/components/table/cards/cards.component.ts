@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { Card, getCardsAssetNumber, Suit } from '../../../models/card'
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser'
 import { GameService } from '../../../game.service'
-import { PlayersTurnMessage } from '../../../models/message'
+import { AddPlayerMessage, PlayersTurnMessage } from '../../../models/message'
 import { PlayerAction } from '../../../models/playerAction'
-import { ModalController } from '@ionic/angular'
+import { AlertController, ModalController } from '@ionic/angular'
 import { SelectSuitComponent } from '../select-suit/select-suit.component'
 
 @Component({
@@ -20,12 +20,33 @@ export class CardsComponent {
   @Input() readonly playerOnTurn?: string
   @Input() readonly isSkippingTurn?: boolean
   @Input() readonly shouldDraw?: number
+  @Output() nameChange: EventEmitter<string> = new EventEmitter()
 
   constructor(
+    private alertController: AlertController,
     private gameService: GameService,
     private modalController: ModalController,
     private sanitizer: DomSanitizer,
     ) {
+  }
+
+  async joinGame(): Promise<void> {
+    try {
+      const playerName = await this.askForName()
+      const message: AddPlayerMessage = {
+        type: 'add_player',
+        player: playerName,
+      }
+
+      this.gameService.sendMessage(message, (result: string) => {
+        if (result !== 'success') {
+          this.showErrorAlert(result)
+        } else {
+          this.nameChange.emit(playerName)
+        }
+      })
+    } catch (e) {
+    }
   }
 
   getCardUrl(card: Card): SafeStyle {
@@ -54,6 +75,71 @@ export class CardsComponent {
         card,
       })
     }
+  }
+
+  private async askForName(): Promise<string> {
+    const alert = await this.alertController.create({
+      header: 'Choose a Name',
+      message: 'Insert a name that will be seen by your opponents.',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          placeholder: 'Put your name here',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Join Game',
+          role: 'submit',
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'alertCancelButton',
+        }
+      ]
+    })
+
+    await alert.present()
+
+    // manually set focus and key press handler to the input element
+    const alertInput: HTMLInputElement | null = document.querySelector('ion-alert input')
+    if (alertInput) {
+      alertInput.focus()
+      alertInput.onkeyup = (event) => {
+        if (event.key === 'Enter') {
+          alert.dismiss({values: {name: alertInput.value}}, 'submit')
+        }
+      }
+    }
+
+    const dismiss = await alert.onWillDismiss()
+
+    if (
+      dismiss &&
+      dismiss.role === 'submit' &&
+      dismiss.data &&
+      dismiss.data.values
+    ) {
+      return dismiss.data.values.name
+    } else {
+      throw new Error('No name given')
+    }
+  }
+
+  private async showErrorAlert(message = 'The server rejected your username'): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Invalid Name',
+      message,
+      buttons: [
+        {
+          text: 'OK',
+        },
+      ]
+    })
+
+    await alert.present()
   }
 
   private sendPlayerAction(action: PlayerAction): void {

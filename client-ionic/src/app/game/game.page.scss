@@ -1,9 +1,8 @@
 #game-button {
   bottom: 16px;
-  left: 0;
-  margin: auto;
+  left: 50%;
   position: absolute;
-  right: 0;
+  transform: translateX(-50%)
 }
 
 #game {

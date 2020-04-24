@@ -1,5 +1,5 @@
 <ion-button
-        [color]="participating ? 'danger' : 'primary'"
-        (click)="handleClick()">
-  {{getButtonText()}}
+        color="danger"
+        (click)="gameActive && !isWinner ? stopGame() : leaveGame()">
+  {{gameActive && !isWinner ? 'End Game' : 'Leave Game'}}
 </ion-button>

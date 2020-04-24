@@ -23,15 +23,15 @@
                 [shouldDraw]="shouldDraw"
                 [cardsInDeck]="cardsInDeck"
                 [playersCount]="players?.length"
+                (nameChange)="playerName = $event"
         ></app-table>
         <ion-fab class="ion-hide-lg-up" vertical="bottom" horizontal="start" slot="fixed">
             <ion-fab-button color="light">
                 <ion-menu-button></ion-menu-button>
             </ion-fab-button>
         </ion-fab>
-        <div id="game-button">
+        <div *ngIf="participating" id="game-button">
             <app-game-button
-                    [participating]="participating"
                     [gameActive]="active"
                     [isWinner]="isWinner"
                     (playerName)="playerName = $event"
