@@ -60,6 +60,18 @@
   right: 8px;
 }
 
+.deck-outline {
+  border: 1px dashed rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  height: calc(500px / 3);
+  width: 100px;
+
+  @media screen and (max-width: 576px) {
+    height: calc(400px / 3);
+    width: 80px;
+  }
+}
+
 .action-overlay {
   position: absolute;
   color: white;

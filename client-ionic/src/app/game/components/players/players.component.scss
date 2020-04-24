@@ -1,6 +1,7 @@
 #players {
   display: flex;
   flex-flow: row nowrap;
+  min-height: 112px;
   overflow: scroll;
 }
 

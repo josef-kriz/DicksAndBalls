@@ -66,7 +66,7 @@ export class GamePage {
     this.playerName = undefined
   }
 
-  shouldShowTable(): boolean {
+  shouldShowMessages(): boolean {
     if (this.error) {
       return false
     }

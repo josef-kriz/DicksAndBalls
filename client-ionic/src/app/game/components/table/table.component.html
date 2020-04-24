@@ -1,23 +1,26 @@
-<div id="table" class="ion-margin-horizontal" [class.active-table]="playerOnTurn === playerName">
+<div id="table" class="ion-margin-horizontal" [class.active-table]="playerOnTurn && playerOnTurn === playerName">
     <ion-grid>
         <ion-row class="ion-justify-content-center decks">
             <ion-col class="ion-padding-end ion-margin-end" size="auto">
                 <div class="deck-overlay-container" [class.empty-deck]="cardsInDeck === '0'" role="button"
                      (click)="handleDeckClick()">
-                    <div *ngIf="cardsInDeck !== ''" class="card-count">{{cardsInDeck}}</div>
+                    <div *ngIf="cardsInDeck" class="card-count">{{cardsInDeck}}</div>
                     <div *ngIf="isSkippingTurn" class="action-overlay">SKIP<br/>
                         <ion-icon name="arrow-redo-sharp"></ion-icon>
                     </div>
                     <div *ngIf="shouldDraw !== 0" class="action-overlay">DRAW<br/>{{shouldDraw}}</div>
                 </div>
             </ion-col>
-            <ion-col *ngIf="reversedDeck" class="ion-padding-start ion-margin-start" size="auto">
-                <app-deck-card [card]="reversedDeck[0]" [noTransform]="true"></app-deck-card>
-                <app-deck-card
-                        *ngFor="let card of reversedDeck | slice:1; trackBy: trackByCard"
-                        [card]="card"
-                        [colorChangedTo]="card.value === 'Queen' ? colorChangedTo : undefined"
-                ></app-deck-card>
+            <ion-col class="ion-padding-start ion-margin-start" size="auto">
+                <div *ngIf="reversedDeck">
+                    <app-deck-card [card]="reversedDeck[0]" [noTransform]="true"></app-deck-card>
+                    <app-deck-card
+                            *ngFor="let card of reversedDeck | slice:1; trackBy: trackByCard"
+                            [card]="card"
+                            [colorChangedTo]="card.value === 'Queen' ? colorChangedTo : undefined"
+                    ></app-deck-card>
+                </div>
+                <div *ngIf="!reversedDeck" class="deck-outline"></div>
             </ion-col>
         </ion-row>
     </ion-grid>

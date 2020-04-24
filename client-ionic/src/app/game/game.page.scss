@@ -1,3 +1,8 @@
+#game-button {
+  position: sticky;
+  bottom: 10px;
+}
+
 #game {
   position: relative;
   width: 100%;
@@ -28,13 +33,10 @@
   text-align: center;
 }
 
-#game-buttons {
-  --ion-grid-width: 300px;
-}
-
 .message {
-  padding-bottom: 24px;
   font-style: italic;
+  min-height: 43px;
+  padding: 0 8px 24px;
 }
 
 .error-message {
