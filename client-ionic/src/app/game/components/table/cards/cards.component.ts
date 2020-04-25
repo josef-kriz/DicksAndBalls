@@ -6,6 +6,7 @@ import { AddPlayerMessage, PlayersTurnMessage } from '../../../models/message'
 import { PlayerAction } from '../../../models/playerAction'
 import { AlertController, ModalController } from '@ionic/angular'
 import { SelectSuitComponent } from '../select-suit/select-suit.component'
+import { SettingsService } from '../../../../settings/settings.service'
 
 @Component({
   selector: 'app-cards',
@@ -30,6 +31,7 @@ export class CardsComponent {
     private gameService: GameService,
     private modalController: ModalController,
     private sanitizer: DomSanitizer,
+    private settingsService: SettingsService,
     ) {
   }
 
@@ -56,6 +58,7 @@ export class CardsComponent {
           this.showErrorAlert(result)
         } else {
           this.nameChange.emit(playerName)
+          this.settingsService.setPlayerName(playerName)
         }
       })
     } catch (e) {
@@ -99,6 +102,7 @@ export class CardsComponent {
           name: 'name',
           type: 'text',
           placeholder: 'Put your name here',
+          value: await this.settingsService.getPlayerName()
         },
       ],
       buttons: [

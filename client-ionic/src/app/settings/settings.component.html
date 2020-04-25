@@ -1,0 +1,82 @@
+<ion-content class="ion-padding">
+  <ion-button class="ion-float-right" fill="clear" color="dark" size="large" (click)="closeModal()">
+    <ion-icon name="close"></ion-icon>
+  </ion-button>
+  <h2>Settings</h2>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Preferred Name</ion-label>
+          <ion-input
+                  maxlength="50"
+                  [value]="playerName | async"
+                  (ionChange)="setPlayerName($event)"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="stacked">Language</ion-label>
+          <ion-select okText="Select" [value]="language | async" (ionChange)="setLanguage($event)">
+            <ion-select-option value="default">System's default</ion-select-option>
+            <ion-select-option value="english">English</ion-select-option>
+            <ion-select-option value="czech">Česky</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label>Sounds</ion-label>
+          <ion-toggle
+                  slot="end"
+                  [checked]="sounds | async"
+                  (ionChange)="setSounds($event)"
+          ></ion-toggle>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label>Pop-up windows</ion-label>
+          <ion-toggle
+                  slot="end"
+                  [checked]="popUps | async"
+                  (ionChange)="setPopUps($event)"
+          ></ion-toggle>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12">
+        <h3>Dark Theme</h3>
+        <ion-item>
+          <ion-label>Use system's default</ion-label>
+          <ion-checkbox slot="end" [checked]="systemTheme | async" (ionChange)="setSystemTheme($event)"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>Use dark theme</ion-label>
+          <ion-toggle slot="end" [disabled]="systemTheme | async" [checked]="darkTheme | async" (ionChange)="setDarkTheme($event)"></ion-toggle>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12">
+        <h3>Cards</h3>
+        <ion-item>
+          <ion-label position="floating">Card back</ion-label>
+          <ion-select>
+            <ion-select-option value="1">1</ion-select-option>
+            <ion-select-option value="2">2</ion-select-option>
+            <ion-select-option value="3">3</ion-select-option>
+            <ion-select-option value="4">4</ion-select-option>
+            <ion-select-option value="5">5</ion-select-option>
+            <ion-select-option value="6">6</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Type</ion-label>
+          <ion-select>
+            <ion-select-option value="one-headed">One-headed</ion-select-option>
+            <ion-select-option value="double-headed">Double-headed</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

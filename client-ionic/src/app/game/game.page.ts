@@ -16,6 +16,7 @@ import {
 } from './models/message'
 import inactivityDetection from './helpers/inactivityDetection'
 import { AlertController } from '@ionic/angular'
+import { SettingsService } from '../settings/settings.service'
 
 @Component({
   selector: 'app-game',
@@ -46,6 +47,7 @@ export class GamePage {
   constructor(
     private alertController: AlertController,
     private gameService: GameService,
+    private settingsService: SettingsService,
   ) {
   }
 
@@ -126,13 +128,18 @@ export class GamePage {
     this.shouldDraw = playerOnTurn === this.playerName ? shouldDraw : 0
     this.cardsInDeck = cardsInDeck
 
-    if (playerOnTurn === this.playerName && this.active) {
+    if (playerOnTurn === this.playerName && this.active && await this.settingsService.getSounds()) {
       inactivityDetection.startDetecting()
     }
     if (playerOnTurn) { // scroll to player's cards (applies only when overflowing)
-      document.getElementById(playerOnTurn)?.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'center'})
+      const playersEl = document.getElementById('players')
+      if (playersEl && playersEl.scrollWidth !== playersEl.clientWidth) {
+        document.getElementById(playerOnTurn)?.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'center'})
+      }
     }
-    await this.playDrawCardSound(drewCards)
+    if (await this.settingsService.getSounds()) {
+      await this.playDrawCardSound(drewCards)
+    }
     if (broughtBackToGame) {
       await this.handleBroughtBackToGame(broughtBackToGame === this.playerName)
     }
@@ -157,33 +164,44 @@ export class GamePage {
   }
 
   private async handleWin(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'You won!',
-      message: 'You\'re a winner! <span role="img" aria-label="ta-da">🎉</span>\n',
-      buttons: ['I\'m awesome!']
-    })
-    await alert.present()
+    if (await this.settingsService.getPopUps()) {
+      const alert = await this.alertController.create({
+        header: 'You won!',
+        message: 'You\'re a winner! <span role="img" aria-label="ta-da">🎉</span>\n',
+        buttons: ['I\'m awesome!']
+      })
+      await alert.present()
+    }
 
-    const audio = new Audio('assets/sounds/win31.mp3')
-    await audio.play()
+    if (await this.settingsService.getSounds()) {
+      const audio = new Audio('assets/sounds/win31.mp3')
+      await audio.play()
+    }
   }
 
   private async handleLoss(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'You lost!',
-      message: 'You\'re a loser! <span role="img" aria-label="thumb-down">👎</span>',
-      buttons: ['I suck']
-    })
-    await alert.present()
+    if (await this.settingsService.getPopUps()) {
+      const alert = await this.alertController.create({
+        header: 'You lost!',
+        message: 'You\'re a loser! <span role="img" aria-label="thumb-down">👎</span>',
+        buttons: ['I suck']
+      })
+      await alert.present()
+    }
 
-    const audio = new Audio('assets/sounds/sadTrombone.mp3')
-    await audio.play()
+    if (await this.settingsService.getSounds()) {
+      const audio = new Audio('assets/sounds/sadTrombone.mp3')
+      await audio.play()
+    }
   }
 
   private async handleBroughtBackToGame(me: boolean = false): Promise<void> {
-    const audio = new Audio('assets/sounds/airHorn.mp3')
-    await audio.play()
-    if (me) {
+    if (await this.settingsService.getSounds()) {
+      const audio = new Audio('assets/sounds/airHorn.mp3')
+      await audio.play()
+    }
+
+    if (me && await this.settingsService.getPopUps()) {
       const alert = await this.alertController.create({
         header: 'You\'ve been brought back to the game!',
         message: 'Another player has brought you back to the game with a 7 of Hearts!',
