@@ -30,7 +30,7 @@ export class GamePage {
   deckTop?: Card[]
   playerOnTurn?: string
   cards?: Card[]
-  lastMessage?: {
+  message?: {
     error: boolean
     text: string
   }
@@ -46,7 +46,8 @@ export class GamePage {
   constructor(
     private alertController: AlertController,
     private gameService: GameService,
-  ) {}
+  ) {
+  }
 
   // noinspection JSUnusedGlobalSymbols
   ionViewWillEnter(): void {
@@ -67,17 +68,6 @@ export class GamePage {
     this.playerName = undefined
   }
 
-  shouldShowMessages(): boolean {
-    if (this.error) {
-      return false
-    }
-    if (this.active) {
-      return true
-    }
-    // if there is a winner/loser among the players show the latest played game
-    return !!this.players?.some(player => player.place > 0 || player.loser)
-  }
-
   private handleServerMessage = async (message: ServerMessage): Promise<void> => {
     if (this.error) {
       this.error = false
@@ -94,7 +84,7 @@ export class GamePage {
   }
 
   private handleErrorMessage(message: ErrorMessage): void {
-    this.lastMessage = {
+    this.message = {
       error: true,
       text: message.message
     }
@@ -105,6 +95,12 @@ export class GamePage {
     this.active = active
     this.players = players
     this.participating = players.some(player => player.name === this.playerName)
+    if (this.participating && !this.active) {
+      this.message = {
+        error: false,
+        text: this.players.length >= 2 ? 'Start the game by shuffling the deck' : 'There must be at least two players to start the game',
+      }
+    }
   }
 
   private async handleGameUpdate(message: GameUpdateMessage): Promise<void> {
@@ -122,7 +118,7 @@ export class GamePage {
     this.colorChangedTo = colorChangedTo
     this.deckTop = deckTop
     this.playerOnTurn = playerOnTurn
-    this.lastMessage = {
+    this.message = {
       error: false,
       text: message.message,
     }

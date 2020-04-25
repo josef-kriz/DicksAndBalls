@@ -41,6 +41,7 @@ export class TableComponent implements OnChanges {
         active: true,
       }
       this.gameService.sendMessage(message)
+      return
     }
 
     if (this.isSkippingTurn) {
@@ -57,6 +58,10 @@ export class TableComponent implements OnChanges {
    */
   trackByCard(index: number, card: Card): string {
     return `${card.value}${card.suit}`
+  }
+
+  canShuffle(): boolean {
+    return !this.gameActive && !!this.participating && !!this.playersCount && this.playersCount >= 2
   }
 
   private drawCard(): void {

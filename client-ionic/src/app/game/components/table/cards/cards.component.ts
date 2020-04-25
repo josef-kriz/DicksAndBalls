@@ -22,6 +22,7 @@ export class CardsComponent {
   @Input() readonly isLoser?: boolean
   @Input() readonly isSkippingTurn?: boolean
   @Input() readonly shouldDraw?: number
+  @Input() readonly playersCount?: number
   @Output() nameChange: EventEmitter<string> = new EventEmitter()
 
   constructor(

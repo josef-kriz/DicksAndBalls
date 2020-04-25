@@ -5,11 +5,11 @@
                 <div class="deck-overlay-container" [class.empty-deck]="cardsInDeck === '0'" role="button"
                      (click)="handleDeckClick()">
                     <div *ngIf="cardsInDeck" class="card-count">{{cardsInDeck}}</div>
-                    <div *ngIf="isSkippingTurn" class="action-overlay">Skip<br/>
+                    <div *ngIf="isSkippingTurn && !canShuffle()" class="action-overlay">Skip<br/>
                         <ion-icon name="arrow-redo-sharp"></ion-icon>
                     </div>
-                    <div *ngIf="shouldDraw !== 0" class="action-overlay">Draw<br/>{{shouldDraw}}</div>
-                    <div *ngIf="!gameActive && participating && this.playersCount && playersCount >= 2" class="action-overlay">Shuffle<br/>
+                    <div *ngIf="shouldDraw !== 0 && !canShuffle()" class="action-overlay">Draw<br/>{{shouldDraw}}</div>
+                    <div *ngIf="canShuffle()" class="action-overlay">Shuffle<br/>
                         <ion-icon name="shuffle"></ion-icon>
                     </div>
                 </div>
@@ -37,6 +37,7 @@
             [isLoser]="isLoser"
             [isSkippingTurn]="isSkippingTurn"
             [shouldDraw]="shouldDraw"
+            [playersCount]="playersCount"
             (nameChange)="nameChange.emit($event)"
     ></app-cards>
 </div>

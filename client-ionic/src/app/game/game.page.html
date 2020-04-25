@@ -7,9 +7,9 @@
                 [playerName]="playerName"
                 [playerOnTurn]="playerOnTurn"
         ></app-players>
-        <div class="message" [class.error-message]="lastMessage?.error">
-            <ion-text *ngIf="shouldShowMessages() && lastMessage"
-                      [color]="lastMessage.error ? 'danger' : null">{{lastMessage.text}}</ion-text>
+        <div class="message" [class.error-message]="message?.error">
+            <ion-text *ngIf="message"
+                      [color]="message.error ? 'danger' : null">{{message.text}}</ion-text>
         </div>
         <app-table
                 [gameActive]="active"
