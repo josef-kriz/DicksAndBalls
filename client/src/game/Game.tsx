@@ -127,14 +127,13 @@ export const Game: FC = (): ReactElement => {
                 players,
             }
         } else if (isGameUpdateMessage(message)) {
-            const {players, colorChangedTo, deckTop, playerOnTurn, skippingNextPlayer, shouldDraw, cardsInDeck, broughtBackToGame, drewCards} = message
+            const {colorChangedTo, deckTop, playerOnTurn, skippingNextPlayer, shouldDraw, cardsInDeck, broughtBackToGame, drewCards} = message
             if (playerOnTurn === playerName && state.active) inactivityDetection.startDetecting()
             if (broughtBackToGame) handleBroughtBackToGame(broughtBackToGame === playerName)
             playDrawCardSound(drewCards)
 
             return {
                 ...state,
-                players,
                 colorChangedTo,
                 deckTop,
                 playerOnTurn,

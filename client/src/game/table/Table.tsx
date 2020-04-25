@@ -59,7 +59,7 @@ export const Table: FC<Props> = (props: Props): ReactElement => {
             const reversed = [...props.deckTop].reverse()
             return (
                 <div>
-                    {reversed.map((card) => <DeckCard key={`${card.suit}${card.value}`} card={card} noTransform={reversed.length === 1} colorChangedTo={card.value === 'T' ? props.colorChangedTo : undefined}/>)}
+                    {reversed.map((card) => <DeckCard key={`${card.suit}${card.value}`} card={card} noTransform={reversed.length === 1} colorChangedTo={card.value === 'Queen' ? props.colorChangedTo : undefined}/>)}
                     <img src="/cards/transparent.png" alt="deck background"/>
                 </div>
             )

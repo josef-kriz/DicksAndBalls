@@ -45,7 +45,7 @@ export const Cards: FC<Props> = (props: Props): ReactElement => {
             !props.isSkippingTurn &&
             props.playerOnTurn === props.playerName &&
             props.shouldDraw === 0 &&
-            card.value === 'T'
+            card.value === 'Queen'
         ) {
             setPickedCard(card)
             askForColor()
