@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { AboutComponent } from './about/about.component'
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit {
   ];
 
   constructor(
+    private modalController: ModalController,
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
@@ -44,5 +46,12 @@ export class AppComponent implements OnInit {
     if (path !== undefined) {
       this.selectedIndex = this.tables.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
     }
+  }
+
+  async openAbout(): Promise<void> {
+    const modal = await this.modalController.create({
+      component: AboutComponent
+    });
+    await modal.present();
   }
 }
