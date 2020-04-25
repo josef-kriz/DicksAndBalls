@@ -1,4 +1,4 @@
-<div id="table" class="ion-margin-horizontal" [class.active-table]="playerOnTurn && playerOnTurn === playerName">
+<div id="table" class="ion-padding ion-margin-horizontal" [class.active-table]="playerOnTurn && playerOnTurn === playerName">
     <ion-grid>
         <ion-row class="ion-justify-content-center decks">
             <ion-col class="ion-padding-end ion-margin-end" size="auto">
@@ -33,6 +33,8 @@
             [cards]="cards"
             [playerName]="playerName"
             [playerOnTurn]="playerOnTurn"
+            [isWinner]="isWinner"
+            [isLoser]="isLoser"
             [isSkippingTurn]="isSkippingTurn"
             [shouldDraw]="shouldDraw"
             (nameChange)="nameChange.emit($event)"

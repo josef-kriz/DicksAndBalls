@@ -18,6 +18,8 @@ export class TableComponent implements OnChanges {
   @Input() readonly cards?: Card[]
   @Input() readonly colorChangedTo?: Suit
   @Input() readonly isSkippingTurn?: boolean
+  @Input() readonly isWinner?: boolean
+  @Input() readonly isLoser?: boolean
   @Input() readonly shouldDraw?: number
   @Input() readonly cardsInDeck?: string
   @Input() readonly playersCount?: number

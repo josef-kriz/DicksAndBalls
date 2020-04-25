@@ -38,6 +38,7 @@ export class GamePage {
   isSkippingTurn = false
   shouldDraw = 0
   isWinner = false
+  isLoser = false
   cardsInDeck?: string
 
   private error = false
@@ -77,7 +78,7 @@ export class GamePage {
     return !!this.players?.some(player => player.place > 0 || player.loser)
   }
 
-  private handleServerMessage = (message: ServerMessage): void => {
+  private handleServerMessage = async (message: ServerMessage): Promise<void> => {
     if (this.error) {
       this.error = false
     }
@@ -86,9 +87,9 @@ export class GamePage {
     } else if (isGameStateMessage(message)) {
       this.handleGameStateUpdate(message)
     } else if (isGameUpdateMessage(message)) {
-      this.handleGameUpdate(message)
+      await this.handleGameUpdate(message)
     } else if (isPlayerUpdateMessage(message)) {
-      this.handlePlayerUpdate(message)
+      await this.handlePlayerUpdate(message)
     }
   }
 
@@ -106,7 +107,7 @@ export class GamePage {
     this.participating = players.some(player => player.name === this.playerName)
   }
 
-  private handleGameUpdate(message: GameUpdateMessage): void {
+  private async handleGameUpdate(message: GameUpdateMessage): Promise<void> {
     const {
       colorChangedTo,
       deckTop,
@@ -118,20 +119,9 @@ export class GamePage {
       drewCards
     } = message
 
-    if (playerOnTurn === this.playerName && this.active) {
-      inactivityDetection.startDetecting()
-    }
-    if (broughtBackToGame) {
-      this.handleBroughtBackToGame(broughtBackToGame === this.playerName)
-    }
-    this.playDrawCardSound(drewCards)
-
     this.colorChangedTo = colorChangedTo
     this.deckTop = deckTop
     this.playerOnTurn = playerOnTurn
-    if (playerOnTurn) { // scroll to player's cards (applies only when overflowing)
-      document.getElementById(playerOnTurn)?.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'center'})
-    }
     this.lastMessage = {
       error: false,
       text: message.message,
@@ -139,18 +129,30 @@ export class GamePage {
     this.isSkippingTurn = this.participating && skippingNextPlayer && playerOnTurn === this.playerName
     this.shouldDraw = playerOnTurn === this.playerName ? shouldDraw : 0
     this.cardsInDeck = cardsInDeck
+
+    if (playerOnTurn === this.playerName && this.active) {
+      inactivityDetection.startDetecting()
+    }
+    if (playerOnTurn) { // scroll to player's cards (applies only when overflowing)
+      document.getElementById(playerOnTurn)?.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'center'})
+    }
+    await this.playDrawCardSound(drewCards)
+    if (broughtBackToGame) {
+      await this.handleBroughtBackToGame(broughtBackToGame === this.playerName)
+    }
   }
 
-  private handlePlayerUpdate(message: PlayerUpdateMessage): void {
+  private async handlePlayerUpdate(message: PlayerUpdateMessage): Promise<void> {
     const {cards, place, loser} = message
     if (place > 0) {
-      this.handleWin()
+      await this.handleWin()
     } else if (loser) {
-      this.handleLoss()
+      await this.handleLoss()
     }
 
     this.cards = cards
     this.isWinner = place > 0
+    this.isLoser = loser
   }
 
   private handleServerDisconnect = (): void => {
@@ -196,6 +198,7 @@ export class GamePage {
     }
   }
 
+  // noinspection JSMethodCanBeStatic
   private async playDrawCardSound(cards: number): Promise<void> {
     let audioFile: string
     switch (cards) {

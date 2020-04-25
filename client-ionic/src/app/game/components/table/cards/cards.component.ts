@@ -18,6 +18,8 @@ export class CardsComponent {
   @Input() readonly cards?: Card[]
   @Input() readonly playerName?: string
   @Input() readonly playerOnTurn?: string
+  @Input() readonly isWinner?: boolean
+  @Input() readonly isLoser?: boolean
   @Input() readonly isSkippingTurn?: boolean
   @Input() readonly shouldDraw?: number
   @Output() nameChange: EventEmitter<string> = new EventEmitter()
@@ -28,6 +30,16 @@ export class CardsComponent {
     private modalController: ModalController,
     private sanitizer: DomSanitizer,
     ) {
+  }
+
+  shouldShowCards(): boolean {
+    if (!this.participating) {
+      return false
+    }
+    if (this.gameActive) {
+      return true
+    }
+    return !!(this.isWinner || this.isLoser);
   }
 
   async joinGame(): Promise<void> {

@@ -20,6 +20,8 @@
                 [cards]="cards"
                 [colorChangedTo]="colorChangedTo"
                 [isSkippingTurn]="isSkippingTurn"
+                [isWinner]="isWinner"
+                [isLoser]="isLoser"
                 [shouldDraw]="shouldDraw"
                 [cardsInDeck]="cardsInDeck"
                 [playersCount]="players?.length"
@@ -30,13 +32,14 @@
                 <ion-menu-button></ion-menu-button>
             </ion-fab-button>
         </ion-fab>
-        <div *ngIf="participating" id="game-button">
+        <ion-fab *ngIf="participating" vertical="bottom" horizontal="center" slot="fixed">
             <app-game-button
+                    id="game-button"
                     [gameActive]="active"
                     [isWinner]="isWinner"
                     (playerName)="playerName = $event"
             ></app-game-button>
-        </div>
+        </ion-fab>
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
             <ion-fab-button color="light">
                 <ion-icon name="chatbubbles-sharp"></ion-icon>
