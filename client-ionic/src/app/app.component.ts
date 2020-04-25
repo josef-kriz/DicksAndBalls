@@ -4,6 +4,7 @@ import { ModalController, Platform } from '@ionic/angular'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AboutComponent } from './about/about.component'
+import { RulesComponent } from './rules/rules.component'
 
 @Component({
   selector: 'app-root',
@@ -48,9 +49,16 @@ export class AppComponent implements OnInit {
     }
   }
 
+  async openRules(): Promise<void> {
+    const modal = await this.modalController.create({
+      component: RulesComponent,
+    });
+    await modal.present();
+  }
+
   async openAbout(): Promise<void> {
     const modal = await this.modalController.create({
-      component: AboutComponent
+      component: AboutComponent,
     });
     await modal.present();
   }
