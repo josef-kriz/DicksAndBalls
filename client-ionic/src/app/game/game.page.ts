@@ -116,6 +116,9 @@ export class GamePage implements ComponentCanDeactivate {
         text: this.players.length >= 2 ? 'Start the game by shuffling the deck' : 'There must be at least two players to start the game',
       }
     }
+    if (!active && this.titleService.getTitle().startsWith('*ON TURN*')) {
+      this.titleService.setTitle(this.titleService.getTitle().slice(10))
+    }
   }
 
   private async handleGameUpdate(message: GameUpdateMessage): Promise<void> {
