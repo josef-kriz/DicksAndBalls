@@ -47,7 +47,7 @@ export class SettingsComponent {
   }
 
   async setDarkTheme(event: CustomEvent): Promise<void> {
-    if (event.detail.checked !== null) {
+    if (event.detail.checked !== null && !(await this.settingsService.getSystemTheme())) {
       await this.settingsService.setDarkTheme(event.detail.checked)
     }
   }
