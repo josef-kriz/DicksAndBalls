@@ -7,6 +7,7 @@ import { Subject } from 'rxjs'
 })
 export class SettingsService {
   private cardBackSubject = new Subject<string>()
+  private cardTypeSubject = new Subject<string>()
 
   constructor(private storage: Storage) { }
 
@@ -101,11 +102,15 @@ export class SettingsService {
   async setCardType(cardType: string): Promise<void> {
     await this.storage.ready()
     await this.storage.set('cardType', cardType)
+    this.cardTypeSubject.next(cardType)
   }
 
-  async getCardType(): Promise<string> {
-    await this.storage.ready()
-    const cardType = await this.storage.get('cardType')
-    return cardType === null ? 'one-headed' : cardType
+  getCardType(): Subject<string> {
+    this.storage.ready().then(() => {
+      this.storage.get('cardType').then((cardType => {
+        this.cardTypeSubject.next(cardType === null ? 'single-headed' : cardType)
+      }))
+    })
+    return this.cardTypeSubject
   }
 }

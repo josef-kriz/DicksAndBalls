@@ -23,6 +23,7 @@ export class SettingsComponent {
   systemTheme = this.settingsService.getSystemTheme()
   darkTheme = this.settingsService.getDarkTheme()
   cardBack = this.settingsService.getCardBack()
+  cardType = this.settingsService.getCardType()
 
   async setPlayerName(event: CustomEvent): Promise<void> {
     await this.settingsService.setPlayerName(event.detail.value)
@@ -60,5 +61,11 @@ export class SettingsComponent {
 
   async closeModal(): Promise<void> {
     await this.modalController.dismiss()
+  }
+
+  async setCardType(event: CustomEvent): Promise<void> {
+    if (event.detail.value !== null) {
+      await this.settingsService.setCardType(event.detail.value)
+    }
   }
 }

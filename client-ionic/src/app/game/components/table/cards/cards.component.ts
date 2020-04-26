@@ -25,6 +25,7 @@ export class CardsComponent {
   @Input() readonly shouldDraw?: number
   @Input() readonly playersCount?: number
   @Output() nameChange: EventEmitter<string> = new EventEmitter()
+  cardType = 'single-headed'
 
   constructor(
     private alertController: AlertController,
@@ -33,6 +34,7 @@ export class CardsComponent {
     private sanitizer: DomSanitizer,
     private settingsService: SettingsService,
     ) {
+    this.settingsService.getCardType().subscribe(type => this.cardType = type)
   }
 
   shouldShowCards(): boolean {
@@ -66,7 +68,7 @@ export class CardsComponent {
   }
 
   getCardUrl(card: Card): SafeStyle {
-    return this.sanitizer.bypassSecurityTrustStyle(`url("assets/cards/${getCardsAssetNumber(card)}.png")`)
+    return this.sanitizer.bypassSecurityTrustStyle(`url("assets/cards/${this.cardType}/${getCardsAssetNumber(card)}.png")`)
   }
 
   async playCard(card: Card): Promise<void> {

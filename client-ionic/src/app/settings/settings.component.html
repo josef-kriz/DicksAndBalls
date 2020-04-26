@@ -75,8 +75,8 @@
         </ion-grid>
         <ion-item>
           <ion-label position="floating">Type</ion-label>
-          <ion-select>
-            <ion-select-option value="one-headed">One-headed</ion-select-option>
+          <ion-select (ionChange)="setCardType($event)" [value]="cardType | async">
+            <ion-select-option value="single-headed">Single-headed</ion-select-option>
             <ion-select-option value="double-headed">Double-headed</ion-select-option>
           </ion-select>
         </ion-item>

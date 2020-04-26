@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core'
 import { Card, getCardsAssetNumber, Suit } from '../../../models/card'
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser'
+import { SettingsService } from '../../../../settings/settings.service'
 
 @Component({
   selector: 'app-deck-card',
@@ -12,15 +13,21 @@ export class DeckCardComponent implements OnInit {
   @Input() readonly noTransform?: boolean
   @Input() readonly colorChangedTo?: Suit
   randomShift: string | null = null
+  cardType = 'single-headed'
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    private settingsService: SettingsService,
+    ) {
+    this.settingsService.getCardType().subscribe(type => this.cardType = type)
+  }
 
   ngOnInit(): void {
     this.randomShift = this.getRandomShift()
   }
 
   getCardUrl(card: Card): SafeStyle {
-    return this.sanitizer.bypassSecurityTrustStyle(`url("assets/cards/${getCardsAssetNumber(card)}.png")`)
+    return this.sanitizer.bypassSecurityTrustStyle(`url("assets/cards/${this.cardType}/${getCardsAssetNumber(card)}.png")`)
   }
 
   /**
