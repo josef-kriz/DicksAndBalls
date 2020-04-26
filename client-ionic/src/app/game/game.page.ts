@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, HostListener } from '@angular/core'
 import { GameService } from './game.service'
 import { Opponent } from './models/opponent'
 import { Card, Suit } from './models/card'
@@ -18,13 +18,15 @@ import inactivityDetection from './helpers/inactivityDetection'
 import { AlertController, MenuController } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
 import { Title } from '@angular/platform-browser'
+import { ComponentCanDeactivate } from './helpers/leaveGameGuard'
+import { Observable } from 'rxjs'
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
 })
-export class GamePage {
+export class GamePage implements ComponentCanDeactivate {
   playerName?: string
   participating = false
   active?: boolean
@@ -71,6 +73,14 @@ export class GamePage {
     }
     this.gameService.sendMessage(message)
     this.playerName = undefined
+  }
+
+  /**
+   * Checks whether the user can leave the page
+   */
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !(this.participating && !!this.active && !!this.cards && this.cards.length > 0)
   }
 
   private handleServerMessage = async (message: ServerMessage): Promise<void> => {
