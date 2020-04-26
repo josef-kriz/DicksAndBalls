@@ -17,6 +17,7 @@ import {
 import inactivityDetection from './helpers/inactivityDetection'
 import { AlertController, MenuController } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
+import { Title } from '@angular/platform-browser'
 
 @Component({
   selector: 'app-game',
@@ -49,6 +50,7 @@ export class GamePage {
     private gameService: GameService,
     private menuController: MenuController,
     private settingsService: SettingsService,
+    private titleService: Title,
   ) {
   }
 
@@ -130,7 +132,10 @@ export class GamePage {
     this.cardsInDeck = cardsInDeck
 
     if (playerOnTurn === this.playerName && this.active && await this.settingsService.getSounds()) {
+      this.titleService.setTitle(`*ON TURN* ${this.titleService.getTitle()}`)
       inactivityDetection.startDetecting()
+    } else if (this.titleService.getTitle().startsWith('*ON TURN*')) {
+      this.titleService.setTitle(this.titleService.getTitle().slice(10))
     }
     if (playerOnTurn) { // scroll to player's cards (applies only when overflowing)
       const playersEl = document.getElementById('players')
