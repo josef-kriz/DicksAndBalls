@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ModalController, Platform } from '@ionic/angular'
+import { MenuController, ModalController, Platform } from '@ionic/angular'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AboutComponent } from './about/about.component'
@@ -27,22 +27,26 @@ export class AppComponent implements OnInit {
       icon: 'beer',
     },
   ];
+  public isMenuEnabled?: Promise<boolean>
+  private init: Promise<void>
 
   constructor(
+    private menuController: MenuController,
     private modalController: ModalController,
     private platform: Platform,
     private settingsService: SettingsService,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
   ) {
-    this.initializeApp();
+    this.init = this.initializeApp();
   }
 
-  initializeApp(): void {
-    this.platform.ready().then(() => {
+  async initializeApp(): Promise<void> {
+    await this.platform.ready()
+    if (this.platform.is('hybrid')) {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-    });
+    }
   }
 
   async ngOnInit(): Promise<void> {
@@ -62,6 +66,7 @@ export class AppComponent implements OnInit {
         await this.settingsService.setDarkTheme(mediaQuery.matches)
       }
     })
+    this.isMenuEnabled = this.menuController.isEnabled('main-menu')
   }
 
   async openSettings(): Promise<void> {
@@ -83,5 +88,19 @@ export class AppComponent implements OnInit {
       component: AboutComponent,
     });
     await modal.present();
+  }
+
+  async showMenu(): Promise<void> {
+    if (await this.menuController.isEnabled('main-menu')) {
+      await this.menuController.open('main-menu')
+    } else {
+      await this.menuController.enable(true, 'main-menu')
+      this.isMenuEnabled = this.menuController.isEnabled('main-menu')
+    }
+  }
+
+  async hideMenu(): Promise<void> {
+    await this.menuController.enable(false, 'main-menu')
+    this.isMenuEnabled = this.menuController.isEnabled('main-menu')
   }
 }

@@ -15,7 +15,7 @@ import {
   ServerMessage
 } from './models/message'
 import inactivityDetection from './helpers/inactivityDetection'
-import { AlertController } from '@ionic/angular'
+import { AlertController, MenuController } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
 
 @Component({
@@ -47,6 +47,7 @@ export class GamePage {
   constructor(
     private alertController: AlertController,
     private gameService: GameService,
+    private menuController: MenuController,
     private settingsService: SettingsService,
   ) {
   }

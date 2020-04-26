@@ -1,5 +1,5 @@
 <div id="game">
-    <ion-content id="game-content">
+    <div id="game-content">
         <app-players
                 [players]="players"
                 [gameActive]="active"
@@ -27,23 +27,18 @@
                 [playersCount]="players?.length"
                 (nameChange)="playerName = $event"
         ></app-table>
-        <ion-fab class="ion-hide-lg-up" vertical="bottom" horizontal="start" slot="fixed">
-            <ion-fab-button color="light">
-                <ion-menu-button></ion-menu-button>
-            </ion-fab-button>
-        </ion-fab>
-        <ion-fab *ngIf="participating" vertical="bottom" horizontal="center" slot="fixed">
-            <app-game-button
-                    id="game-button"
-                    [gameActive]="active"
-                    [isWinner]="isWinner"
-                    (playerName)="playerName = $event"
-            ></app-game-button>
-        </ion-fab>
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-            <ion-fab-button color="light">
-                <ion-icon name="chatbubbles-sharp"></ion-icon>
-            </ion-fab-button>
-        </ion-fab>
-    </ion-content>
+    </div>
 </div>
+<ion-fab *ngIf="participating" vertical="bottom" horizontal="center" slot="fixed">
+    <app-game-button
+            id="game-button"
+            [gameActive]="active"
+            [isWinner]="isWinner"
+            (playerName)="playerName = $event"
+    ></app-game-button>
+</ion-fab>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="light">
+        <ion-icon name="chatbubbles-sharp"></ion-icon>
+    </ion-fab-button>
+</ion-fab>
