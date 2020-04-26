@@ -21,14 +21,14 @@
   //noinspection CssUnknownTarget
   background: url("/assets/background/wood1.jpg") repeat center / contain;
   filter: brightness(200%) blur(3px);
+  // remove imperfect blur
+  transform: scale(1.03);
   opacity: 0.5;
 }
 
 ::ng-deep {
   body.dark #game::before {
     filter: brightness(15%) blur(3px);
-    // remove imperfect blur
-    transform: scale(1.03);
     opacity: 1;
   }
 }
