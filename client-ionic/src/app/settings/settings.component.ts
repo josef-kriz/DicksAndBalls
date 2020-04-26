@@ -8,6 +8,7 @@ import { SettingsService } from './settings.service'
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent {
+  public cardBacks = ['1', '2', '3', '4', '5', '6']
 
   constructor(
     private modalController: ModalController,
@@ -21,6 +22,7 @@ export class SettingsComponent {
   popUps = this.settingsService.getPopUps()
   systemTheme = this.settingsService.getSystemTheme()
   darkTheme = this.settingsService.getDarkTheme()
+  cardBack = this.settingsService.getCardBack()
 
   async setPlayerName(event: CustomEvent): Promise<void> {
     await this.settingsService.setPlayerName(event.detail.value)
@@ -50,6 +52,10 @@ export class SettingsComponent {
     if (event.detail.checked !== null && !(await this.settingsService.getSystemTheme())) {
       await this.settingsService.setDarkTheme(event.detail.checked)
     }
+  }
+
+  async setCardBack(cardBack: string): Promise<void> {
+    await this.settingsService.setCardBack(cardBack)
   }
 
   async closeModal(): Promise<void> {

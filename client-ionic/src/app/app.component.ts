@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
     // if user wants to use system's theme, update it (and register a listener)
     if (await this.settingsService.getSystemTheme()) {
-      await this.settingsService.setSystemTheme(prefersDark.matches)
+      await this.settingsService.setDarkTheme(prefersDark.matches)
     } else {
       await this.settingsService.setDarkTheme(await this.settingsService.getDarkTheme())
     }

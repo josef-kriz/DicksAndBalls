@@ -58,17 +58,21 @@
       </ion-col>
       <ion-col size="12">
         <h3>Cards</h3>
-        <ion-item>
-          <ion-label position="floating">Card back</ion-label>
-          <ion-select>
-            <ion-select-option value="1">1</ion-select-option>
-            <ion-select-option value="2">2</ion-select-option>
-            <ion-select-option value="3">3</ion-select-option>
-            <ion-select-option value="4">4</ion-select-option>
-            <ion-select-option value="5">5</ion-select-option>
-            <ion-select-option value="6">6</ion-select-option>
-          </ion-select>
-        </ion-item>
+        <ion-label>Card back</ion-label>
+        <ion-grid>
+          <ion-row>
+            <ion-col *ngFor="let back of cardBacks" size="2">
+              <img
+                      class="clickable-card"
+                      [class.selected-card]="(cardBack | async) === back"
+                      role="button"
+                      [src]="'/assets/cards/back/' + back + '.svg'"
+                      [alt]="'card back ' + back"
+                      (click)="setCardBack(back)"
+              />
+            </ion-col>
+          </ion-row>
+        </ion-grid>
         <ion-item>
           <ion-label position="floating">Type</ion-label>
           <ion-select>

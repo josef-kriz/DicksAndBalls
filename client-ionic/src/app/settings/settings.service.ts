@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage'
+import { Subject } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
+  private cardBackSubject = new Subject<string>()
 
   constructor(private storage: Storage) { }
 
@@ -84,11 +86,16 @@ export class SettingsService {
   async setCardBack(cardBack: string): Promise<void> {
     await this.storage.ready()
     await this.storage.set('cardBack', cardBack)
+    this.cardBackSubject.next(cardBack)
   }
 
-  async getCardBack(): Promise<string | null> {
-    await this.storage.ready()
-    return this.storage.get('cardBack')
+  getCardBack(): Subject<string> {
+    this.storage.ready().then(() => {
+      this.storage.get('cardBack').then((cardBack => {
+        this.cardBackSubject.next(cardBack === null ? '1' : cardBack)
+      }))
+    })
+    return this.cardBackSubject
   }
 
   async setCardType(cardType: string): Promise<void> {
@@ -96,8 +103,9 @@ export class SettingsService {
     await this.storage.set('cardType', cardType)
   }
 
-  async getCardType(): Promise<string | null> {
+  async getCardType(): Promise<string> {
     await this.storage.ready()
-    return this.storage.get('cardType')
+    const cardType = await this.storage.get('cardType')
+    return cardType === null ? 'one-headed' : cardType
   }
 }

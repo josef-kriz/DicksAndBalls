@@ -3,6 +3,7 @@ import { Card, Suit } from '../../models/card'
 import { Draw, PlayerAction, SkippingTurn } from '../../models/playerAction'
 import { ChangeGameStateMessage, PlayersTurnMessage } from '../../models/message'
 import { GameService } from '../../game.service'
+import { SettingsService } from '../../../settings/settings.service'
 
 @Component({
   selector: 'app-table',
@@ -25,8 +26,12 @@ export class TableComponent implements OnChanges {
   @Input() readonly playersCount?: number
   @Output() nameChange: EventEmitter<string> = new EventEmitter()
   reversedDeck?: Card[]
+  cardBack = this.settingsService.getCardBack()
 
-  constructor(private gameService: GameService) { }
+  constructor(
+    private gameService: GameService,
+    private settingsService: SettingsService,
+    ) { }
 
   ngOnChanges(): void {
     this.reversedDeck = this.deckTop && [...this.deckTop].reverse()

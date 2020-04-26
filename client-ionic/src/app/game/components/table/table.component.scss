@@ -27,8 +27,6 @@
 }
 
 .deck-overlay-container {
-  //noinspection CssUnknownTarget
-  background-image: url("/assets/cards/back/1.svg");
   background-size: cover;
   filter: drop-shadow(0 0 8px black);
   height: calc(500px / 3);

@@ -14,10 +14,12 @@
             <span *ngIf="player.place > 3" role="img" aria-label="ta-da">🎉</span>
             <span *ngIf="player.loser" role="img" aria-label="loser">👎</span>
             <span *ngIf="gameActive">
-                    <img *ngFor="let card of [].constructor(player.cards)" class="card-shell"
-                         src="assets/cards/back/1.svg"
-                         alt="card back"/>
-                </span>
+                <img *ngFor="let card of [].constructor(player.cards)"
+                     class="card-shell"
+                     alt="card back"
+                     [src]="'assets/cards/back/' + cardBack + '.svg'"
+                />
+            </span>
             <span *ngIf="(!player.place && !player.loser && (player.cards === 0 || !gameActive))">
                     <span role="img" aria-label="hourglass">⏳</span>
                     <span class="waiting">waiting...</span>
