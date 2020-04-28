@@ -2,7 +2,7 @@
   display: flex;
   flex-flow: row nowrap;
   min-height: 112px;
-  overflow: scroll;
+  overflow-x: scroll;
 }
 
 #players::before, #players::after {
