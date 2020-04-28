@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { Opponent } from '../../models/opponent'
+import { Opponent } from '../../../models/opponent'
 import { SettingsService } from '../../../settings/settings.service'
 
 @Component({
