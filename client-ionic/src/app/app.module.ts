@@ -30,7 +30,10 @@ import { SocketIoModule } from 'ngx-socket-io'
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
     AppRoutingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production, registrationStrategy: 'registerImmediately'  }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWithDelay:5000'
+    }), // TODO
     SocketIoModule,
   ],
   providers: [
