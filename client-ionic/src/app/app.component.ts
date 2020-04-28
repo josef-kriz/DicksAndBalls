@@ -10,6 +10,7 @@ import { SettingsService } from './settings/settings.service'
 import { TablesService } from './services/tables.service'
 import { isTableUpdateMessage, TableInfo, TableUpdateMessage } from './models/message'
 import { AddTableMessage } from '../../../src/models/message'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private menuController: MenuController,
     private modalController: ModalController,
     private platform: Platform,
+    private router: Router,
     private settingsService: SettingsService,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
@@ -115,7 +117,7 @@ export class AppComponent implements OnInit, OnDestroy {
       if (error) {
         this.showErrorAlert(error)
       } else if (id) {
-        // TODO navigate
+        this.router.navigate(['table', id])
       }
     })
   }

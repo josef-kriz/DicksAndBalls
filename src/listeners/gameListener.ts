@@ -20,6 +20,12 @@ export function gameListener(socket: Socket): void {
     console.log(`* User ${clientId} connected`)
 
     socket.emit('table_event', tables.getTableUpdateMessage())
+    socket.emit('server_event', tables.getGame(tableId).getGameStateMessage())
+
+    tables.onTableRemove({
+        id: clientId,
+        cb: () => socket.emit('table_event', tables.getTableUpdateMessage()),
+    })
 
     socket.on('table_event', async (message: AddTableMessage, callback?: Function) => {
         try {
@@ -68,8 +74,12 @@ export function gameListener(socket: Socket): void {
     }
 
     const removePlayer = (): void => {
-        tables.getGame(tableId).removePlayer(clientId)
-        io.to(tableId).emit('server_event', tables.getGame(tableId).getGameStateMessage())
+        try {
+            tables.getGame(tableId).removePlayer(clientId)
+            io.to(tableId).emit('server_event', tables.getGame(tableId).getGameStateMessage())
+        } catch (e) {
+            console.log('* Remove player error, skipping')
+        }
     }
 
     const startGame = (): void => {
@@ -105,6 +115,7 @@ export function gameListener(socket: Socket): void {
     socket.on('disconnect', () => {
         console.log(`* User ${clientId} disconnected`)
         removePlayer()
+        tables.deregisterCallback(clientId)
     })
 
     socket.on('player_event', async (message: ClientMessage, callback?: Function) => {

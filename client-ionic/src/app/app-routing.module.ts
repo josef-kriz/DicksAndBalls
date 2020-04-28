@@ -9,7 +9,7 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'table/:id',
+    path: 'table/:tableId',
     loadChildren: (): Promise<GamePageModule> => import('./game/game.module').then(m => m.GamePageModule),
   },
 ];

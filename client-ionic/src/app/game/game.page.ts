@@ -57,7 +57,7 @@ export class GamePage implements ComponentCanDeactivate {
     private settingsService: SettingsService,
     private titleService: Title,
   ) {
-    const id = this.route.snapshot.paramMap.get('id')
+    const id = this.route.snapshot.paramMap.get('tableId')
     this.tableId = id ?? 'main'
 
     const joinMessage: JoinTableMessage = {
