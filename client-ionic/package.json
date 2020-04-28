@@ -1,9 +1,9 @@
 {
   "name": "dicks-and-balls-client",
-  "description": "An Ionic project",
+  "description": "A web implementation of popular Czech card game",
   "version": "2.0.0",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Josef Kriz <email@josefkriz.com>",
+  "homepage": "https://prsi.josefkriz.com/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -31,9 +31,7 @@
     "ngx-socket-io": "^3.0.1",
     "rxjs": "~6.5.1",
     "tslib": "^1.10.0",
-    "zone.js": "~0.10.2"
-  },
-  "devDependencies": {
+    "zone.js": "~0.10.2",
     "@angular-devkit/build-angular": "~0.901.1",
     "@angular/cli": "~9.1.1",
     "@angular/compiler": "~9.1.2",
