@@ -12,7 +12,7 @@
     "prebuild": "rimraf dist",
     "build": "yarn run build-ts && yarn run eslint",
     "heroku-postbuild": "cd client-ionic && yarn && yarn build",
-    "preinstall": "npm install -g angular-cli",
+    "preinstall": "yarn global add angular-cli",
     "serve": "node dist/server.js",
     "build-ts": "tsc",
     "eslint": "eslint . --ext .js,.ts"
