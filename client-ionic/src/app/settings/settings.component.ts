@@ -30,7 +30,10 @@ export class SettingsComponent {
   }
 
   async setLanguage(event: CustomEvent): Promise<void> {
-    await this.settingsService.setLanguage(event.detail.value)
+    if (event.detail.value !== null && event.detail.value !== await this.language) {
+      await this.settingsService.setLanguage(event.detail.value)
+      alert('Will be available in Prší 2.0, hold on!') // TODO
+    }
   }
 
   async setSounds(event: CustomEvent): Promise<void> {

@@ -99,6 +99,10 @@ export class GamePage implements ComponentCanDeactivate {
     return !(this.participating && !!this.active && !!this.cards && this.cards.length > 0)
   }
 
+  openChat(): void {
+    alert('Will be available in Prší 2.0, hold on!') // TODO
+  }
+
   private handleServerMessage = async (message: ServerMessage): Promise<void> => {
     if (this.error) {
       this.error = false
