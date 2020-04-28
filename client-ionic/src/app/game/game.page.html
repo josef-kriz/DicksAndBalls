@@ -34,6 +34,7 @@
             id="game-button"
             [gameActive]="active"
             [isWinner]="isWinner"
+            [cardsCount]="cards?.length"
             (playerName)="playerName = $event"
     ></app-game-button>
 </ion-fab>

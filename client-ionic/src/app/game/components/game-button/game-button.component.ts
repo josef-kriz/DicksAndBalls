@@ -10,9 +10,14 @@ import { ChangeGameStateMessage, RemovePlayerMessage } from '../../../models/mes
 export class GameButtonComponent {
   @Input() readonly gameActive?: boolean
   @Input() readonly isWinner?: boolean
+  @Input() readonly cardsCount?: number
   @Output() playerName: EventEmitter<undefined> = new EventEmitter()
 
   constructor(private gameService: GameService) {
+  }
+
+  canEndGame(): boolean {
+    return !!this.gameActive && !this.isWinner && !!this.cardsCount && this.cardsCount > 0
   }
 
   stopGame(): void {
