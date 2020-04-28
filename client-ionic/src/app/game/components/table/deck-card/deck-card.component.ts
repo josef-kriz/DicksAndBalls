@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { Card, getCardsAssetNumber, Suit } from '../../../models/card'
+import { Card, getCardsAssetNumber, Suit } from '../../../../models/card'
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser'
 import { SettingsService } from '../../../../settings/settings.service'
 

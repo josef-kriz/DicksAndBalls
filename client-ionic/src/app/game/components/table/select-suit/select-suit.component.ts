@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular'
-import { Suit } from '../../../models/card'
+import { Suit } from '../../../../models/card'
 
 @Component({
   selector: 'app-select-suit',

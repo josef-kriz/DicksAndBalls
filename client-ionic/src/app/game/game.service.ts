@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ClientMessage, ServerMessage } from './models/message'
+import { ClientMessage, ServerMessage } from '../models/message'
 import { Observable } from 'rxjs'
-import { GameSocket } from './helpers/socket/game.socket'
+import { MainSocket } from '../sockets/main.socket'
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  constructor(private socket: GameSocket) { }
+  constructor(private socket: MainSocket) { }
 
   getMessages(): Observable<ServerMessage> {
     return this.socket.fromEvent<ServerMessage>('server_event')

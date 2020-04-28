@@ -9,7 +9,7 @@ import {
 } from './models/playerAction'
 import { GameMessage } from './models/gameMessage'
 
-class Game {
+export class Game {
     private active = false
     private deck: Card[] = getUnshuffledDeck()
     private playedCards: Card[] = []
@@ -19,6 +19,10 @@ class Game {
     private drawCount = 0 // keeps track of how many cards to draw when seven is played
     private skippingNextPlayer = false // keeps track whether the next player should skip a turn (if an ace is played)
     private changeColorTo?: Suit
+
+    public getPlayersCount(): number {
+        return this.players.length
+    }
 
     public getGameStateMessage(): GameStateMessage {
         const {active} = this
@@ -370,5 +374,3 @@ class Game {
         console.log(`#Move: on turn: ${this.players[this.playerOnTurn].name}`, `drawCount: ${this.drawCount}`, `skippingTurn: ${this.skippingNextPlayer}`, this.players, this.deck, this.playedCards)
     }
 }
-
-export const game = new Game()

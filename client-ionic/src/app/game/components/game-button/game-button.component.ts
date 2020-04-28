@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { GameService } from '../../game.service'
-import { ChangeGameStateMessage, RemovePlayerMessage } from '../../models/message'
+import { ChangeGameStateMessage, RemovePlayerMessage } from '../../../models/message'
 
 @Component({
   selector: 'app-game-button',

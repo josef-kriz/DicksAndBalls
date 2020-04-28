@@ -11,6 +11,8 @@ export interface ErrorMessage extends Message {
     message: string
 }
 
+// ------------------------- Client -------------------------
+
 export function isErrorMessage(message: Message): message is ErrorMessage {
     return message.type === 'error'
 }
@@ -35,6 +37,8 @@ export interface PlayersTurnMessage extends Message {
 }
 
 export type ClientMessage = ErrorMessage | AddPlayerMessage | RemovePlayerMessage | ChangeGameStateMessage | PlayersTurnMessage
+
+// ------------------------- Server -------------------------
 
 export interface GameStateMessage extends Message {
     type: 'game_state'
@@ -75,3 +79,31 @@ export function isGameUpdateMessage(message: ServerMessage): message is GameUpda
 export function isPlayerUpdateMessage(message: ServerMessage): message is PlayerUpdateMessage {
     return message.type === 'player_update'
 }
+
+// ------------------------- Tables -------------------------
+
+export interface TableInfo {
+    id: string
+    name: string
+    playersCount: number
+}
+
+export interface TableUpdateMessage extends Message {
+    type: 'table_update'
+    tables: TableInfo[]
+}
+
+export interface AddTableMessage extends Message {
+    type: 'add_table'
+    name: string
+}
+
+export function isAddTableMessage(message: Message): message is AddTableMessage {
+    return message.type === 'add_table'
+}
+
+export function isTableUpdateMessage(message: Message): message is TableUpdateMessage {
+    return message.type === 'table_update'
+}
+
+// TODO make sure is same as client version

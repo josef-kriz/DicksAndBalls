@@ -11,6 +11,8 @@ export interface ErrorMessage extends Message {
     message: string
 }
 
+// ------------------------- Client -------------------------
+
 export interface AddPlayerMessage extends Message {
     type: 'add_player'
     player: string
@@ -48,6 +50,8 @@ export function isPlayersTurnMessage(message: Message): message is PlayersTurnMe
     return message.type === 'players_turn'
 }
 
+// ------------------------- Server -------------------------
+
 export interface GameStateMessage extends Message {
     type: 'game_state'
     active: boolean
@@ -74,3 +78,28 @@ export interface PlayerUpdateMessage extends Message {
     loser: boolean
 }
 
+// ------------------------- Tables -------------------------
+
+export interface TableInfo {
+    id: string
+    name: string
+    playersCount: number
+}
+
+export interface TableUpdateMessage extends Message {
+    type: 'table_update'
+    tables: TableInfo[]
+}
+
+export interface AddTableMessage extends Message {
+    type: 'add_table'
+    name: string
+}
+
+export function isAddTableMessage(message: Message): message is AddTableMessage {
+    return message.type === 'add_table'
+}
+
+export function isTableUpdateMessage(message: Message): message is TableUpdateMessage {
+    return message.type === 'table_update'
+}

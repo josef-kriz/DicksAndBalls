@@ -14,6 +14,8 @@ import { RulesComponent } from './rules/rules.component'
 import { SettingsComponent } from './settings/settings.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment'
+import { MainSocket } from './sockets/main.socket'
+import { SocketIoModule } from 'ngx-socket-io'
 
 @NgModule({
   declarations: [
@@ -28,12 +30,14 @@ import { environment } from '../environments/environment'
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
     AppRoutingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    SocketIoModule,
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    MainSocket,
   ],
   bootstrap: [AppComponent]
 })

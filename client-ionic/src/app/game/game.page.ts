@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core'
 import { GameService } from './game.service'
-import { Opponent } from './models/opponent'
-import { Card, Suit } from './models/card'
+import { Opponent } from '../models/opponent'
+import { Card, Suit } from '../models/card'
 import {
   ErrorMessage,
   GameStateMessage,
@@ -13,7 +13,7 @@ import {
   PlayerUpdateMessage,
   RemovePlayerMessage,
   ServerMessage
-} from './models/message'
+} from '../models/message'
 import inactivityDetection from './helpers/inactivityDetection'
 import { AlertController, MenuController } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
@@ -73,6 +73,7 @@ export class GamePage implements ComponentCanDeactivate {
     }
     this.gameService.sendMessage(message)
     this.playerName = undefined
+    this.gameService.stop()
   }
 
   /**
