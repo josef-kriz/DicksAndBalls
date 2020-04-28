@@ -4,7 +4,7 @@
             <ion-col class="ion-padding-end ion-margin-end" size="auto">
                 <div class="deck-overlay-container"
                      [class.empty-deck]="cardsInDeck === '0'"
-                     [style.background-image]="'url(/assets/cards/back/' + ((cardBack | async) || 1) + '.svg)'"
+                     [style.background-image]="'url(assets/cards/back/' + ((cardBack | async) || 1) + '.svg)'"
                      role="button"
                      (click)="handleDeckClick()"
                 >
