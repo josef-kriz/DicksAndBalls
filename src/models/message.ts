@@ -110,11 +110,3 @@ export interface AddTableMessage extends Message {
     type: 'add_table'
     name: string
 }
-
-export function isAddTableMessage(message: Message): message is AddTableMessage {
-    return message.type === 'add_table'
-}
-
-export function isTableUpdateMessage(message: Message): message is TableUpdateMessage {
-    return message.type === 'table_update'
-}

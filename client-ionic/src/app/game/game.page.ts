@@ -65,7 +65,7 @@ export class GamePage implements ComponentCanDeactivate {
       type: 'join_table',
       id: this.tableId,
     }
-    this.gameService.sendMessage(joinMessage, (error: boolean): void => {
+    this.gameService.sendMessage(joinMessage, (): void => {
       // the table doesn't exist
       this.router.navigate(['table', 'main']).then()
     })

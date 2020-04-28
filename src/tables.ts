@@ -40,12 +40,15 @@ class Tables {
 
   addTable(name: string): TableInfo {
     if (this.tables.length >= MAX_TABLES) throw new Error('The maximum number of tables was reached')
-    // TODO name validation
+    if (!name) throw new Error('The name must not be empty')
+    const trimmed = name.trim()
+    if (trimmed.length > 10) throw new Error('The maximum name length is 10 non-space characters')
+    if (!trimmed.match(/^[0-9a-zA-Z ]+$/)) throw new Error('The name can only contain non-accented letters or numbers')
 
     const id = uuidv4()
     const newTable = {
       id,
-      name,
+      name: trimmed,
       game: new Game(),
       expires: setTimeout(() => this.removeTable(id), TABLE_DESTROY_TIMEOUT),
     }

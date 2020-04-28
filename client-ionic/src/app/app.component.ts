@@ -145,7 +145,7 @@ export class AppComponent implements OnInit, OnDestroy {
         {
           name: 'name',
           type: 'text',
-          placeholder: 'Put the name here'
+          placeholder: 'Put the name here',
         },
       ],
       buttons: [
@@ -188,7 +188,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   // TODO move to separate component
-  // TODO capitalize first table letter
   private async showErrorAlert(message = 'Cannot create a new table now'): Promise<void> {
     const alert = await this.alertController.create({
       header: 'Error',
