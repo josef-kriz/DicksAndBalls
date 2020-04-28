@@ -122,7 +122,7 @@ export class AppComponent implements OnInit, OnDestroy {
     })
   }
 
-  private handleTablesMessage = (message: TableUpdateMessage) => {
+  private handleTablesMessage = async (message: TableUpdateMessage): Promise<void> => {
     if (isTableUpdateMessage(message)) {
       this.tables = message.tables
 
@@ -130,6 +130,9 @@ export class AppComponent implements OnInit, OnDestroy {
       const path = window.location.pathname.split('table/')[1]
       if (path !== undefined) {
         this.selectedIndex = this.tables.findIndex(table => table.id.toLowerCase() === path.toLowerCase())
+        if (this.selectedIndex === -1) {
+          await this.router.navigate(['table', 'main'])
+        }
       }
     }
   }

@@ -45,13 +45,14 @@ export function gameListener(socket: Socket): void {
         }
     }
 
-    const joinTable = (message: JoinTableMessage): void => {
+    const joinTable = (message: JoinTableMessage, callback?: Function): void => {
         try {
             if (tableId !== message.id) tableId = message.id
             socket.join(tableId)
             socket.emit('server_event', tables.getGame(tableId).getGameStateMessage())
         } catch (e) {
             socket.emit('server_event', getErrorMessage(e))
+            callback && callback(true)
         }
     }
 
@@ -120,7 +121,7 @@ export function gameListener(socket: Socket): void {
 
     socket.on('player_event', async (message: ClientMessage, callback?: Function) => {
         console.log(`* Message received from client ${clientId}:`, message)
-        if (isJoinTableMessage(message)) joinTable(message)
+        if (isJoinTableMessage(message)) joinTable(message, callback)
         else if (isAddPlayerMessage(message)) addPlayer(message, callback)
         else if (isRemovePlayerMessage(message)) removePlayer()
         else if (isChangeGameMessage(message) && message.active) startGame()

@@ -20,7 +20,7 @@ import { SettingsService } from '../settings/settings.service'
 import { Title } from '@angular/platform-browser'
 import { ComponentCanDeactivate } from './helpers/leaveGameGuard'
 import { Observable } from 'rxjs'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 
 @Component({
   selector: 'app-game',
@@ -54,6 +54,7 @@ export class GamePage implements ComponentCanDeactivate {
     private gameService: GameService,
     private menuController: MenuController,
     private route: ActivatedRoute,
+    private router: Router,
     private settingsService: SettingsService,
     private titleService: Title,
   ) {
@@ -64,7 +65,10 @@ export class GamePage implements ComponentCanDeactivate {
       type: 'join_table',
       id: this.tableId,
     }
-    this.gameService.sendMessage(joinMessage)
+    this.gameService.sendMessage(joinMessage, (error: boolean): void => {
+      // the table doesn't exist
+      this.router.navigate(['table', 'main']).then()
+    })
   }
 
   // noinspection JSUnusedGlobalSymbols
