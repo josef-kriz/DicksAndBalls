@@ -9,7 +9,7 @@ import {
   isErrorMessage,
   isGameStateMessage,
   isGameUpdateMessage,
-  isPlayerUpdateMessage,
+  isPlayerUpdateMessage, JoinTableMessage,
   PlayerUpdateMessage,
   RemovePlayerMessage,
   ServerMessage
@@ -20,6 +20,7 @@ import { SettingsService } from '../settings/settings.service'
 import { Title } from '@angular/platform-browser'
 import { ComponentCanDeactivate } from './helpers/leaveGameGuard'
 import { Observable } from 'rxjs'
+import { ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-game',
@@ -27,6 +28,7 @@ import { Observable } from 'rxjs'
   styleUrls: ['./game.page.scss'],
 })
 export class GamePage implements ComponentCanDeactivate {
+  tableId: string
   playerName?: string
   participating = false
   active?: boolean
@@ -51,9 +53,18 @@ export class GamePage implements ComponentCanDeactivate {
     private alertController: AlertController,
     private gameService: GameService,
     private menuController: MenuController,
+    private route: ActivatedRoute,
     private settingsService: SettingsService,
     private titleService: Title,
   ) {
+    const id = this.route.snapshot.paramMap.get('id')
+    this.tableId = id ?? 'main'
+
+    const joinMessage: JoinTableMessage = {
+      type: 'join_table',
+      id: this.tableId,
+    }
+    this.gameService.sendMessage(joinMessage)
   }
 
   // noinspection JSUnusedGlobalSymbols

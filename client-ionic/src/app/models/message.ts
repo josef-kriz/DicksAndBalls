@@ -17,6 +17,11 @@ export function isErrorMessage(message: Message): message is ErrorMessage {
     return message.type === 'error'
 }
 
+export interface JoinTableMessage extends Message {
+    type: 'join_table'
+    id: string
+}
+
 export interface AddPlayerMessage extends Message {
     type: 'add_player'
     player: string
@@ -36,7 +41,13 @@ export interface PlayersTurnMessage extends Message {
     action: PlayerAction
 }
 
-export type ClientMessage = ErrorMessage | AddPlayerMessage | RemovePlayerMessage | ChangeGameStateMessage | PlayersTurnMessage
+export type ClientMessage =
+  ErrorMessage |
+  JoinTableMessage |
+  AddPlayerMessage |
+  RemovePlayerMessage |
+  ChangeGameStateMessage |
+  PlayersTurnMessage
 
 // ------------------------- Server -------------------------
 

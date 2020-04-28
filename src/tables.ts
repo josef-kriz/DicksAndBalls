@@ -43,6 +43,12 @@ class Tables {
     return this.getTableInfo(newTable)
   }
 
+  getGame(id: string): Game | never {
+    const table = this.tables.find(table => table.id === id)
+    if (!table) throw new Error('Non-existent table')
+    return table.game
+  }
+
   private getTableInfo({id, name, game}: Table): TableInfo {
     return {
       id,

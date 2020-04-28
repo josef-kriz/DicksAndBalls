@@ -13,13 +13,14 @@ export interface ErrorMessage extends Message {
 
 // ------------------------- Client -------------------------
 
+export interface JoinTableMessage extends Message {
+    type: 'join_table'
+    id: string
+}
+
 export interface AddPlayerMessage extends Message {
     type: 'add_player'
     player: string
-}
-
-export function isRemovePlayerMessage(message: ClientMessage): message is RemovePlayerMessage {
-    return message.type === 'remove_player'
 }
 
 export interface RemovePlayerMessage extends Message {
@@ -36,10 +37,24 @@ export interface PlayersTurnMessage extends Message {
     action: PlayerAction
 }
 
-export type ClientMessage = ErrorMessage | AddPlayerMessage | RemovePlayerMessage | ChangeGameStateMessage | PlayersTurnMessage
+export type ClientMessage =
+  ErrorMessage |
+  JoinTableMessage |
+  AddPlayerMessage |
+  RemovePlayerMessage |
+  ChangeGameStateMessage |
+  PlayersTurnMessage
+
+export function isJoinTableMessage(message: Message): message is JoinTableMessage {
+    return message.type === 'join_table'
+}
 
 export function isAddPlayerMessage(message: Message): message is AddPlayerMessage {
     return message.type === 'add_player'
+}
+
+export function isRemovePlayerMessage(message: ClientMessage): message is RemovePlayerMessage {
+    return message.type === 'remove_player'
 }
 
 export function isChangeGameMessage(message: Message): message is ChangeGameStateMessage {
