@@ -33,7 +33,7 @@ import { SocketIoModule } from 'ngx-socket-io'
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       registrationStrategy: 'registerWithDelay:5000'
-    }), // TODO
+    }), // TODO register via observable
     SocketIoModule,
   ],
   providers: [
