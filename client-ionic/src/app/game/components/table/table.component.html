@@ -20,7 +20,11 @@
             </ion-col>
             <ion-col class="ion-padding-start ion-margin-start" size="auto">
                 <div *ngIf="reversedDeck">
-                    <app-deck-card [card]="reversedDeck[0]" [noTransform]="true"></app-deck-card>
+                    <app-deck-card
+                            [card]="reversedDeck[0]"
+                            [noTransform]="true"
+                            [colorChangedTo]="reversedDeck[0].value === 'Queen' ? colorChangedTo : undefined"
+                    ></app-deck-card>
                     <app-deck-card
                             *ngFor="let card of reversedDeck | slice:1; trackBy: trackByCard"
                             [card]="card"
