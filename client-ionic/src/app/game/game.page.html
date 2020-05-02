@@ -1,5 +1,5 @@
-<div id="game">
-    <ion-content id="game-content">
+<ion-content id="game">
+    <div id="game-content">
         <app-players
                 [players]="players"
                 [gameActive]="active"
@@ -27,8 +27,8 @@
                 [playersCount]="players?.length"
                 (nameChange)="playerName = $event"
         ></app-table>
-    </ion-content>
-</div>
+    </div>
+</ion-content>
 <ion-fab *ngIf="participating" vertical="bottom" horizontal="center" slot="fixed">
     <app-game-button
             id="game-button"
