@@ -1,0 +1,68 @@
+#chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.message-container {
+  display: flex;
+  margin: 0 8px 16px;
+}
+
+.message {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+.text {
+  background: #f1f0f0;
+  border-radius: 16px;
+  color: #444950;
+  max-width: 80%;
+  padding: 6px 8px;
+  width: fit-content;
+}
+
+.own {
+  flex-direction: row-reverse;
+
+  .message {
+    align-items: flex-end;
+  }
+
+  .text {
+    background: #3578e5;
+    color: white;
+  }
+}
+
+.author {
+  font-size: 14px;
+  overflow: hidden;
+  padding: 0 8px;
+  text-overflow: ellipsis;
+  width: 80%;
+  white-space: nowrap;
+}
+
+#no-messages {
+  font-size: 18px;
+  font-weight: bold;
+  left: 0;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#send {
+  display: flex;
+  justify-content: space-between;
+}
+
+ion-input {
+  --color: var(--ion-color-light-contrast);
+}
