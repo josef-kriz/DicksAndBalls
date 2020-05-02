@@ -172,8 +172,11 @@ export class GamePage implements ComponentCanDeactivate {
     }
     if (playerOnTurn) { // scroll to player's cards (applies only when overflowing)
       const playersEl = document.getElementById('players')
-      if (playersEl && playersEl.scrollWidth !== playersEl.clientWidth) {
-        document.getElementById(playerOnTurn)?.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'center'})
+      const playerEl = document.getElementById(playerOnTurn)
+      if (playersEl && playersEl.scrollWidth !== playersEl.clientWidth && playerEl) {
+        const offset = playerEl.offsetLeft - playersEl.offsetWidth / 2 + playerEl.scrollWidth / 2
+        const rangedOffset = Math.min(Math.max(offset, 0), playersEl.scrollWidth - playersEl.offsetWidth)
+        playersEl.scrollTo({behavior: 'smooth', left: rangedOffset})
       }
     }
     if (await this.settingsService.getSounds()) {
