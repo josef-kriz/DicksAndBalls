@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import { MenuController } from '@ionic/angular'
 import { ChatService, Message } from './chat.service'
 import { TablesService } from '../services/tables.service'
+import { SettingsService } from '../settings/settings.service'
 
 @Component({
   selector: 'app-chat',
@@ -17,18 +18,13 @@ export class ChatComponent implements OnInit {
   constructor(
     private chatService: ChatService,
     private menuController: MenuController,
+    private settingsService: SettingsService,
     public tablesService: TablesService,
   ) {
   }
 
   ngOnInit(): void {
-    this.chatService.getMessages().subscribe(async message => {
-      this.messages.push(message)
-      this.chatContent?.scrollToBottom(500)
-      if (!(await this.menuController.isOpen('chat'))) {
-        this.unread++
-      }
-    })
+    this.chatService.getMessages().subscribe(this.handleMessage)
     this.chatService.contextChanged.subscribe(() => {
       this.unread = 0
       this.messages = []
@@ -50,6 +46,18 @@ export class ChatComponent implements OnInit {
     if (this.message) {
       await this.chatService.sendMessage(this.message)
       this.message = ''
+    }
+  }
+
+  private handleMessage = async (message: Message) => {
+    this.messages.push(message)
+    this.chatContent?.scrollToBottom(500)
+    if (!(await this.menuController.isOpen('chat'))) {
+      this.unread++
+      if (await this.settingsService.getSounds()) {
+        const audio = new Audio('assets/sounds/message.mp3')
+        await audio.play()
+      }
     }
   }
 }
