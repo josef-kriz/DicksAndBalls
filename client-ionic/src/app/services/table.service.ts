@@ -10,8 +10,8 @@ import { tap } from 'rxjs/operators'
 @Injectable({
   providedIn: 'root'
 })
-export class TablesService {
-  currentTable?: TableInfo
+export class TableService {
+  private currentTable?: TableInfo
   private tables: TableInfo[] = []
 
   constructor(
@@ -24,6 +24,10 @@ export class TablesService {
     return this.socket.fromEvent<TableUpdateMessage>('table_event').pipe(
       tap(message => this.tables = message.tables)
     )
+  }
+
+  getCurrentTable(): TableInfo | undefined {
+    return this.currentTable
   }
 
   joinTable(tableId: string): void {

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { MenuController } from '@ionic/angular'
 import { ChatService, Message } from './chat.service'
-import { TablesService } from '../services/tables.service'
+import { TableService } from '../services/table.service'
 import { SettingsService } from '../settings/settings.service'
 
 @Component({
@@ -19,7 +19,7 @@ export class ChatComponent implements OnInit {
     private chatService: ChatService,
     private menuController: MenuController,
     private settingsService: SettingsService,
-    public tablesService: TablesService,
+    private tableService: TableService,
   ) {
   }
 
@@ -40,6 +40,10 @@ export class ChatComponent implements OnInit {
 
   async closeChat(): Promise<void> {
     await this.menuController.close('chat')
+  }
+
+  getTableName(): string | undefined {
+    return this.tableService.getCurrentTable()?.name
   }
 
   async sendMessage(): Promise<void> {

@@ -7,7 +7,7 @@ import { AboutComponent } from './about/about.component'
 import { RulesComponent } from './rules/rules.component'
 import { SettingsComponent } from './settings/settings.component'
 import { SettingsService } from './settings/settings.service'
-import { TablesService } from './services/tables.service'
+import { TableService } from './services/table.service'
 import { isTableUpdateMessage, TableInfo, TableUpdateMessage } from './models/message'
 import { AddTableMessage } from '../../../src/models/message'
 import { Router } from '@angular/router'
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private tableService: TablesService,
+    private tableService: TableService,
   ) {
     this.init = this.initializeApp()
   }

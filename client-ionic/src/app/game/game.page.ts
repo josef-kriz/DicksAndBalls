@@ -21,7 +21,7 @@ import { Title } from '@angular/platform-browser'
 import { ComponentCanDeactivate } from './helpers/leaveGameGuard'
 import { Observable } from 'rxjs'
 import { ActivatedRoute } from '@angular/router'
-import { TablesService } from '../services/tables.service'
+import { TableService } from '../services/table.service'
 
 @Component({
   selector: 'app-game',
@@ -55,12 +55,12 @@ export class GamePage implements ComponentCanDeactivate {
     private gameService: GameService,
     private route: ActivatedRoute,
     private settingsService: SettingsService,
-    private tablesService: TablesService,
+    public tableService: TableService,
     private titleService: Title,
   ) {
     const id = this.route.snapshot.paramMap.get('tableId')
     this.tableId = id ?? 'main'
-    this.tablesService.joinTable(this.tableId)
+    this.tableService.joinTable(this.tableId)
   }
 
   // noinspection JSUnusedGlobalSymbols
