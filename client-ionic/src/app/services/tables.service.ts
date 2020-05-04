@@ -22,7 +22,7 @@ export class TablesService {
 
   getTables(): Observable<TableUpdateMessage> {
     return this.socket.fromEvent<TableUpdateMessage>('table_event').pipe(
-      tap((message => this.tables = message.tables))
+      tap(message => this.tables = message.tables)
     )
   }
 

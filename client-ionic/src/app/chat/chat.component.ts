@@ -12,6 +12,7 @@ export class ChatComponent implements OnInit {
   @ViewChild('chatContent') private readonly chatContent?: HTMLIonContentElement;
   messages: Message[] = []
   message = ''
+  unread = 0
 
   constructor(
     private chatService: ChatService,
@@ -24,13 +25,21 @@ export class ChatComponent implements OnInit {
     this.chatService.getMessages().subscribe(async message => {
       this.messages.push(message)
       this.chatContent?.scrollToBottom(500)
+      if (!(await this.menuController.isOpen('chat'))) {
+        this.unread++
+      }
     })
-    this.chatService.contextChanged.subscribe(() => this.messages = [])
+    this.chatService.contextChanged.subscribe(() => {
+      this.unread = 0
+      this.messages = []
+    })
   }
 
   async openChat(): Promise<void> {
     await this.menuController.open('chat');
     (document.querySelector('#chat-input > input') as HTMLInputElement)?.focus()
+    this.unread = 0
+    this.chatContent?.scrollToBottom(1000)
   }
 
   async closeChat(): Promise<void> {

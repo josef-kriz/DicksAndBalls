@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 import { Observable, Subject } from 'rxjs'
 import { SettingsService } from '../settings/settings.service'
 import { MainSocket } from '../sockets/main.socket'
@@ -13,13 +13,13 @@ export interface Message {
   providedIn: 'root'
 })
 export class ChatService {
-  // unreadMessages = new Subject<number>()
   contextChanged = new Subject<undefined>() // used for triggering functions when switching chats
 
   constructor(
     private settingsService: SettingsService,
     private socket: MainSocket,
-    ) { }
+  ) {
+  }
 
   getMessages(): Observable<Message> {
     return this.socket.fromEvent('chat_message')
