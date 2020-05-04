@@ -11,6 +11,7 @@ import { TablesService } from './services/tables.service'
 import { isTableUpdateMessage, TableInfo, TableUpdateMessage } from './models/message'
 import { AddTableMessage } from '../../../src/models/message'
 import { Router } from '@angular/router'
+import { ChatService } from './chat/chat.service'
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertController: AlertController,
+    private chatService: ChatService,
     private menuController: MenuController,
     private modalController: ModalController,
     private platform: Platform,
@@ -118,6 +120,8 @@ export class AppComponent implements OnInit, OnDestroy {
         this.showErrorAlert(error)
       } else if (id) {
         this.router.navigate(['table', id])
+        this.menuController.close('main-menu')
+        this.chatService.changeContext()
       }
     })
   }

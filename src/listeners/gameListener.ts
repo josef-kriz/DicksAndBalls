@@ -2,12 +2,15 @@ import { Socket } from 'socket.io'
 import {
     AddPlayerMessage,
     AddTableMessage,
+    ChatMessage,
     ClientMessage,
     ErrorMessage,
     isAddPlayerMessage,
-    isChangeGameMessage, isJoinTableMessage,
+    isChangeGameMessage,
+    isJoinTableMessage,
     isPlayersTurnMessage,
-    isRemovePlayerMessage, JoinTableMessage
+    isRemovePlayerMessage,
+    JoinTableMessage
 } from '../models/message'
 
 import { io } from '../server'
@@ -37,6 +40,20 @@ export function gameListener(socket: Socket): void {
         }
     })
 
+    socket.on('chat_message', async ({author, text}: ChatMessage) => {
+        socket.to(tableId).emit('chat_message', {
+            author,
+            text,
+            own: false,
+        })
+        socket.emit('chat_message', {
+            author,
+            text,
+            own: true,
+        })
+        console.log(`* Message from ${clientId} (${author}) [${tableId}]: ${text}`)
+    })
+
     const getErrorMessage = (error: Error): ErrorMessage => {
         console.log('! An error occurred: ', error.message)
         return {
@@ -47,6 +64,7 @@ export function gameListener(socket: Socket): void {
 
     const joinTable = (message: JoinTableMessage, callback?: Function): void => {
         try {
+            socket.leave(tableId)
             if (tableId !== message.id) tableId = message.id
             socket.join(tableId)
             socket.emit('server_event', tables.getGame(tableId).getGameStateMessage())
@@ -69,17 +87,20 @@ export function gameListener(socket: Socket): void {
 
             callback && callback('success')
             io.to(tableId).emit('server_event', tables.getGame(tableId).getGameStateMessage())
+            io.emit('table_event', tables.getTableUpdateMessage())
         } catch (e) {
             callback && callback(e.message)
         }
     }
 
-    const removePlayer = (): void => {
+    const removePlayer = (table: string): void => {
         try {
-            tables.getGame(tableId).removePlayer(clientId)
-            io.to(tableId).emit('server_event', tables.getGame(tableId).getGameStateMessage())
+            tables.getGame(table).removePlayer(clientId)
+            io.to(table).emit('server_event', tables.getGame(table).getGameStateMessage())
         } catch (e) {
             console.log('* Remove player error, skipping')
+        } finally {
+            io.emit('table_event', tables.getTableUpdateMessage())
         }
     }
 
@@ -115,7 +136,7 @@ export function gameListener(socket: Socket): void {
 
     socket.on('disconnect', () => {
         console.log(`* User ${clientId} disconnected`)
-        removePlayer()
+        removePlayer(tableId)
         tables.deregisterCallback(clientId)
     })
 
@@ -123,7 +144,7 @@ export function gameListener(socket: Socket): void {
         console.log(`* Message received from client ${clientId}:`, message)
         if (isJoinTableMessage(message)) joinTable(message, callback)
         else if (isAddPlayerMessage(message)) addPlayer(message, callback)
-        else if (isRemovePlayerMessage(message)) removePlayer()
+        else if (isRemovePlayerMessage(message)) removePlayer(message.tableId)
         else if (isChangeGameMessage(message) && message.active) startGame()
         else if (isChangeGameMessage(message) && !message.active) stopGame()
         else if (isPlayersTurnMessage(message)) handlePlayersTurn(message.action)

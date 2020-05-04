@@ -8,12 +8,15 @@ import { ChangeGameStateMessage, RemovePlayerMessage } from '../../../models/mes
   styleUrls: ['./game-button.component.scss'],
 })
 export class GameButtonComponent {
+  @Input() readonly tableId?: string
   @Input() readonly gameActive?: boolean
   @Input() readonly isWinner?: boolean
   @Input() readonly cardsCount?: number
   @Output() playerName: EventEmitter<undefined> = new EventEmitter()
 
-  constructor(private gameService: GameService) {
+  constructor(
+    private gameService: GameService,
+  ) {
   }
 
   canEndGame(): boolean {
@@ -31,6 +34,7 @@ export class GameButtonComponent {
   leaveGame(): void {
     const message: RemovePlayerMessage = {
       type: 'remove_player',
+      tableId: this.tableId || 'main',
     }
     this.gameService.sendMessage(message)
     this.playerName.emit(undefined)

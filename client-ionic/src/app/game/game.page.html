@@ -32,15 +32,10 @@
 <ion-fab *ngIf="participating" vertical="bottom" horizontal="center" slot="fixed">
     <app-game-button
             id="game-button"
+            [tableId]="tableId"
             [gameActive]="active"
             [isWinner]="isWinner"
             [cardsCount]="cards?.length"
             (playerName)="playerName = $event"
     ></app-game-button>
 </ion-fab>
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="light" (click)="toggleChat()">
-        <ion-icon name="chatbubbles-sharp"></ion-icon>
-    </ion-fab-button>
-</ion-fab>
-<app-chat></app-chat>

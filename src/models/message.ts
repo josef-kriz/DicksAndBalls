@@ -25,6 +25,7 @@ export interface AddPlayerMessage extends Message {
 
 export interface RemovePlayerMessage extends Message {
     type: 'remove_player'
+    tableId: string
 }
 
 export interface ChangeGameStateMessage extends Message {
@@ -109,4 +110,12 @@ export interface TableUpdateMessage extends Message {
 export interface AddTableMessage extends Message {
     type: 'add_table'
     name: string
+}
+
+// ------------------------- Chat -------------------------
+
+export interface ChatMessage extends Message {
+    type: 'chat_message'
+    author: string
+    text: string
 }

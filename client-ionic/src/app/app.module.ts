@@ -16,6 +16,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment'
 import { MainSocket } from './sockets/main.socket'
 import { SocketIoModule } from 'ngx-socket-io'
+import { ChatComponent } from './chat/chat.component'
+import { FormsModule } from '@angular/forms'
 
 @NgModule({
   declarations: [
@@ -23,10 +25,12 @@ import { SocketIoModule } from 'ngx-socket-io'
     SettingsComponent,
     AboutComponent,
     RulesComponent,
+    ChatComponent,
   ],
   entryComponents: [],
   imports: [
     BrowserModule,
+    FormsModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
     AppRoutingModule,

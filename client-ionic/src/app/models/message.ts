@@ -11,11 +11,11 @@ export interface ErrorMessage extends Message {
     message: string
 }
 
-// ------------------------- Client -------------------------
-
 export function isErrorMessage(message: Message): message is ErrorMessage {
     return message.type === 'error'
 }
+
+// ------------------------- Client -------------------------
 
 export interface JoinTableMessage extends Message {
     type: 'join_table'
@@ -29,6 +29,7 @@ export interface AddPlayerMessage extends Message {
 
 export interface RemovePlayerMessage extends Message {
     type: 'remove_player'
+    tableId: string
 }
 
 export interface ChangeGameStateMessage extends Message {

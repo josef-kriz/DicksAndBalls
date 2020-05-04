@@ -5,15 +5,24 @@
   justify-content: space-between;
 }
 
+.table-name {
+  text-transform: capitalize;
+}
+
 .message-container {
   display: flex;
-  margin: 0 8px 16px;
+}
+
+.message-container:last-child {
+  padding-bottom: 16px;
 }
 
 .message {
   align-items: flex-start;
   display: flex;
+  padding: 0 8px 16px;
   flex-direction: column;
+  width: 100%;
 }
 
 .text {
@@ -21,7 +30,7 @@
   border-radius: 16px;
   color: #444950;
   max-width: 80%;
-  padding: 6px 8px;
+  padding: 8px 12px;
   width: fit-content;
 }
 
@@ -43,7 +52,6 @@
   overflow: hidden;
   padding: 0 8px;
   text-overflow: ellipsis;
-  width: 80%;
   white-space: nowrap;
 }
 

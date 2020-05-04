@@ -9,18 +9,19 @@ import {
   isErrorMessage,
   isGameStateMessage,
   isGameUpdateMessage,
-  isPlayerUpdateMessage, JoinTableMessage,
+  isPlayerUpdateMessage,
   PlayerUpdateMessage,
   RemovePlayerMessage,
   ServerMessage
 } from '../models/message'
 import inactivityDetection from './helpers/inactivityDetection'
-import { AlertController, MenuController } from '@ionic/angular'
+import { AlertController } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
 import { Title } from '@angular/platform-browser'
 import { ComponentCanDeactivate } from './helpers/leaveGameGuard'
 import { Observable } from 'rxjs'
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute } from '@angular/router'
+import { TablesService } from '../services/tables.service'
 
 @Component({
   selector: 'app-game',
@@ -52,23 +53,14 @@ export class GamePage implements ComponentCanDeactivate {
   constructor(
     private alertController: AlertController,
     private gameService: GameService,
-    private menuController: MenuController,
     private route: ActivatedRoute,
-    private router: Router,
     private settingsService: SettingsService,
+    private tablesService: TablesService,
     private titleService: Title,
   ) {
     const id = this.route.snapshot.paramMap.get('tableId')
     this.tableId = id ?? 'main'
-
-    const joinMessage: JoinTableMessage = {
-      type: 'join_table',
-      id: this.tableId,
-    }
-    this.gameService.sendMessage(joinMessage, (): void => {
-      // the table doesn't exist
-      this.router.navigate(['table', 'main']).then()
-    })
+    this.tablesService.joinTable(this.tableId)
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -85,6 +77,7 @@ export class GamePage implements ComponentCanDeactivate {
   ionViewWillLeave(): void {
     const message: RemovePlayerMessage = {
       type: 'remove_player',
+      tableId: this.tableId,
     }
     this.gameService.sendMessage(message)
     this.playerName = undefined
@@ -97,10 +90,6 @@ export class GamePage implements ComponentCanDeactivate {
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
     return !(this.participating && !!this.active && !!this.cards && this.cards.length > 0)
-  }
-
-  async toggleChat(): Promise<void> {
-    await this.menuController.toggle('chat')
   }
 
   private handleServerMessage = async (message: ServerMessage): Promise<void> => {
@@ -164,9 +153,11 @@ export class GamePage implements ComponentCanDeactivate {
     this.shouldDraw = playerOnTurn === this.playerName ? shouldDraw : 0
     this.cardsInDeck = cardsInDeck
 
-    if (playerOnTurn === this.playerName && this.active && await this.settingsService.getSounds()) {
+    if (playerOnTurn === this.playerName && this.active) { // update page title and start inactivity detection (if sounds are allowed)
       this.titleService.setTitle(`*ON TURN* ${this.titleService.getTitle()}`)
-      inactivityDetection.startDetecting()
+      if (await this.settingsService.getSounds()) {
+        inactivityDetection.startDetecting()
+      }
     } else if (this.titleService.getTitle().startsWith('*ON TURN*')) {
       this.titleService.setTitle(this.titleService.getTitle().slice(10))
     }

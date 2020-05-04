@@ -12,7 +12,6 @@ import { CardsComponent } from './components/table/cards/cards.component'
 import { SelectSuitComponent } from './components/table/select-suit/select-suit.component'
 import { GameButtonComponent } from './components/game-button/game-button.component'
 import { LeaveGameGuard } from './helpers/leaveGameGuard'
-import { ChatComponent } from './components/chat/chat.component'
 
 @NgModule({
   declarations: [
@@ -23,7 +22,6 @@ import { ChatComponent } from './components/chat/chat.component'
     CardsComponent,
     SelectSuitComponent,
     GameButtonComponent,
-    ChatComponent,
   ],
   imports: [
     CommonModule,
