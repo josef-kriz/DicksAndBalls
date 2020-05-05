@@ -2,7 +2,7 @@
     <div id="game-content">
         <h1 id="table-name">
             <ion-icon src="assets/icons/table.svg"></ion-icon>
-            {{tableService?.getCurrentTable().name || 'Main'}}</h1>
+            {{tableService?.getCurrentTable()?.name || 'Main'}}</h1>
         <app-players
                 [players]="players"
                 [gameActive]="active"
