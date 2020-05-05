@@ -15,7 +15,7 @@ import {
   ServerMessage
 } from '../models/message'
 import inactivityDetection from './helpers/inactivityDetection'
-import { AlertController, MenuController } from '@ionic/angular'
+import { AlertController, MenuController, Platform } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
 import { Title } from '@angular/platform-browser'
 import { ComponentCanDeactivate } from './helpers/leaveGameGuard'
@@ -61,6 +61,7 @@ export class GamePage implements ComponentCanDeactivate {
     private gameService: GameService,
     private menuController: MenuController,
     private menuService: MenuService,
+    private platform: Platform,
     private route: ActivatedRoute,
     private settingsService: SettingsService,
     public tableService: TableService,
@@ -180,7 +181,7 @@ export class GamePage implements ComponentCanDeactivate {
     if (playerOnTurn === this.playerName && this.active) { // update page title and start inactivity detection (if sounds are allowed)
       this.titleService.setTitle(`*ON TURN* ${this.titleService.getTitle()}`)
       if (await this.settingsService.getSounds()) {
-        inactivityDetection.startDetecting()
+        inactivityDetection.startDetecting((await this.platform.is('mobile') ? 10000 : undefined))
       }
     } else if (this.titleService.getTitle().startsWith('*ON TURN*')) {
       this.titleService.setTitle(this.titleService.getTitle().slice(10))

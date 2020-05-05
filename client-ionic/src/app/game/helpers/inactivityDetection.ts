@@ -3,8 +3,8 @@ export class InactivityDetection {
     private readonly events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click']
     private timer?: number
 
-    public startDetecting = (): void => {
-        this.timer = setTimeout(this.inactive, this.TIMEOUT)
+    public startDetecting = (timeout: number = this.TIMEOUT): void => {
+        this.timer = setTimeout(this.inactive, timeout)
         for (const event of this.events) { document.addEventListener(event, this.stopTimer, true) }
     }
 
