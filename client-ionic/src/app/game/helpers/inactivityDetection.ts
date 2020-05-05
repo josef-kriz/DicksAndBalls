@@ -8,6 +8,10 @@ export class InactivityDetection {
         for (const event of this.events) { document.addEventListener(event, this.stopTimer, true) }
     }
 
+    public stopDetecting = (): void => {
+        this.stopTimer()
+    }
+
     private inactive = async (): Promise<void> => {
         const audio = new Audio('assets/sounds/idle.mp3')
         await audio.play()
