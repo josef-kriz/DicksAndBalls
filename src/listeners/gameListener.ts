@@ -10,7 +10,8 @@ import {
     isJoinTableMessage,
     isPlayersTurnMessage,
     isRemovePlayerMessage,
-    JoinTableMessage
+    JoinTableMessage,
+    PlayerUpdateMessage
 } from '../models/message'
 
 import { io } from '../server'
@@ -97,6 +98,12 @@ export function gameListener(socket: Socket): void {
         try {
             tables.getGame(table).removePlayer(clientId)
             io.to(table).emit('server_event', tables.getGame(table).getGameStateMessage())
+            socket.emit('server_event', {
+                type: 'player_update',
+                cards: [],
+                place: 0,
+                loser: false,
+            } as PlayerUpdateMessage)
         } catch (e) {
             console.log('* Remove player error, skipping')
         } finally {
