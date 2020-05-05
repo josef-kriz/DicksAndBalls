@@ -6,19 +6,37 @@ import { AddTableMessage } from '../../../../src/models/message'
 import { ChatService } from '../chat/chat.service'
 import { Router } from '@angular/router'
 import { tap } from 'rxjs/operators'
+import { LoadingController } from '@ionic/angular'
 
 @Injectable({
   providedIn: 'root'
 })
 export class TableService {
   private currentTable?: TableInfo
+  private reconnecting?: HTMLIonLoadingElement
   private tables: TableInfo[] = []
 
   constructor(
     private chatService: ChatService,
+    private loadingController: LoadingController,
     private router: Router,
     private socket: MainSocket,
-    ) { }
+    ) {
+    this.socket.on('disconnect', async () => {
+      this.reconnecting = await this.loadingController.create({
+        message: 'Either you or the server went offline. Reconnecting...',
+      });
+      await this.reconnecting.present()
+    })
+    this.socket.on('connect', async () => {
+      if (this.reconnecting) {
+        await this.reconnecting.dismiss()
+      }
+      if (this.currentTable) {
+        this.joinTable(this.currentTable.id)
+      }
+    })
+  }
 
   getTables(): Observable<TableUpdateMessage> {
     return this.socket.fromEvent<TableUpdateMessage>('table_event').pipe(
