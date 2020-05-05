@@ -41,9 +41,10 @@ class Tables {
   addTable(name: string): TableInfo {
     if (this.tables.length >= MAX_TABLES) throw new Error('The maximum number of tables was reached')
     if (!name) throw new Error('The name must not be empty')
-    const trimmed = name.trim()
+    const trimmed = name.trim().toLowerCase()
     if (trimmed.length > 10) throw new Error('The maximum name length is 10 non-space characters')
     if (!trimmed.match(/^[0-9a-zA-Z ]+$/)) throw new Error('The name can only contain non-accented letters or numbers')
+    if (this.tables.some(table => table.name === trimmed)) throw new Error('A table with this name already exists')
 
     const id = uuidv4()
     const newTable = {
