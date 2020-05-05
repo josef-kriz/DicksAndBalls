@@ -23,6 +23,7 @@ import { Observable } from 'rxjs'
 import { ActivatedRoute } from '@angular/router'
 import { TableService } from '../services/table.service'
 import { MenuService } from '../services/menu.service'
+import { ChatService } from '../chat/chat.service'
 
 @Component({
   selector: 'app-game',
@@ -50,11 +51,13 @@ export class GamePage implements ComponentCanDeactivate {
   cardsInDeck?: string
 
   isMenuEnabled = this.menuService.menuEnabled
+  unreadChatMessages = this.chatService.unread
 
   private error = false
 
   constructor(
     private alertController: AlertController,
+    private chatService: ChatService,
     private gameService: GameService,
     private menuController: MenuController,
     private menuService: MenuService,
@@ -104,6 +107,10 @@ export class GamePage implements ComponentCanDeactivate {
       await this.menuController.enable(true, 'main-menu')
       this.menuService.menuEnabled.next(true)
     }
+  }
+
+  async openChat(): Promise<void> {
+    await this.menuController.open('chat')
   }
 
   private handleServerMessage = async (message: ServerMessage): Promise<void> => {

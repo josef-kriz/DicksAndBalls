@@ -14,6 +14,7 @@ export interface Message {
 })
 export class ChatService {
   contextChanged = new Subject<undefined>() // used for triggering functions when switching chats
+  unread = new Subject<number>() // used for triggering functions when switching chats
 
   constructor(
     private settingsService: SettingsService,

@@ -27,14 +27,15 @@ export class ChatComponent implements OnInit {
     this.chatService.getMessages().subscribe(this.handleMessage)
     this.chatService.contextChanged.subscribe(() => {
       this.unread = 0
+      this.chatService.unread.next(0)
       this.messages = []
     })
   }
 
-  async openChat(): Promise<void> {
-    await this.menuController.open('chat');
+  openChat(): void {
     (document.querySelector('#chat-input > input') as HTMLInputElement)?.focus()
     this.unread = 0
+    this.chatService.unread.next(0)
     this.chatContent?.scrollToBottom(1000)
   }
 
@@ -58,6 +59,7 @@ export class ChatComponent implements OnInit {
     this.chatContent?.scrollToBottom(500)
     if (!(await this.menuController.isOpen('chat'))) {
       this.unread++
+      this.chatService.unread.next(this.unread)
       if (await this.settingsService.getSounds()) {
         const audio = new Audio('assets/sounds/message.mp3')
         await audio.play()

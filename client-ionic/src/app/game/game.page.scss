@@ -55,3 +55,11 @@
 .error-message {
   font-weight: bold;
 }
+
+.unread-messages {
+  opacity: 0.9;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

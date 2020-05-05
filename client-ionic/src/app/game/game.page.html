@@ -47,3 +47,9 @@
             (playerName)="playerName = $event"
     ></app-game-button>
 </ion-fab>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="light" (click)="openChat()">
+        <ion-icon name="chatbubbles-sharp"></ion-icon>
+    </ion-fab-button>
+    <ion-badge *ngIf="(unreadChatMessages | async) !== 0" class="unread-messages" color="danger">{{(unreadChatMessages | async)}}</ion-badge>
+</ion-fab>

@@ -1,4 +1,4 @@
-<ion-menu side="end" menuId="chat" contentId="main-content">
+<ion-menu side="end" menuId="chat" contentId="main-content" (ionDidOpen)="openChat()">
     <ion-header>
         <ion-toolbar>
             <ion-title>
@@ -31,10 +31,3 @@
         </ion-button>
     </ion-footer>
 </ion-menu>
-
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="light" (click)="openChat()">
-        <ion-icon name="chatbubbles-sharp"></ion-icon>
-    </ion-fab-button>
-    <ion-badge *ngIf="unread !== 0" color="danger">{{unread}}</ion-badge>
-</ion-fab>
