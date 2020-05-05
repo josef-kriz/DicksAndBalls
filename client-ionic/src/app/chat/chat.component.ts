@@ -58,12 +58,12 @@ export class ChatComponent implements OnInit {
     this.messages.push(message)
     this.chatContent?.scrollToBottom(500)
     if (!(await this.menuController.isOpen('chat'))) {
-      this.unread++
-      this.chatService.unread.next(this.unread)
       if (await this.settingsService.getSounds()) {
         const audio = new Audio('assets/sounds/message.mp3')
         await audio.play()
       }
+      this.unread++
+      this.chatService.unread.next(this.unread)
     }
   }
 }
