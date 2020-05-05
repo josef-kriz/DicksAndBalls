@@ -34,8 +34,8 @@ export function gameListener(socket: Socket): void {
     socket.on('table_event', async (message: AddTableMessage, callback?: Function) => {
         try {
             const newTable = tables.addTable(message.name)
-            callback && callback(undefined, newTable.id)
             io.emit('table_event', tables.getTableUpdateMessage())
+            callback && callback(undefined, newTable.id)
         } catch (e) {
             callback && callback(e.message)
         }
