@@ -62,6 +62,7 @@ export function gameListener(socket: Socket): void {
         }
     }
 
+    // TODO client not joining table after reconnecting -> not joining room
     const joinTable = (message: JoinTableMessage, callback?: Function): void => {
         try {
             socket.leave(tableId)

@@ -1,59 +1,63 @@
 <ion-app>
     <ion-split-pane contentId="main-content">
-        <ion-router-outlet id="main-content"></ion-router-outlet>
-    </ion-split-pane>
-    <ion-menu menu-id="main-menu" contentId="main-content" type="overlay">
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Prší</ion-title>
-                <ion-buttons slot="secondary">
-                    <ion-button (click)="openSettings()">
-                        <ion-icon slot="icon-only" name="settings-sharp"></ion-icon>
-                    </ion-button>
-                </ion-buttons>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content>
-            <ion-list id="tables-list">
-                <ion-list-header>
-                    <ion-label>Tables</ion-label>
-                </ion-list-header>
+        <ion-menu menu-id="main-menu" contentId="main-content" type="overlay">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>Prší</ion-title>
+                    <ion-buttons slot="secondary">
+                        <ion-button (click)="openSettings()">
+                            <ion-icon slot="icon-only" name="settings-sharp"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-list id="tables-list">
+                    <ion-list-header>
+                        <ion-label>Tables</ion-label>
+                    </ion-list-header>
 
-                <ion-menu-toggle auto-hide="false" *ngFor="let table of tables; let i = index">
-                    <ion-item (click)="selectedIndex = i" routerDirection="root" [routerLink]="['table', table.id]" lines="none"
-                              detail="false" [class.selected]="selectedIndex == i">
-                        <ion-label class="table-name">{{ table.name }}</ion-label>
-                        <ion-badge slot="end">{{table.playersCount}}</ion-badge>
+                    <ion-menu-toggle auto-hide="false" *ngFor="let table of tables; let i = index">
+                        <ion-item (click)="selectedIndex = i" routerDirection="root" [routerLink]="['table', table.id]"
+                                  lines="none"
+                                  detail="false" [class.selected]="selectedIndex == i">
+                            <ion-label class="table-name">{{ table.name }}</ion-label>
+                            <ion-badge slot="end">{{table.playersCount}}</ion-badge>
+                        </ion-item>
+                    </ion-menu-toggle>
+                    <ion-item button lines="none" detail="false" (click)="addTable()">
+                        <ion-icon slot="start" ios="add-outline" md="add-sharp"></ion-icon>
+                        <ion-label>Add Table</ion-label>
                     </ion-item>
-                </ion-menu-toggle>
-                <ion-item button lines="none" detail="false" (click)="addTable()">
-                    <ion-icon slot="start" ios="add-outline" md="add-sharp"></ion-icon>
-                    <ion-label>Add Table</ion-label>
-                </ion-item>
-            </ion-list>
-        </ion-content>
-        <ion-footer>
-            <ion-list>
-                <ion-item button lines="none" detail="false" (click)="openRules()">
-                    <ion-icon slot="start" ios="help-circle-outline" md="help-circle-sharp"></ion-icon>
-                    <ion-label>Rules</ion-label>
-                </ion-item>
-                <ion-item button lines="none" detail="false" (click)="openAbout()">
-                    <ion-icon slot="start" ios="information-circle-outline"
-                              md="information-circle-sharp"></ion-icon>
-                    <ion-label>About</ion-label>
-                </ion-item>
-                <ion-item class="ion-hide-lg-down" button lines="none" detail="false" (click)="hideMenu()">
-                    <ion-icon slot="start" ios="chevron-back-outline" md="chevron-back-sharp"></ion-icon>
-                    <ion-label>Hide Menu</ion-label>
-                </ion-item>
-            </ion-list>
-        </ion-footer>
-    </ion-menu>
+                </ion-list>
+            </ion-content>
+            <ion-footer>
+                <ion-list>
+                    <ion-item button lines="none" detail="false" (click)="openRules()">
+                        <ion-icon slot="start" ios="help-circle-outline" md="help-circle-sharp"></ion-icon>
+                        <ion-label>Rules</ion-label>
+                    </ion-item>
+                    <ion-item button lines="none" detail="false" (click)="openAbout()">
+                        <ion-icon slot="start" ios="information-circle-outline"
+                                  md="information-circle-sharp"></ion-icon>
+                        <ion-label>About</ion-label>
+                    </ion-item>
+                    <ion-item class="ion-hide-lg-down" button lines="none" detail="false" (click)="hideMenu()">
+                        <ion-icon slot="start" ios="chevron-back-outline" md="chevron-back-sharp"></ion-icon>
+                        <ion-label>Hide Menu</ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-footer>
+        </ion-menu>
+        <ion-router-outlet id="main-content">
+            <ion-content>
+                <ion-fab [class.ion-hide-lg-up]="isMenuEnabled | async" vertical="bottom" horizontal="start" slot="fixed">
+                    <ion-fab-button color="light" (click)="showMenu()">
+                        <ion-icon name="menu"></ion-icon>
+                    </ion-fab-button>
+                </ion-fab>
+            </ion-content>
+        </ion-router-outlet>
+    </ion-split-pane>
     <app-chat></app-chat>
-    <ion-fab [class.ion-hide-lg-up]="isMenuEnabled | async" vertical="bottom" horizontal="start" slot="fixed">
-        <ion-fab-button color="light" (click)="showMenu()">
-            <ion-icon name="menu"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
 </ion-app>
