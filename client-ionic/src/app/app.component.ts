@@ -12,6 +12,7 @@ import { isTableUpdateMessage, TableInfo, TableUpdateMessage } from './models/me
 import { AddTableMessage } from '../../../src/models/message'
 import { Router } from '@angular/router'
 import { ChatService } from './chat/chat.service'
+import { MenuService } from './services/menu.service'
 
 @Component({
   selector: 'app-root',
@@ -21,13 +22,14 @@ import { ChatService } from './chat/chat.service'
 export class AppComponent implements OnInit, OnDestroy {
   public selectedIndex = 0
   public tables?: TableInfo[]
-  public isMenuEnabled?: Promise<boolean>
+  public isMenuEnabled = this.menuService.menuEnabled
   private init: Promise<void>
 
   constructor(
     private alertController: AlertController,
     private chatService: ChatService,
     private menuController: MenuController,
+    private menuService: MenuService,
     private modalController: ModalController,
     private platform: Platform,
     private router: Router,
@@ -65,7 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.isMenuEnabled = this.menuController.isEnabled('main-menu')
+    this.isMenuEnabled.next(await this.menuController.isEnabled('main-menu'))
   }
 
   ngOnDestroy(): void {
@@ -93,18 +95,9 @@ export class AppComponent implements OnInit, OnDestroy {
     await modal.present()
   }
 
-  async showMenu(): Promise<void> {
-    if (await this.menuController.isEnabled('main-menu')) {
-      await this.menuController.open('main-menu')
-    } else {
-      await this.menuController.enable(true, 'main-menu')
-      this.isMenuEnabled = this.menuController.isEnabled('main-menu')
-    }
-  }
-
   async hideMenu(): Promise<void> {
     await this.menuController.enable(false, 'main-menu')
-    this.isMenuEnabled = this.menuController.isEnabled('main-menu')
+    this.isMenuEnabled.next(false)
   }
 
   async addTable(): Promise<void> {

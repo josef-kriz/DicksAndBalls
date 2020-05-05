@@ -32,6 +32,11 @@
         ></app-table>
     </div>
 </ion-content>
+<ion-fab [class.ion-hide-lg-up]="isMenuEnabled | async" vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button color="light" (click)="showMenu()">
+        <ion-icon name="menu"></ion-icon>
+    </ion-fab-button>
+</ion-fab>
 <ion-fab *ngIf="participating" vertical="bottom" horizontal="center" slot="fixed">
     <app-game-button
             id="game-button"

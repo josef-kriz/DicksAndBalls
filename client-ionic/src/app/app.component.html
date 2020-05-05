@@ -49,15 +49,7 @@
                 </ion-list>
             </ion-footer>
         </ion-menu>
-        <ion-router-outlet id="main-content">
-            <ion-content>
-                <ion-fab [class.ion-hide-lg-up]="isMenuEnabled | async" vertical="bottom" horizontal="start" slot="fixed">
-                    <ion-fab-button color="light" (click)="showMenu()">
-                        <ion-icon name="menu"></ion-icon>
-                    </ion-fab-button>
-                </ion-fab>
-            </ion-content>
-        </ion-router-outlet>
+        <ion-router-outlet id="main-content"></ion-router-outlet>
     </ion-split-pane>
     <app-chat></app-chat>
 </ion-app>

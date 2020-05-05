@@ -15,13 +15,14 @@ import {
   ServerMessage
 } from '../models/message'
 import inactivityDetection from './helpers/inactivityDetection'
-import { AlertController } from '@ionic/angular'
+import { AlertController, MenuController } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
 import { Title } from '@angular/platform-browser'
 import { ComponentCanDeactivate } from './helpers/leaveGameGuard'
 import { Observable } from 'rxjs'
 import { ActivatedRoute } from '@angular/router'
 import { TableService } from '../services/table.service'
+import { MenuService } from '../services/menu.service'
 
 @Component({
   selector: 'app-game',
@@ -48,11 +49,15 @@ export class GamePage implements ComponentCanDeactivate {
   isLoser = false
   cardsInDeck?: string
 
+  isMenuEnabled = this.menuService.menuEnabled
+
   private error = false
 
   constructor(
     private alertController: AlertController,
     private gameService: GameService,
+    private menuController: MenuController,
+    private menuService: MenuService,
     private route: ActivatedRoute,
     private settingsService: SettingsService,
     public tableService: TableService,
@@ -90,6 +95,15 @@ export class GamePage implements ComponentCanDeactivate {
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
     return !(this.participating && !!this.active && !!this.cards && this.cards.length > 0)
+  }
+
+  async showMenu(): Promise<void> {
+    if (await this.menuController.isEnabled('main-menu')) {
+      await this.menuController.open('main-menu')
+    } else {
+      await this.menuController.enable(true, 'main-menu')
+      this.menuService.menuEnabled.next(true)
+    }
   }
 
   private handleServerMessage = async (message: ServerMessage): Promise<void> => {
