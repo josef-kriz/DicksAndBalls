@@ -197,6 +197,8 @@ export class Game {
         this.changePlayerOnTurn()
         if (returnedPlayer) this.changePlayerOnTurn()
 
+        if (this.active) message += `${['?', '!'].includes(message[message.length - 1]) ? '' : '.'} ${this.players[this.playerOnTurn].name}'s turn.`
+
         this.logGame()
 
         const response: GameMessage = {
