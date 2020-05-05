@@ -118,7 +118,7 @@ export function gameListener(socket: Socket): void {
                 io.to(`${playerMessage.playerId}`).emit('server_event', playerMessage.message)
             }
             io.to(tableId).emit('server_event', tables.getGame(tableId).getGameStateMessage())
-            io.to(tableId).emit('server_event', tables.getGame(tableId).getGameUpdateMessage('The game has started'))
+            io.to(tableId).emit('server_event', tables.getGame(tableId).getGameUpdateMessage())
         } catch (e) {
             socket.emit('server_event', getErrorMessage(e))
         }

@@ -61,7 +61,7 @@ export interface GameStateMessage extends Message {
 export interface GameUpdateMessage extends Message {
     type: 'game_update'
     deckTop: Card[]
-    message: string
+    message: string[]
     cardsInDeck: string
     playerOnTurn?: string
     colorChangedTo?: Suit

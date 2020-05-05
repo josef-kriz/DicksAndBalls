@@ -33,7 +33,8 @@ export class Game {
         }
     }
 
-    public getGameUpdateMessage(message: string, broughtBackToGame?: string, drewCards = 0): GameUpdateMessage {
+    public getGameUpdateMessage(message?: string[], broughtBackToGame?: string, drewCards = 0): GameUpdateMessage {
+        if (!message) message = ['The game has started!', ` ${this.players[this.playerOnTurn].name}'s turn.`]
         return {
             type: 'game_update',
             deckTop: this.playedCards,
@@ -140,7 +141,7 @@ export class Game {
         if (playerId !== this.players[this.playerOnTurn].id) throw new Error('It\'s not your turn')
 
         // values that we could send to the player are stored here
-        let message = `${player.name}`
+        const message = [`${player.name}`]
         let returnedPlayer: Player | undefined
         let drewCards = 0
 
@@ -156,17 +157,17 @@ export class Game {
             player.cards.splice(playersCardIndex, 1)
             this.changeColorTo = undefined
 
-            message += ` played ${action.card.value} of ${action.card.suit}s`
+            message.push(` played ${action.card.value} of ${action.card.suit}s`)
 
             if (action.card.value === '7') {
                 if (action.card.suit === 'Heart') returnedPlayer = this.check7ofHeartsRule()
-                if (returnedPlayer) message += ` and brought ${returnedPlayer.name} back to the game`
+                if (returnedPlayer) message.push(` and brought ${returnedPlayer.name} back to the game`)
                 else this.drawCount += 2
             }
             else if (action.card.value === 'Ace') this.skippingNextPlayer = true
             else if (action.card.value === 'Queen') {
                 this.changeColorTo = action.changeColorTo
-                message += ` and changed the color to ${action.changeColorTo}s`
+                message.push(` and changed the color to ${action.changeColorTo}s`)
             }
 
             console.log(`# Action: Player ${playerId} played ${action.card.suit} ${action.card.value}`)
@@ -174,30 +175,30 @@ export class Game {
             if (player.cards.length === 0) {
                 player.place = this.getWinnersCount() + 1
                 player.canBeBroughtBack = true
-                message += ' and won!'
+                message.push(' and won!')
             }
         } else if (isDrawAction(action)) {
             if (this.drawCount > 0) {
-                message += ` drew ${this.drawCount} cards`
+                message.push(` drew ${this.drawCount} cards`)
                 for (let i = 0; i < this.drawCount; i++) this.drawCard(player)
                 drewCards = this.drawCount
                 this.drawCount = 0
             } else {
-                message += ` drew a card`
+                message.push(` drew a card`)
                 drewCards++
                 this.drawCard(player)
             }
             console.log(`# Action: Player ${playerId} drew a card`)
         } else if (isSkippingTurnAction(action)) {
             this.skippingNextPlayer = false
-            message += ' skipped a turn'
+            message.push(' skipped a turn')
             console.log(`# Action: Player ${playerId} skipped a turn`)
         } else throw new Error('Unknown player action')
 
         this.changePlayerOnTurn()
         if (returnedPlayer) this.changePlayerOnTurn()
 
-        if (this.active) message += `${['?', '!'].includes(message[message.length - 1]) ? '' : '.'} ${this.players[this.playerOnTurn].name}'s turn.`
+        if (this.active) message.push(`${['?', '!'].includes(message[message.length - 1]) ? '' : '.'} ${this.players[this.playerOnTurn].name}'s turn.`)
 
         this.logGame()
 

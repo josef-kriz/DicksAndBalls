@@ -172,7 +172,7 @@ export class GamePage implements ComponentCanDeactivate {
     this.playerOnTurn = playerOnTurn
     this.message = {
       error: false,
-      text: message.message,
+      text: message.message.join(''),
     }
     this.isSkippingTurn = this.participating && skippingNextPlayer && playerOnTurn === this.playerName
     this.shouldDraw = playerOnTurn === this.playerName ? shouldDraw : 0
