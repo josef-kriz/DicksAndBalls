@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 import { MainSocket } from '../sockets/main.socket'
 import { Observable } from 'rxjs'
 import { JoinTableMessage, TableInfo, TableUpdateMessage } from '../models/message'
@@ -21,12 +21,12 @@ export class TableService {
     private loadingController: LoadingController,
     private router: Router,
     private socket: MainSocket,
-    ) {
+  ) {
     this.socket.on('disconnect', async () => {
-      this.reconnecting = await this.loadingController.create({
-        message: 'Either you or the server went offline. Reconnecting...',
-      });
-      await this.reconnecting.present()
+      await this.showConnectionError()
+    })
+    this.socket.on('connect_error', async () => {
+      await this.showConnectionError()
     })
     this.socket.on('connect', async () => {
       if (this.reconnecting) {
@@ -70,5 +70,14 @@ export class TableService {
 
   stop(): void {
     this.socket.removeAllListeners('table_event')
+  }
+
+  private async showConnectionError(): Promise<void> {
+    if (!(await this.loadingController.getTop())) {
+      this.reconnecting = await this.loadingController.create({
+        message: 'Either you or the server went offline. Reconnecting...',
+      })
+      await this.reconnecting.present()
+    }
   }
 }
