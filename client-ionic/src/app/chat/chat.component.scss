@@ -48,8 +48,12 @@
   }
 }
 
+::ng-deep .text a {
+  color: black;
+}
+
 ::ng-deep .own .text a {
-  color: #e5a235;
+  color: white;
 }
 
 .author {
