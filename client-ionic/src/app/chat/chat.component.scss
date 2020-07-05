@@ -48,6 +48,10 @@
   }
 }
 
+::ng-deep .own .text a {
+  color: #e5a235;
+}
+
 .author {
   font-size: 14px;
   overflow: hidden;

@@ -19,7 +19,7 @@
         <div *ngFor="let message of messages" class="message-container" [class.own]="message.own">
             <div class="message">
                 <ion-text class="author" [color]="message.own ? 'primary' : 'medium'">{{message.author}}</ion-text>
-                <div class="text">{{message.text}}</div>
+                <div class="text" [innerHTML]="message.text | linkify"></div>
             </div>
         </div>
     </ion-content>

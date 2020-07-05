@@ -18,6 +18,7 @@ import { MainSocket } from './sockets/main.socket'
 import { SocketIoModule } from 'ngx-socket-io'
 import { ChatComponent } from './chat/chat.component'
 import { FormsModule } from '@angular/forms'
+import { NgxLinkifyjsModule } from 'ngx-linkifyjs'
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { FormsModule } from '@angular/forms'
       registrationStrategy: 'registerWithDelay:5000'
     }), // TODO register via observable
     SocketIoModule,
+    NgxLinkifyjsModule.forRoot(),
   ],
   providers: [
     StatusBar,
