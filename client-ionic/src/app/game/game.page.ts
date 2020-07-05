@@ -31,7 +31,7 @@ import { ChatService } from '../chat/chat.service'
   styleUrls: ['./game.page.scss'],
 })
 export class GamePage implements ComponentCanDeactivate {
-  tableId: string
+  tableId = 'main'
   playerName?: string
   participating = false
   active?: boolean
@@ -67,19 +67,24 @@ export class GamePage implements ComponentCanDeactivate {
     public tableService: TableService,
     private titleService: Title,
   ) {
-    const id = this.route.snapshot.paramMap.get('tableId')
-    this.tableId = id ?? 'main'
-    this.tableService.joinTable(this.tableId)
   }
 
   // noinspection JSUnusedGlobalSymbols
   ionViewWillEnter(): void {
+    const id = this.route.snapshot.paramMap.get('tableId')
+    if (id) {
+      this.tableId = id
+    }
+
     this.gameService.getMessages().subscribe(
       this.handleServerMessage,
       () => this.error = true)
+
     this.gameService.onDisconnect().subscribe(
       this.handleServerDisconnect
     )
+
+    this.tableService.joinTable(this.tableId)
   }
 
   // noinspection JSUnusedGlobalSymbols

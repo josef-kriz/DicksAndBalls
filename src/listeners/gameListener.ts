@@ -24,7 +24,6 @@ export function gameListener(socket: Socket): void {
     console.log(`* User ${clientId} connected`)
 
     socket.emit('table_event', tables.getTableUpdateMessage())
-    socket.emit('server_event', tables.getGame(tableId).getGameStateMessage())
 
     tables.onTableRemove({
         id: clientId,
