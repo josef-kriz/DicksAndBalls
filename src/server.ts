@@ -7,10 +7,10 @@ const port = process.env.PORT || 3001
 
 const app = express()
 
-app.use(express.static('./client-ionic/www'))
+app.use(express.static('./client/www'))
 
 app.get('/*', function(req, res) {
-    res.sendFile(path.join(__dirname, '../client-ionic/www', 'index.html'));
+    res.sendFile(path.join(__dirname, '../client/www', 'index.html'));
 })
 
 const server = app.listen(port, () => {

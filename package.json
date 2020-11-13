@@ -8,10 +8,10 @@
   "private": true,
   "scripts": {
     "start": "yarn run build && yarn run serve",
-    "start:watch": "nodemon -e js,ts --exec \"yarn start\" --ignore dist/ --ignore client/ --ignore client-ionic/ dist/server.js",
+    "start:watch": "nodemon -e js,ts --exec \"yarn start\" --ignore dist/ --ignore client/ dist/server.js",
     "prebuild": "rimraf dist",
     "build": "yarn run build-ts && yarn run eslint",
-    "heroku-postbuild": "cd client-ionic && yarn && yarn build --prod",
+    "heroku-postbuild": "cd client && yarn && yarn build --prod",
     "serve": "node dist/server.js",
     "build-ts": "tsc",
     "eslint": "eslint . --ext .js,.ts"
