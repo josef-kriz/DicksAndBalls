@@ -107,12 +107,7 @@ export class GamePage implements ComponentCanDeactivate {
   }
 
   async showMenu(): Promise<void> {
-    if (await this.menuController.isEnabled('main-menu')) {
-      await this.menuController.open('main-menu')
-    } else {
-      await this.menuController.enable(true, 'main-menu')
-      this.menuService.menuEnabled.next(true)
-    }
+    await this.menuService.showMenu()
   }
 
   async openChat(): Promise<void> {
@@ -268,7 +263,7 @@ export class GamePage implements ComponentCanDeactivate {
     if (me && await this.settingsService.getPopUps()) {
       const alert = await this.alertController.create({
         header: 'You\'ve been brought back to the game!',
-        message: 'Another player has brought you back to the game with a 7 of Hearts!',
+        message: 'Another player has brought you back to the game with the 7 of Hearts!',
         buttons: ['Back to Game']
       })
 
