@@ -86,7 +86,10 @@ export function gameListener(socket: Socket): void {
             })
 
             callback && callback('success')
-            io.to(tableId).emit('server_event', tables.getGame(tableId).getGameStateMessage())
+            // Players were sometimes not present in a room despite correctly being added previously in joinTable()
+            // This led to the game state message not being sent and breaking the game on client side
+            // The cause of this problem couldn't be found but we just join the room again to be safe
+            socket.join(tableId, () => io.to(tableId).emit('server_event', tables.getGame(tableId).getGameStateMessage()))
             io.emit('table_event', tables.getTableUpdateMessage())
         } catch (e) {
             callback && callback(e.message)
