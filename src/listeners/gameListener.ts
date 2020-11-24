@@ -140,8 +140,8 @@ export function gameListener(socket: Socket): void {
         }
     }
 
-    socket.on('disconnect', () => {
-        console.log(`* User ${clientId} disconnected`)
+    socket.on('disconnect', (reason) => {
+        console.log(`* User ${clientId} disconnected (${reason})`)
         removePlayer(tableId)
         tables.deregisterCallback(clientId)
     })
