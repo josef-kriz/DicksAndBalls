@@ -20,7 +20,7 @@ const DEFAULT_TABLE: TableInfo = {
 export class TableService {
   currentTable = new BehaviorSubject<TableInfo>(DEFAULT_TABLE)
 
-  private reconnecting?: HTMLIonLoadingElement
+  private reconnecting = false
   private tables: TableInfo[] = []
 
   constructor(
@@ -32,12 +32,15 @@ export class TableService {
     this.socket.on('disconnect', async () => {
       await this.showConnectionError()
     })
+
     this.socket.on('connect_error', async () => {
       await this.showConnectionError()
     })
+
     this.socket.on('connect', async () => {
       if (this.reconnecting) {
-        await this.reconnecting.dismiss()
+        await this.loadingController.dismiss()
+        this.reconnecting = false
       }
 
       this.joinTable(this.currentTable.getValue().id)
@@ -75,11 +78,16 @@ export class TableService {
   }
 
   private async showConnectionError(): Promise<void> {
+    this.reconnecting = true
+
     if (!(await this.loadingController.getTop())) {
-      this.reconnecting = await this.loadingController.create({
+      const message = await this.loadingController.create({
         message: 'Either you or the server went offline. Reconnecting...',
       })
-      await this.reconnecting.present()
+      await message.present()
+
+      // abort presenting if message should have already been dismissed
+      if (!this.reconnecting) await message.dismiss()
     }
   }
 }
