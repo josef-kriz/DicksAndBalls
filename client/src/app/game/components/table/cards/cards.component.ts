@@ -7,6 +7,7 @@ import { PlayerAction } from '../../../../models/player-action'
 import { AlertController, ModalController } from '@ionic/angular'
 import { SelectSuitComponent } from '../select-suit/select-suit.component'
 import { SettingsService } from '../../../../settings/settings.service'
+import { focusOnAlertInput } from '../../../../util/helpers'
 
 @Component({
   selector: 'app-cards',
@@ -122,16 +123,7 @@ export class CardsComponent {
 
     await alert.present()
 
-    // manually set focus and key press handler to the input element
-    const alertInput: HTMLInputElement | null = document.querySelector('ion-alert input')
-    if (alertInput) {
-      alertInput.focus()
-      alertInput.onkeyup = (event) => {
-        if (event.key === 'Enter') {
-          alert.dismiss({values: {name: alertInput.value}}, 'submit')
-        }
-      }
-    }
+    focusOnAlertInput(alert)
 
     const dismiss = await alert.onWillDismiss()
 

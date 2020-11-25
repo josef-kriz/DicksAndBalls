@@ -13,6 +13,7 @@ import { AddTableMessage } from '../../../src/models/message'
 import { Router } from '@angular/router'
 import { ChatService } from './chat/chat.service'
 import { MenuService } from './services/menu.service'
+import { focusOnAlertInput } from './util/helpers'
 
 @Component({
   selector: 'app-root',
@@ -158,19 +159,9 @@ export class AppComponent implements OnInit, OnDestroy {
       ]
     })
 
-    // TODO duplicate code
     await alert.present()
 
-    // manually set focus and key press handler to the input element
-    const alertInput: HTMLInputElement | null = document.querySelector('ion-alert input')
-    if (alertInput) {
-      alertInput.focus()
-      alertInput.onkeyup = (event) => {
-        if (event.key === 'Enter') {
-          alert.dismiss({values: {name: alertInput.value}}, 'submit')
-        }
-      }
-    }
+    focusOnAlertInput(alert)
 
     const dismiss = await alert.onWillDismiss()
 
