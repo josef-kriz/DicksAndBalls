@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { MainSocket } from '../sockets/main.socket'
-import { Observable } from 'rxjs'
+import { Observable, BehaviorSubject } from 'rxjs'
 import { JoinTableMessage, TableInfo, TableUpdateMessage } from '../models/message'
 import { AddTableMessage } from '../../../../src/models/message'
 import { ChatService } from '../chat/chat.service'
@@ -8,11 +8,18 @@ import { Router } from '@angular/router'
 import { tap } from 'rxjs/operators'
 import { LoadingController } from '@ionic/angular'
 
+const DEFAULT_TABLE: TableInfo = {
+  id: 'main',
+  name: 'Main',
+  playersCount: 0,
+}
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TableService {
-  private currentTable?: TableInfo
+  currentTable = new BehaviorSubject<TableInfo>(DEFAULT_TABLE)
+
   private reconnecting?: HTMLIonLoadingElement
   private tables: TableInfo[] = []
 
@@ -32,20 +39,15 @@ export class TableService {
       if (this.reconnecting) {
         await this.reconnecting.dismiss()
       }
-      if (this.currentTable) {
-        this.joinTable(this.currentTable.id)
-      }
+
+      this.joinTable(this.currentTable.getValue().id)
     })
   }
 
   getTables(): Observable<TableUpdateMessage> {
     return this.socket.fromEvent<TableUpdateMessage>('table_event').pipe(
-      tap(message => this.tables = message.tables)
+      tap(message => this.tables = message.tables),
     )
-  }
-
-  getCurrentTable(): TableInfo | undefined {
-    return this.currentTable
   }
 
   joinTable(tableId: string): void {
@@ -57,9 +59,9 @@ export class TableService {
       // the table doesn't exist
       this.router.navigate(['table', 'main']).then()
     })
-    const findTable = this.tables.find(table => table.id === tableId)
-    if (findTable) {
-      this.currentTable = findTable
+    const table = this.tables.find(table => table.id === tableId)
+    if (table) {
+      this.currentTable.next(table)
     }
     this.chatService.changeContext()
   }
@@ -68,7 +70,7 @@ export class TableService {
     this.socket.emit('table_event', message, callback)
   }
 
-  stop(): void {
+  dispose(): void {
     this.socket.removeAllListeners('table_event')
   }
 

@@ -2,7 +2,7 @@
     <div id="game-content">
         <h1 id="table-name">
             <ion-icon src="assets/icons/table.svg"></ion-icon>
-            {{tableService?.getCurrentTable()?.name || 'Main'}}</h1>
+            {{(currentTable$ | async)?.name}}</h1>
         <app-players
                 [players]="players"
                 [gameActive]="active"
@@ -32,7 +32,7 @@
         ></app-table>
     </div>
 </ion-content>
-<ion-fab [class.ion-hide-lg-up]="isMenuEnabled | async" vertical="bottom" horizontal="start" slot="fixed">
+<ion-fab [class.ion-hide-lg-up]="isMenuEnabled$ | async" vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button color="light" (click)="showMenu()">
         <ion-icon name="menu"></ion-icon>
     </ion-fab-button>
@@ -51,5 +51,5 @@
     <ion-fab-button color="light" (click)="openChat()">
         <ion-icon name="chatbubbles-sharp"></ion-icon>
     </ion-fab-button>
-    <ion-badge *ngIf="(unreadChatMessages | async) as unreadCount" class="unread-messages" color="danger">{{unreadCount}}</ion-badge>
+    <ion-badge *ngIf="(unreadChatMessages$ | async) as unreadCount" class="unread-messages" color="danger">{{unreadCount}}</ion-badge>
 </ion-fab>

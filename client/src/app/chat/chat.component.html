@@ -3,7 +3,7 @@
         <ion-toolbar>
             <ion-title>
                 Chat
-                <span *ngIf="getTableName()" class="table-name"> - {{getTableName()}}</span>
+                <span class="table-name"> - {{(currentTable$ | async)?.name}}</span>
             </ion-title>
             <ion-buttons slot="secondary">
                 <ion-button (click)="closeChat()">

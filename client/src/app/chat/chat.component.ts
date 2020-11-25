@@ -15,6 +15,8 @@ export class ChatComponent implements OnInit {
   message = ''
   unread = 0
 
+  currentTable$ = this.tableService.currentTable
+
   constructor(
     private chatService: ChatService,
     private menuController: MenuController,
@@ -39,10 +41,6 @@ export class ChatComponent implements OnInit {
 
   async closeChat(): Promise<void> {
     await this.menuController.close('chat')
-  }
-
-  getTableName(): string | undefined {
-    return this.tableService.getCurrentTable()?.name
   }
 
   async sendMessage(): Promise<void> {

@@ -51,8 +51,9 @@ export class GamePage implements ComponentCanDeactivate {
   isLoser = false
   cardsInDeck?: string
 
-  isMenuEnabled = this.menuService.menuEnabled
-  unreadChatMessages = this.chatService.unread
+  isMenuEnabled$ = this.menuService.menuEnabled
+  unreadChatMessages$ = this.chatService.unread
+  currentTable$ = this.tableService.currentTable
 
   private error = false
 
@@ -65,7 +66,7 @@ export class GamePage implements ComponentCanDeactivate {
     private platform: Platform,
     private route: ActivatedRoute,
     private settingsService: SettingsService,
-    public tableService: TableService,
+    private tableService: TableService,
     private titleService: Title,
   ) {
   }
@@ -96,7 +97,7 @@ export class GamePage implements ComponentCanDeactivate {
     }
     this.gameService.sendMessage(message)
     this.playerName = undefined
-    this.gameService.stop()
+    this.gameService.dispose()
   }
 
   /**

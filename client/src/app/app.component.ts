@@ -71,7 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.tableService.stop()
+    this.tableService.dispose()
   }
 
   async openSettings(): Promise<void> {

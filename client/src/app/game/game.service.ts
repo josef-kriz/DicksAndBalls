@@ -21,7 +21,7 @@ export class GameService {
     this.socket.emit('player_event', message, callback)
   }
 
-  stop(): void {
+  dispose(): void {
     this.socket.removeAllListeners('server_event')
     this.socket.removeAllListeners('disconnect')
   }
