@@ -59,11 +59,11 @@ export class TableService {
       // the table doesn't exist
       this.router.navigate(['table', 'main']).then()
     })
+
     const table = this.tables.find(table => table.id === tableId)
-    if (table) {
-      this.currentTable.next(table)
-    }
-    this.chatService.changeContext()
+    if (table) this.currentTable.next(table)
+
+    if (this.currentTable.getValue().id !== tableId) this.chatService.changeContext()
   }
 
   addTable(message: AddTableMessage, callback: (error?: string, id?: string) => void): void {

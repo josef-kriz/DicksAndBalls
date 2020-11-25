@@ -16,7 +16,7 @@
         <div *ngIf="messages.length === 0" id="no-messages">
             There are no messages
         </div>
-        <div *ngFor="let message of messages" class="message-container" [class.own]="message.own">
+        <div *ngFor="let message of messages; trackBy: trackByMessageId" class="message-container" [class.own]="message.own">
             <div class="message">
                 <ion-text class="author" [color]="message.own ? 'primary' : 'medium'">{{message.author}}</ion-text>
                 <div class="text" [innerHTML]="message.text | linkify"></div>

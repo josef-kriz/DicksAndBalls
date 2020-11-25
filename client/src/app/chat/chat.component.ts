@@ -39,6 +39,10 @@ export class ChatComponent implements OnInit {
     this.chatContent?.scrollToBottom(1000)
   }
 
+  trackByMessageId(_: number, message: Message): string {
+    return message.id
+  }
+
   async closeChat(): Promise<void> {
     await this.menuController.close('chat')
   }

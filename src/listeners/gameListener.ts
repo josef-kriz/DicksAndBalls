@@ -13,7 +13,7 @@ import {
     JoinTableMessage,
     PlayerUpdateMessage
 } from '../models/message'
-
+import { v4 as uuidv4 } from 'uuid'
 import { io } from '../server'
 import { PlayerAction } from '../models/playerAction'
 import { tables } from '../tables'
@@ -41,12 +41,15 @@ export function gameListener(socket: Socket): void {
     })
 
     socket.on('chat_message', async ({author, text}: ChatMessage) => {
+        const messageId = uuidv4()
         socket.to(tableId).emit('chat_message', {
+            id: messageId,
             author,
             text,
             own: false,
         })
         socket.emit('chat_message', {
+            id: messageId,
             author,
             text,
             own: true,
