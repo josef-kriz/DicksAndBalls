@@ -22,10 +22,9 @@ export class GameButtonComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const gameActive = changes.gameActive?.currentValue || this.gameActive
-    const isWinner = changes.isWinner?.currentValue || this.isWinner
-    const cardsCount = changes.cardsCount?.currentValue || this.cardsCount
-    this.canEndGame = !!gameActive && !isWinner && !!cardsCount && cardsCount > 0
+    if (changes.gameActive || changes.isWinner || changes.cardsCount) {
+      this.canEndGame = !!this.gameActive && !this.isWinner && !!this.cardsCount && this.cardsCount > 0
+    }
   }
 
   stopGame(): void {
