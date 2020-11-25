@@ -12,10 +12,10 @@ import {
   isPlayerUpdateMessage,
   PlayerUpdateMessage,
   RemovePlayerMessage,
-  ServerMessage
+  ServerMessage,
 } from '../models/message'
 import inactivityDetection from './helpers/inactivity-detection'
-import { AlertController, MenuController, Platform } from '@ionic/angular'
+import { MenuController, Platform } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
 import { Title } from '@angular/platform-browser'
 import { ComponentCanDeactivate } from './helpers/leave-game.guard'
@@ -24,6 +24,7 @@ import { ActivatedRoute } from '@angular/router'
 import { TableService } from '../services/table.service'
 import { MenuService } from '../services/menu.service'
 import { ChatService } from '../chat/chat.service'
+import { GamePromptsService } from './helpers/game-prompts.service'
 
 @Component({
   selector: 'app-game',
@@ -56,8 +57,8 @@ export class GamePage implements ComponentCanDeactivate {
   private error = false
 
   constructor(
-    private alertController: AlertController,
     private chatService: ChatService,
+    private gamePromptsService: GamePromptsService,
     private gameService: GameService,
     private menuController: MenuController,
     private menuService: MenuService,
@@ -81,7 +82,7 @@ export class GamePage implements ComponentCanDeactivate {
       () => this.error = true)
 
     this.gameService.onDisconnect().subscribe(
-      this.handleServerDisconnect
+      this.handleServerDisconnect,
     )
 
     this.tableService.joinTable(this.tableId)
@@ -132,7 +133,7 @@ export class GamePage implements ComponentCanDeactivate {
   private handleErrorMessage(message: ErrorMessage): void {
     this.message = {
       error: true,
-      text: message.message
+      text: message.message,
     }
   }
 
@@ -164,7 +165,7 @@ export class GamePage implements ComponentCanDeactivate {
       shouldDraw,
       cardsInDeck,
       broughtBackToGame,
-      drewCards
+      drewCards,
     } = message
 
     this.colorChangedTo = colorChangedTo
@@ -181,34 +182,29 @@ export class GamePage implements ComponentCanDeactivate {
     if (playerOnTurn === this.playerName && this.active) { // update page title and start inactivity detection (if sounds are allowed)
       this.titleService.setTitle(`*ON TURN* ${this.titleService.getTitle()}`)
       if (await this.settingsService.getSounds()) {
-        inactivityDetection.startDetecting((await this.platform.is('mobile') ? 10000 : undefined))
+        const inactivityTimeout = await this.platform.is('mobile') ? 10000 : undefined
+        inactivityDetection.startDetecting(inactivityTimeout)
       }
     } else if (this.titleService.getTitle().startsWith('*ON TURN*')) {
       this.titleService.setTitle(this.titleService.getTitle().slice(10))
     }
-    if (playerOnTurn) { // scroll to player's cards (applies only when overflowing)
-      const playersEl = document.getElementById('players')
-      const playerEl = document.getElementById(playerOnTurn)
-      if (playersEl && playersEl.scrollWidth !== playersEl.clientWidth && playerEl) {
-        const offset = playerEl.offsetLeft - playersEl.offsetWidth / 2 + playerEl.scrollWidth / 2
-        const rangedOffset = Math.min(Math.max(offset, 0), playersEl.scrollWidth - playersEl.offsetWidth)
-        playersEl.scrollTo({behavior: 'smooth', left: rangedOffset})
-      }
+
+    if (playerOnTurn) {
+      this.scrollToCards(playerOnTurn)
     }
-    if (await this.settingsService.getSounds()) {
-      await this.playDrawCardSound(drewCards)
-    }
+
+    await this.gamePromptsService.playDrawCardSound(drewCards)
     if (broughtBackToGame) {
-      await this.handleBroughtBackToGame(broughtBackToGame === this.playerName)
+      await this.gamePromptsService.handleBroughtBackToGame(broughtBackToGame === this.playerName)
     }
   }
 
   private async handlePlayerUpdate(message: PlayerUpdateMessage): Promise<void> {
     const {cards, place, loser} = message
     if (place > 0) {
-      await this.handleWin()
+      await this.gamePromptsService.handleWin()
     } else if (loser) {
-      await this.handleLoss()
+      await this.gamePromptsService.handleLoss()
     }
 
     this.cards = cards
@@ -222,72 +218,15 @@ export class GamePage implements ComponentCanDeactivate {
     inactivityDetection.stopDetecting()
   }
 
-  private async handleWin(): Promise<void> {
-    if (await this.settingsService.getPopUps()) {
-      const alert = await this.alertController.create({
-        header: 'You won!',
-        message: 'You\'re a winner! <span role="img" aria-label="ta-da">🎉</span>\n',
-        buttons: ['I\'m awesome!']
-      })
-      await alert.present()
-    }
-
-    if (await this.settingsService.getSounds()) {
-      const audio = new Audio('assets/sounds/win31.mp3')
-      await audio.play()
-    }
-  }
-
-  private async handleLoss(): Promise<void> {
-    if (await this.settingsService.getPopUps()) {
-      const alert = await this.alertController.create({
-        header: 'You lost!',
-        message: 'You\'re a loser! <span role="img" aria-label="thumb-down">👎</span>',
-        buttons: ['I suck']
-      })
-      await alert.present()
-    }
-
-    if (await this.settingsService.getSounds()) {
-      const audio = new Audio('assets/sounds/sadTrombone.mp3')
-      await audio.play()
-    }
-  }
-
-  private async handleBroughtBackToGame(me: boolean = false): Promise<void> {
-    if (await this.settingsService.getSounds()) {
-      const audio = new Audio('assets/sounds/airHorn.mp3')
-      await audio.play()
-    }
-
-    if (me && await this.settingsService.getPopUps()) {
-      const alert = await this.alertController.create({
-        header: 'You\'ve been brought back to the game!',
-        message: 'Another player has brought you back to the game with the 7 of Hearts!',
-        buttons: ['Back to Game']
-      })
-
-      await alert.present()
-    }
-  }
-
+  // scroll to player's cards (applies only when overflowing)
   // noinspection JSMethodCanBeStatic
-  private async playDrawCardSound(cards: number): Promise<void> {
-    let audioFile: string
-    switch (cards) {
-      case 4:
-        audioFile = 'assets/sounds/crack_the_whip.mp3'
-        break
-      case 6:
-        audioFile = 'assets/sounds/drama.mp3'
-        break
-      case 8:
-        audioFile = 'assets/sounds/holy_shit.mp3'
-        break
-      default:
-        return
+  private scrollToCards(playerOnTurn: string): void {
+    const playersEl = document.getElementById('players')
+    const playerEl = document.getElementById(playerOnTurn)
+    if (playersEl && playersEl.scrollWidth !== playersEl.clientWidth && playerEl) {
+      const offset = playerEl.offsetLeft - playersEl.offsetWidth / 2 + playerEl.scrollWidth / 2
+      const rangedOffset = Math.min(Math.max(offset, 0), playersEl.scrollWidth - playersEl.offsetWidth)
+      playersEl.scrollTo({behavior: 'smooth', left: rangedOffset})
     }
-    const audio = new Audio(audioFile)
-    await audio.play()
   }
 }
