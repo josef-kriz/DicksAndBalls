@@ -11,7 +11,7 @@ import { DeckCardComponent } from './components/table/deck-card/deck-card.compon
 import { CardsComponent } from './components/table/cards/cards.component'
 import { SelectSuitComponent } from './components/table/select-suit/select-suit.component'
 import { GameButtonComponent } from './components/game-button/game-button.component'
-import { LeaveGameGuard } from './helpers/leaveGameGuard'
+import { LeaveGameGuard } from './helpers/leave-game.guard'
 
 @NgModule({
   declarations: [

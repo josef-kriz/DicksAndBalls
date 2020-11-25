@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core'
 import { Card, Suit } from '../../../models/card'
-import { Draw, PlayerAction, SkippingTurn } from '../../../models/playerAction'
+import { Draw, PlayerAction, SkippingTurn } from '../../../models/player-action'
 import { ChangeGameStateMessage, PlayersTurnMessage } from '../../../models/message'
 import { GameService } from '../../game.service'
 import { SettingsService } from '../../../settings/settings.service'

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { GamePage } from './game.page';
-import { LeaveGameGuard } from './helpers/leaveGameGuard'
+import { LeaveGameGuard } from './helpers/leave-game.guard'
 
 const routes: Routes = [
   {

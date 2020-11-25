@@ -14,11 +14,11 @@ import {
   RemovePlayerMessage,
   ServerMessage
 } from '../models/message'
-import inactivityDetection from './helpers/inactivityDetection'
+import inactivityDetection from './helpers/inactivity-detection'
 import { AlertController, MenuController, Platform } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
 import { Title } from '@angular/platform-browser'
-import { ComponentCanDeactivate } from './helpers/leaveGameGuard'
+import { ComponentCanDeactivate } from './helpers/leave-game.guard'
 import { Observable } from 'rxjs'
 import { ActivatedRoute } from '@angular/router'
 import { TableService } from '../services/table.service'

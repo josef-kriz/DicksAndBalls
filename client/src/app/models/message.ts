@@ -1,6 +1,6 @@
 import { Card, Suit } from './card'
 import { Opponent } from './opponent'
-import { PlayerAction } from './playerAction'
+import { PlayerAction } from './player-action'
 
 interface Message {
     readonly type: string
