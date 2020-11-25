@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core'
 import { Card, getCardsAssetNumber, Suit } from '../../../../models/card'
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser'
 import { GameService } from '../../../game.service'
@@ -9,12 +9,16 @@ import { SelectSuitComponent } from '../select-suit/select-suit.component'
 import { SettingsService } from '../../../../settings/settings.service'
 import { focusOnAlertInput } from '../../../../util/helpers'
 
+interface CardWithBackground extends Card {
+  background: SafeStyle
+}
+
 @Component({
   selector: 'app-cards',
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.scss'],
 })
-export class CardsComponent {
+export class CardsComponent implements OnChanges {
   @Input() readonly participating?: boolean
   @Input() readonly gameActive?: boolean
   @Input() readonly cards?: Card[]
@@ -26,7 +30,10 @@ export class CardsComponent {
   @Input() readonly shouldDraw?: number
   @Input() readonly playersCount?: number
   @Output() nameChange: EventEmitter<string> = new EventEmitter()
+
   cardType = 'single-headed'
+  showCards = false
+  cardsWithBackgrounds?: CardWithBackground[]
 
   constructor(
     private alertController: AlertController,
@@ -36,6 +43,18 @@ export class CardsComponent {
     private settingsService: SettingsService,
     ) {
     this.settingsService.getCardType().subscribe(type => this.cardType = type)
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.participating || changes.gameActive || changes.isWinner || changes.isLoser) {
+      this.showCards = this.shouldShowCards()
+    }
+    if (changes.cards) {
+      this.cardsWithBackgrounds = this.cards?.map((card: Card) => ({
+        ...card,
+        background: this.getCardUrl(card),
+      }))
+    }
   }
 
   shouldShowCards(): boolean {
@@ -68,8 +87,8 @@ export class CardsComponent {
     }
   }
 
-  getCardUrl(card: Card): SafeStyle {
-    return this.sanitizer.bypassSecurityTrustStyle(`url("assets/cards/${this.cardType}/${getCardsAssetNumber(card)}.png")`)
+  trackByCard(_: number, card: CardWithBackground): string {
+    return `${card.suit}${card.value}`
   }
 
   async playCard(card: Card): Promise<void> {
@@ -94,6 +113,10 @@ export class CardsComponent {
         card,
       })
     }
+  }
+
+  private getCardUrl(card: Card): SafeStyle {
+    return this.sanitizer.bypassSecurityTrustStyle(`url("assets/cards/${this.cardType}/${getCardsAssetNumber(card)}.png")`)
   }
 
   private async askForName(): Promise<string> {
