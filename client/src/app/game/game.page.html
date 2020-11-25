@@ -51,5 +51,5 @@
     <ion-fab-button color="light" (click)="openChat()">
         <ion-icon name="chatbubbles-sharp"></ion-icon>
     </ion-fab-button>
-    <ion-badge *ngIf="(unreadChatMessages | async) !== 0" class="unread-messages" color="danger">{{(unreadChatMessages | async)}}</ion-badge>
+    <ion-badge *ngIf="(unreadChatMessages | async) as unreadCount" class="unread-messages" color="danger">{{unreadCount}}</ion-badge>
 </ion-fab>

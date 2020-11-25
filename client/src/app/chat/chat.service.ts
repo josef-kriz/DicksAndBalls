@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Observable, Subject } from 'rxjs'
+import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { SettingsService } from '../settings/settings.service'
 import { MainSocket } from '../sockets/main.socket'
 
@@ -14,7 +14,7 @@ export interface Message {
 })
 export class ChatService {
   contextChanged = new Subject<undefined>() // used for triggering functions when switching chats
-  unread = new Subject<number>() // used for triggering functions when switching chats
+  unread = new BehaviorSubject<number>(0) // used for keeping the number of unread messages
 
   constructor(
     private settingsService: SettingsService,

@@ -26,8 +26,6 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
     this.chatService.getMessages().subscribe(this.handleMessage)
     this.chatService.contextChanged.subscribe(() => {
-      this.unread = 0
-      this.chatService.unread.next(0)
       this.messages = []
     })
   }
