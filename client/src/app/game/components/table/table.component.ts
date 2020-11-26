@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core'
 import { Card, Suit } from '../../../models/card'
 import { Draw, PlayerAction, SkippingTurn } from '../../../models/player-action'
 import { ChangeGameStateMessage, PlayersTurnMessage } from '../../../models/message'
@@ -25,20 +25,29 @@ export class TableComponent implements OnChanges {
   @Input() readonly cardsInDeck?: string
   @Input() readonly playersCount?: number
   @Output() nameChange: EventEmitter<string> = new EventEmitter()
+
   reversedDeck?: Card[]
   cardBack = this.settingsService.getCardBack()
+  canShuffle = false
 
   constructor(
     private gameService: GameService,
     private settingsService: SettingsService,
-    ) { }
+  ) {
+  }
 
-  ngOnChanges(): void {
-    this.reversedDeck = this.deckTop && [...this.deckTop].reverse()
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.deckTop?.currentValue) this.reversedDeck = [...changes.deckTop.currentValue].reverse()
+
+    if (changes.gameActive || changes.participating || changes.playersCount) {
+      this.canShuffle = !this.gameActive && !!this.participating && !!this.playersCount && this.playersCount >= 2
+    }
   }
 
   handleDeckClick(): void {
-    if (!this.participating) { return }
+    if (!this.participating) {
+      return
+    }
 
     if (!this.gameActive && this.participating && this.playersCount && this.playersCount >= 2) {
       const message: ChangeGameStateMessage = {
@@ -63,10 +72,6 @@ export class TableComponent implements OnChanges {
    */
   trackByCard(index: number, card: Card): string {
     return `${card.value}${card.suit}`
-  }
-
-  canShuffle(): boolean {
-    return !this.gameActive && !!this.participating && !!this.playersCount && this.playersCount >= 2
   }
 
   private drawCard(): void {
