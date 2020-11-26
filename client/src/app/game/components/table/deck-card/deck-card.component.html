@@ -1,6 +1,6 @@
 <div class="deck-card-container">
     <div *ngIf="card" [style.transform]="randomShift">
-        <div class="deck-card" [style.background-image]="getCardUrl(card)"></div>
+        <div class="deck-card" [style.background-image]="cardBackground"></div>
         <div *ngIf="colorChangedTo" class="color-overlay" [ngSwitch]="colorChangedTo">
             <img *ngSwitchCase="'Ball'" class="overlay-suit-icon" src="assets/suits/ball.svg" alt="balls"/>
             <img *ngSwitchCase="'Dick'" class="overlay-suit-icon" src="assets/suits/dick.svg" alt="dicks"/>

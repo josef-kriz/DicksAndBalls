@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core'
 import { Card, getCardsAssetNumber, Suit } from '../../../../models/card'
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser'
 import { SettingsService } from '../../../../settings/settings.service'
@@ -8,12 +8,14 @@ import { SettingsService } from '../../../../settings/settings.service'
   templateUrl: './deck-card.component.html',
   styleUrls: ['./deck-card.component.scss'],
 })
-export class DeckCardComponent implements OnInit {
+export class DeckCardComponent implements OnInit, OnChanges {
   @Input() readonly card?: Card
   @Input() readonly noTransform?: boolean
   @Input() readonly colorChangedTo?: Suit
+
   randomShift: string | null = null
   cardType = 'single-headed'
+  cardBackground?: SafeStyle
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -24,6 +26,15 @@ export class DeckCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.randomShift = this.getRandomShift()
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.card
+      && changes.card.previousValue?.suit !== changes.card.currentValue?.suit
+      && changes.card.previousValue?.value !== changes.card.currentValue?.value
+    ) {
+      this.cardBackground = this.getCardUrl(changes.card.currentValue)
+    }
   }
 
   getCardUrl(card: Card): SafeStyle {

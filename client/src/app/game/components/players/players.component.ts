@@ -13,6 +13,7 @@ export class PlayersComponent implements OnInit {
   @Input() readonly playerOnTurn?: string
   @Input() readonly playerName?: string
   @Input() readonly participating?: boolean
+
   cardBack = '1'
 
   constructor(private settingsService: SettingsService) { }
