@@ -15,9 +15,13 @@ export class PlayersComponent implements OnInit {
   @Input() readonly participating?: boolean
   cardBack = '1'
 
+  constructor(private settingsService: SettingsService) { }
+
   ngOnInit(): void {
     this.settingsService.getCardBack().subscribe(back => this.cardBack = back)
   }
 
-  constructor(private settingsService: SettingsService) { }
+  trackByPlayerName(_: number, player: Opponent): string {
+    return player.name
+  }
 }
