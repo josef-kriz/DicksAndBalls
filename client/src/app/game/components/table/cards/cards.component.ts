@@ -92,25 +92,31 @@ export class CardsComponent implements OnChanges {
   }
 
   async playCard(card: Card): Promise<void> {
+    // remove properties extended from the Card interface
+    const pureCard = {
+      suit: card.suit,
+      value: card.value,
+    }
+
     if (
       this.gameActive &&
       !this.isSkippingTurn &&
       this.playerOnTurn === this.playerName &&
       this.shouldDraw === 0 &&
-      card.value === 'Queen'
+      pureCard.value === 'Queen'
     ) {
       const changeColorTo = await this.askForSuit()
       if (changeColorTo) {
         this.sendPlayerAction({
           action: 'card_played',
-          card,
+          card: pureCard,
           changeColorTo,
         })
       }
     } else {
       this.sendPlayerAction({
         action: 'card_played',
-        card,
+        card: pureCard,
       })
     }
   }
