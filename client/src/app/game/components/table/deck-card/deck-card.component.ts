@@ -20,7 +20,7 @@ export class DeckCardComponent implements OnInit, OnChanges {
   constructor(
     private sanitizer: DomSanitizer,
     private settingsService: SettingsService,
-    ) {
+  ) {
     this.settingsService.getCardType().subscribe(type => this.cardType = type)
   }
 
@@ -30,8 +30,8 @@ export class DeckCardComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.card
-      && changes.card.previousValue?.suit !== changes.card.currentValue?.suit
-      && changes.card.previousValue?.value !== changes.card.currentValue?.value
+      && (changes.card.previousValue?.suit !== changes.card.currentValue?.suit
+        || changes.card.previousValue?.value !== changes.card.currentValue?.value)
     ) {
       this.cardBackground = this.getCardUrl(changes.card.currentValue)
     }
@@ -45,17 +45,25 @@ export class DeckCardComponent implements OnInit, OnChanges {
    * This function employs the Box–Muller transform to give a normal distribution between 0 and 1 inclusive.
    */
   private random_normal(): number {
-    let u = 0, v = 0;
-    while (u === 0) { u = Math.random(); } // Converting [0,1) to (0,1)
-    while (v === 0) { v = Math.random(); }
-    let num = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
-    num = num / 10.0 + 0.5; // Translate to 0 -> 1
-    if (num > 1 || num < 0) { return this.random_normal(); } // resample between 0 and 1
-    return num;
+    let u = 0, v = 0
+    while (u === 0) {
+      u = Math.random()
+    } // Converting [0,1) to (0,1)
+    while (v === 0) {
+      v = Math.random()
+    }
+    let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v)
+    num = num / 10.0 + 0.5 // Translate to 0 -> 1
+    if (num > 1 || num < 0) {
+      return this.random_normal()
+    } // resample between 0 and 1
+    return num
   }
 
   private getRandomShift(): string | null {
-    if (this.noTransform) { return null }
+    if (this.noTransform) {
+      return null
+    }
 
     const getRandomArbitrary = (min: number, max: number) => {
       const random = this.random_normal() * Math.floor(max - min) + min
