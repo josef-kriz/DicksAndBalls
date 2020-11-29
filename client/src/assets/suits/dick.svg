@@ -1,33 +1,125 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
- "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="66px" height="121px"
- preserveAspectRatio="xMidYMid meet">
-<path style="fill:Yellow;stroke:black;" d="M13 21 Q13 1 33 1 L33 52 L13 52 Z" />
-<path style="fill:Red;stroke:black;" d="M33 1 Q53 1 53 21 L53 52 L33 52 Z" />
-<path style="fill:#0000DF;stroke:black;" d="M13 52 L33 52 L33 62 L13 62 Z" />
-<path style="fill:#007F00;stroke:black;" d="M37 96 Q37 119 16 119 L24 110 Q25 109 27 108 Q29 107 29 102 L29 96" />
-<path style="fill:none;stroke:black;" d="M27 108 Q31.2 108 31.2 110.5 Q31.2 114 29 115.57" />
-<path style="fill:none;stroke:black;" d="M35 96 Q35 107 31 111" />
-<path style="fill:none;stroke:black;" d="M33 96 Q33 102 31.5 106" />
-<path style="fill:none;stroke:black;" d="M20 117 L26 111 Q28 109 29 111 Q29.5 112 28 113" />
-<path style="fill:#000000;stroke:black;" d="M33 52 L33 62 L53 62 L53 52 Z" />
-<path style="fill:#007F00;stroke:black;" d="M13 62 Q1 62 1 74 Q1 96 33 96 Q64 96 64 74 Q64 62 54 62 Z" />
-<path style="fill:#000000;stroke:black;" d="M33 66.5 Q28.5 66.5 28.5 71 Q28.5 77 33 87 Q37.5 77 37.5 71 Q37.5 66.5 33 66.5" />
-<path style="fill:#000000;stroke:black;" d="M21 89 Q10 80 10 74 Q10 67 15 67 Q17 67 17 71 Q17 72 16.5 73 Q16 74 16 75 Q16 80 21 89" />
-<path style="fill:#000000;stroke:black;" d="M45 89 Q56 80 56 74 Q56 67 51 67 Q49 67 49 71 Q49 72 49.5 73 Q50 74 50 75 Q50 80 45 89" />
-
-<path style="stroke:black;" d="M33 62 L33 96" />
-<path style="stroke:black;" d="M35.86 1 L35.86 96" />
-<path style="stroke:black;" d="M38.7 1.8 L38.7 96" />
-<path style="stroke:black;" d="M41.6 2.7 L41.6 95" />
-<path style="stroke:black;" d="M44.4 3 L44.4 95" />
-<path style="stroke:black;" d="M47.3 5.4 L47.3 94.6" />
-<path style="stroke:black;" d="M50.1 8.8 L50.1 93.7" />
-<path style="stroke:black;" d="M53 62 L53 92.6" />
-<path style="stroke:black;" d="M55.8 62.3 L55.8 91" />
-<path style="stroke:black;" d="M58.7 63 L58.7 88.6" />
-<path style="stroke:black;" d="M61.6 65 L61.6 84.7" />
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg
+   version="1.0"
+   xmlns="http://www.w3.org/2000/svg"
+   width="66"
+   height="97"
+   preserveAspectRatio="xMidYMid meet">
+  <path
+     style="fill:#ffff00;stroke:#000000"
+     d="M 53,21 Q 53,1 33,1 v 51 h 20 z" />
+  <path
+     style="fill:#c80122;stroke:#000000;stroke-opacity:1;fill-opacity:1"
+     d="M 33,1 Q 13,1 13,21 v 31 h 20 z" />
+  <path
+     style="fill:#007f00;stroke:#000000"
+     d="M 13,62 Q 1,62 1,74 1,96 33,96 64,96 64,74 64,62 54,62 Z" />
+  <path
+     style="fill:#c80122;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="m 13,50 c 14.03053,-2.918394 27.257496,-3.088172 40,0 V 61.5 H 13 Z" />
+  <path
+     style="stroke:#000000;stroke-width:0.999998"
+     d="M 30.1,1 V 61.653934" />
+  <path
+     style="stroke:#000000;stroke-width:1"
+     d="M 27.299999,1.8 V 61.37125" />
+  <path
+     style="stroke:#000000;stroke-width:1"
+     d="M 24.4,2.7 V 61.219301" />
+  <path
+     style="stroke:#000000;stroke-width:0.999999"
+     d="M 21.6,3 V 61.219301" />
+  <path
+     style="stroke:#000000;stroke-width:0.999999"
+     d="M 18.7,5.3999999 V 61.52601" />
+  <path
+     style="stroke:#000000;stroke-width:1"
+     d="M 15.86,8.8 V 61.615404" />
+  <path
+     style="stroke:#000000;stroke-width:1"
+     d="M 32.999999,46.898899 V 61.653933" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 1.3341597,78.036131 c 3.8677036,6.191405 7.7172157,9.70911 12.2533563,14.786453" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 1.2544419,70.750525 C 7.8538575,79.66305 15.203178,87.675689 22.914473,95.253958" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 4.0142141,64.980092 C 12.349893,76.191528 21.71547,86.579045 32.280972,96.006623" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 9.8682765,61.969432 C 19.151797,74.173733 29.743813,85.307447 41.480213,95.504846" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 20.20533,61.776898 c 8.198979,12.137322 18.666848,22.32988 29.972347,31.80447" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 31.444678,61.969432 C 37.279123,72.530491 46.916796,81.189936 57.6207,89.316266" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 44.156356,61.969432 c 4.956963,7.587456 10.673147,14.415692 18.733,18.900258" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 55.028186,61.969432 c 2.14917,3.293238 4.411593,6.485805 8.530205,8.028428" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 63.752608,78.036131 c -3.867703,6.191405 -7.717215,9.70911 -12.253356,14.786453" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 63.832326,70.750525 C 57.232911,79.66305 49.88359,87.675689 42.172295,95.253958" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 61.072554,64.980092 C 52.736875,76.191528 43.371298,86.579045 32.805796,96.006623" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 55.218492,61.969432 C 45.934971,74.173733 35.342955,85.307447 23.606555,95.504846" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 44.881438,61.776898 C 36.682459,73.91422 26.21459,84.106778 14.909091,93.581368" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 33.64209,61.969432 C 27.807645,72.530491 18.169972,81.189936 7.4660677,89.316266" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 20.930412,61.969432 C 15.973449,69.556888 10.257265,76.385124 2.1974117,80.86969" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 10.058582,61.969432 C 7.9094117,65.26267 5.6469887,68.455237 1.5283767,69.99786" />
+  <path
+     style="stroke:#000000;stroke-width:0.999997"
+     d="M 29.740448,64.899999 H 3.96" />
+  <path
+     style="stroke:#000000;stroke-width:0.999998"
+     d="M 26.094211,67.8 H 2.4" />
+  <path
+     style="stroke:#000000;stroke-width:0.999998"
+     d="M 23.470019,70.7 H 1.7" />
+  <path
+     style="stroke:#000000;stroke-width:0.999998"
+     d="M 21.588037,73.599999 H 1" />
+  <path
+     style="stroke:#000000;stroke-width:1"
+     d="M 20.482735,76.499999 H 1.4" />
+  <path
+     style="stroke:#000000;stroke-width:1"
+     d="M 20.516075,79.4 H 2" />
+  <path
+     style="stroke:#000000;stroke-width:1"
+     d="M 21.272955,82.3 H 2.5" />
+  <path
+     style="stroke:#000000;stroke-width:1"
+     d="M 22.093505,85.199999 H 3.8" />
+  <path
+     style="stroke:#000000;stroke-width:1"
+     d="M 23.242712,88.099998 H 6" />
+  <path
+     style="stroke:#000000;stroke-width:0.999996"
+     d="M 24.750274,90.999998 H 9.7999996" />
+  <path
+     style="stroke:#000000;stroke-width:1"
+     d="M 26.913534,93.899999 H 16.400001" />
 </svg>
 <!--Code Copyright by infanf-->
