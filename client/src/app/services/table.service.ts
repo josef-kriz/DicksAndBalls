@@ -18,7 +18,7 @@ const DEFAULT_TABLE: TableInfo = {
   providedIn: 'root',
 })
 export class TableService {
-  currentTable = new BehaviorSubject<TableInfo>(DEFAULT_TABLE)
+  currentTable$ = new BehaviorSubject<TableInfo>(DEFAULT_TABLE)
 
   private reconnecting = false
   private tables: TableInfo[] = []
@@ -43,7 +43,7 @@ export class TableService {
         this.reconnecting = false
       }
 
-      this.joinTable(this.currentTable.getValue().id)
+      this.joinTable(this.currentTable$.getValue().id)
     })
   }
 
@@ -64,9 +64,9 @@ export class TableService {
     })
 
     const table = this.tables.find(table => table.id === tableId)
-    if (table) this.currentTable.next(table)
+    if (table) this.currentTable$.next(table)
 
-    if (this.currentTable.getValue().id !== tableId) this.chatService.changeContext()
+    if (this.currentTable$.getValue().id !== tableId) this.chatService.changeContext()
   }
 
   addTable(message: AddTableMessage, callback: (error?: string, id?: string) => void): void {

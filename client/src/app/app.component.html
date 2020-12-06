@@ -33,6 +33,10 @@
             </ion-content>
             <ion-footer>
                 <ion-list>
+                    <ion-item *ngIf="updateAvailable$ | async" button lines="none" detail="false" (click)="showUpdateAlert()">
+                        <ion-icon color="danger" slot="start" ios="alert-circle-outline" md="alert-circle-sharp"></ion-icon>
+                        <ion-label>New version available!</ion-label>
+                    </ion-item>
                     <ion-item button lines="none" detail="false" (click)="openRules()">
                         <ion-icon slot="start" ios="help-circle-outline" md="help-circle-sharp"></ion-icon>
                         <ion-label>Rules</ion-label>

@@ -51,9 +51,9 @@ export class GamePage implements ComponentCanDeactivate {
   isLoser = false
   cardsInDeck?: string
 
-  isMenuEnabled$ = this.menuService.menuEnabled
-  unreadChatMessages$ = this.chatService.unread
-  currentTable$ = this.tableService.currentTable
+  isMenuEnabled$ = this.menuService.menuEnabled$
+  unreadChatMessages$ = this.chatService.unread$
+  currentTable$ = this.tableService.currentTable$
 
   private error = false
 

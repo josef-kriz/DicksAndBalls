@@ -15,7 +15,7 @@ export class ChatComponent implements OnInit {
   message = ''
   unread = 0
 
-  currentTable$ = this.tableService.currentTable
+  currentTable$ = this.tableService.currentTable$
 
   constructor(
     private chatService: ChatService,
@@ -27,7 +27,7 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.chatService.getMessages().subscribe(this.handleMessage)
-    this.chatService.contextChanged.subscribe(() => {
+    this.chatService.contextChanged$.subscribe(() => {
       this.messages = []
     })
   }
@@ -35,7 +35,7 @@ export class ChatComponent implements OnInit {
   openChat(): void {
     (document.querySelector('#chat-input > input') as HTMLInputElement)?.focus()
     this.unread = 0
-    this.chatService.unread.next(0)
+    this.chatService.unread$.next(0)
     this.chatContent?.scrollToBottom(1000)
   }
 
@@ -63,7 +63,7 @@ export class ChatComponent implements OnInit {
         await audio.play()
       }
       this.unread++
-      this.chatService.unread.next(this.unread)
+      this.chatService.unread$.next(this.unread)
     }
   }
 }

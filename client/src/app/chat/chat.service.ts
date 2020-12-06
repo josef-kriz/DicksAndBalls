@@ -14,8 +14,8 @@ export interface Message {
   providedIn: 'root'
 })
 export class ChatService {
-  contextChanged = new Subject<undefined>() // used for triggering functions when switching chats
-  unread = new BehaviorSubject<number>(0) // used for keeping the number of unread messages
+  contextChanged$ = new Subject<undefined>() // used for triggering functions when switching chats
+  unread$ = new BehaviorSubject<number>(0) // used for keeping the number of unread messages
 
   constructor(
     private settingsService: SettingsService,
@@ -40,6 +40,6 @@ export class ChatService {
    * Explicitly notify that the chat context was changed (like a table was switched and old chat messages should be removed)
    */
   changeContext(): void {
-    this.contextChanged.next()
+    this.contextChanged$.next()
   }
 }

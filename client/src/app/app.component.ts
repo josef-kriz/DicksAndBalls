@@ -14,6 +14,7 @@ import { Router } from '@angular/router'
 import { ChatService } from './chat/chat.service'
 import { MenuService } from './services/menu.service'
 import { focusOnAlertInput } from './util/helpers'
+import { UpdateService } from './services/update.service'
 
 @Component({
   selector: 'app-root',
@@ -21,9 +22,12 @@ import { focusOnAlertInput } from './util/helpers'
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  public selectedIndex = 0
-  public tables?: TableInfo[]
-  public isMenuEnabled = this.menuService.menuEnabled
+  selectedIndex = 0
+  tables?: TableInfo[]
+
+  isMenuEnabled$ = this.menuService.menuEnabled$
+  updateAvailable$ = this.updateService.updateAvailable$
+
   private init: Promise<void>
 
   constructor(
@@ -38,6 +42,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private tableService: TableService,
+    private updateService: UpdateService,
   ) {
     this.init = this.initializeApp()
   }
@@ -68,7 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.isMenuEnabled.next(await this.menuController.isEnabled('main-menu'))
+    this.isMenuEnabled$.next(await this.menuController.isEnabled('main-menu'))
   }
 
   ngOnDestroy(): void {
@@ -98,7 +103,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   async hideMenu(): Promise<void> {
     await this.menuController.enable(false, 'main-menu')
-    this.isMenuEnabled.next(false)
+    this.isMenuEnabled$.next(false)
   }
 
   async addTable(): Promise<void> {
@@ -118,6 +123,10 @@ export class AppComponent implements OnInit, OnDestroy {
         this.chatService.changeContext()
       }
     })
+  }
+
+  async showUpdateAlert(): Promise<void> {
+    await this.updateService.showUpdateAlert()
   }
 
   private handleTablesMessage = async (message: TableUpdateMessage): Promise<void> => {

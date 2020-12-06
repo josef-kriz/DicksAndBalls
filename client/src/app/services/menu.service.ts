@@ -6,14 +6,14 @@ import { MenuController } from '@ionic/angular'
   providedIn: 'root'
 })
 export class MenuService {
-  menuEnabled = new Subject<boolean>()
+  menuEnabled$ = new Subject<boolean>()
 
   constructor(private menuController: MenuController) { }
 
   async showMenu(): Promise<void> {
     if (!await this.menuController.isEnabled('main-menu')) {
       await this.menuController.enable(true, 'main-menu')
-      this.menuEnabled.next(true)
+      this.menuEnabled$.next(true)
     }
 
     await this.menuController.open('main-menu')
