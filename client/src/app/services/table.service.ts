@@ -6,7 +6,7 @@ import { AddTableMessage } from '../../../../src/models/message'
 import { ChatService } from '../chat/chat.service'
 import { Router } from '@angular/router'
 import { tap } from 'rxjs/operators'
-import { LoadingController } from '@ionic/angular'
+import { AlertController, LoadingController } from '@ionic/angular'
 
 const DEFAULT_TABLE: TableInfo = {
   id: 'main',
@@ -24,6 +24,7 @@ export class TableService {
   private tables: TableInfo[] = []
 
   constructor(
+    private alertController: AlertController,
     private chatService: ChatService,
     private loadingController: LoadingController,
     private router: Router,
@@ -75,6 +76,20 @@ export class TableService {
 
   dispose(): void {
     this.socket.removeAllListeners('table_event')
+  }
+
+  async showErrorAlert(message = 'Cannot create a new table now'): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message,
+      buttons: [
+        {
+          text: 'OK',
+        },
+      ]
+    })
+
+    await alert.present()
   }
 
   private async showConnectionError(): Promise<void> {

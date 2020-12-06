@@ -116,7 +116,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.tableService.addTable(message, (error?: string, id?: string) => {
       if (error) {
-        this.showErrorAlert(error)
+        this.tableService.showErrorAlert(error)
       } else if (id) {
         this.router.navigate(['table', id])
         this.menuController.close('main-menu')
@@ -182,20 +182,5 @@ export class AppComponent implements OnInit, OnDestroy {
     ) {
       return dismiss.data.values.name
     }
-  }
-
-  // TODO move to separate component
-  private async showErrorAlert(message = 'Cannot create a new table now'): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'Error',
-      message,
-      buttons: [
-        {
-          text: 'OK',
-        },
-      ]
-    })
-
-    await alert.present()
   }
 }
