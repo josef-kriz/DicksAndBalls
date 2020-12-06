@@ -22,7 +22,7 @@
   width: 100%;
   height: 100%;
   //noinspection CssUnknownTarget
-  background: url("~/assets/background/wood1.jpg") repeat center / contain;
+  background: url("/assets/background/wood1.jpg") repeat center / contain;
   filter: brightness(200%) blur(3px);
   // remove imperfect blur
   transform: scale(1.03);
