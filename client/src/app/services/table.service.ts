@@ -6,7 +6,8 @@ import { AddTableMessage } from '../../../../src/models/message'
 import { ChatService } from '../chat/chat.service'
 import { Router } from '@angular/router'
 import { tap } from 'rxjs/operators'
-import { AlertController, LoadingController } from '@ionic/angular'
+import { AlertController, LoadingController, MenuController } from '@ionic/angular'
+import { focusOnAlertInput } from '../util/helpers'
 
 const DEFAULT_TABLE: TableInfo = {
   id: 'main',
@@ -27,6 +28,7 @@ export class TableService {
     private alertController: AlertController,
     private chatService: ChatService,
     private loadingController: LoadingController,
+    private menuController: MenuController,
     private router: Router,
     private socket: MainSocket,
   ) {
@@ -70,12 +72,67 @@ export class TableService {
     if (this.currentTable$.getValue().id !== tableId) this.chatService.changeContext()
   }
 
-  addTable(message: AddTableMessage, callback: (error?: string, id?: string) => void): void {
-    this.socket.emit('table_event', message, callback)
+  async addTable(): Promise<void> {
+    const tableName = await this.askForTableName()
+    if (!tableName) { return }
+    const message: AddTableMessage = {
+      type: 'add_table',
+      name: tableName,
+    }
+
+    this.socket.emit('table_event', message, (error?: string, id?: string) => {
+      if (error) {
+        this.showErrorAlert(error)
+      } else if (id) {
+        this.router.navigate(['table', id])
+        this.menuController.close('main-menu')
+        this.chatService.changeContext()
+      }
+    })
   }
 
   dispose(): void {
     this.socket.removeAllListeners('table_event')
+  }
+
+  private async askForTableName(): Promise<string | undefined> {
+    const alert = await this.alertController.create({
+      header: 'Table Name',
+      message: 'Insert a short table name.',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          placeholder: 'Put the name here',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Create',
+          role: 'submit',
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'alertCancelButton',
+        }
+      ]
+    })
+
+    await alert.present()
+
+    focusOnAlertInput(alert)
+
+    const dismiss = await alert.onWillDismiss()
+
+    if (
+      dismiss &&
+      dismiss.role === 'submit' &&
+      dismiss.data &&
+      dismiss.data.values
+    ) {
+      return dismiss.data.values.name
+    }
   }
 
   async showErrorAlert(message = 'Cannot create a new table now'): Promise<void> {

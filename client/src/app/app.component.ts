@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 
-import { AlertController, MenuController, ModalController, Platform } from '@ionic/angular'
+import { MenuController, ModalController, Platform } from '@ionic/angular'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
 import { AboutComponent } from './about/about.component'
@@ -9,11 +9,8 @@ import { SettingsComponent } from './settings/settings.component'
 import { SettingsService } from './settings/settings.service'
 import { TableService } from './services/table.service'
 import { isTableUpdateMessage, TableInfo, TableUpdateMessage } from './models/message'
-import { AddTableMessage } from '../../../src/models/message'
 import { Router } from '@angular/router'
-import { ChatService } from './chat/chat.service'
 import { MenuService } from './services/menu.service'
-import { focusOnAlertInput } from './util/helpers'
 import { UpdateService } from './services/update.service'
 
 @Component({
@@ -31,8 +28,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private init: Promise<void>
 
   constructor(
-    private alertController: AlertController,
-    private chatService: ChatService,
     private menuController: MenuController,
     private menuService: MenuService,
     private modalController: ModalController,
@@ -60,6 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.tableService.getTables().subscribe(this.handleTablesMessage) // TODO error handling
 
     // set correct theme based on settings
+
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
     // if user wants to use system's theme, update it (and register a listener)
     if (await this.settingsService.getSystemTheme()) {
@@ -107,22 +103,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   async addTable(): Promise<void> {
-    const tableName = await this.askForTableName()
-    if (!tableName) { return }
-    const message: AddTableMessage = {
-      type: 'add_table',
-      name: tableName,
-    }
-
-    this.tableService.addTable(message, (error?: string, id?: string) => {
-      if (error) {
-        this.tableService.showErrorAlert(error)
-      } else if (id) {
-        this.router.navigate(['table', id])
-        this.menuController.close('main-menu')
-        this.chatService.changeContext()
-      }
-    })
+    await this.tableService.addTable()
   }
 
   async showUpdateAlert(): Promise<void> {
@@ -141,46 +122,6 @@ export class AppComponent implements OnInit, OnDestroy {
           await this.router.navigate(['table', 'main'])
         }
       }
-    }
-  }
-
-  private async askForTableName(): Promise<string | undefined> {
-    const alert = await this.alertController.create({
-      header: 'Table Name',
-      message: 'Insert a short table name.',
-      inputs: [
-        {
-          name: 'name',
-          type: 'text',
-          placeholder: 'Put the name here',
-        },
-      ],
-      buttons: [
-        {
-          text: 'Create',
-          role: 'submit',
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'alertCancelButton',
-        }
-      ]
-    })
-
-    await alert.present()
-
-    focusOnAlertInput(alert)
-
-    const dismiss = await alert.onWillDismiss()
-
-    if (
-      dismiss &&
-      dismiss.role === 'submit' &&
-      dismiss.data &&
-      dismiss.data.values
-    ) {
-      return dismiss.data.values.name
     }
   }
 }
