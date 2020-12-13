@@ -6318,10 +6318,10 @@ ngx-linkifyjs@^1.3.0:
   dependencies:
     linkifyjs "^2.1.7"
 
-ngx-socket-io@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/ngx-socket-io/-/ngx-socket-io-3.0.1.tgz"
-  integrity sha512-6+99AULDEcdrsFSd9FVo5mUSpQMa2KL6twPbteoEv3qWO0Hh2kdrzTjvPdsC2jeTuEuqa8R9l5/3eGYdiLZyWQ==
+ngx-socket-io@^3.0.2:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/ngx-socket-io/-/ngx-socket-io-3.2.0.tgz#afd9e6f8937e4b6d4cf2492e29cc8f01cc5d1b44"
+  integrity sha512-gxphw9yiHvnCavZutCRG6JCYNeguIon5Fxo4+8VCnMThtEy45vrZ3UmczR1ZH9vjJTkoaAS8YtqG8TdqDu5DkQ==
   dependencies:
     core-js "^3.0.0"
     reflect-metadata "^0.1.10"
