@@ -1,0 +1,20 @@
+ion-row {
+  @media screen and (max-width: 576px) {
+    width: 100%;
+  }
+}
+
+.clickable-card:not(.selected-card) {
+  border: 2px solid transparent;
+}
+
+.clickable-card:not(.selected-card):hover {
+  cursor: pointer;
+  filter: drop-shadow(0 0 4px var(--ion-color-primary))
+}
+
+.selected-card {
+  border: 2px solid var(--ion-color-warning);
+  border-radius: 8px;
+  filter: drop-shadow(0 0 4px var(--ion-color-warning));
+}

@@ -1,5 +1,5 @@
 export type Suit = 'Heart' | 'Green' | 'Dick' | 'Ball'
-export type Value = '7' | '8' | '9' | '10' | 'B' | 'T' | 'K' | 'A'
+export type Value = '7' | '8' | '9' | '10' | 'Jack' | 'Queen' | 'King' | 'Ace'
 
 export interface Card {
     suit: Suit
@@ -29,19 +29,19 @@ export const getUnshuffledDeck = (): Card[] => [
     },
     {
         suit: 'Heart',
-        value: 'B',
+        value: 'Jack',
     },
     {
         suit: 'Heart',
-        value: 'T',
+        value: 'Queen',
     },
     {
         suit: 'Heart',
-        value: 'K',
+        value: 'King',
     },
     {
         suit: 'Heart',
-        value: 'A',
+        value: 'Ace',
     },
     {
         suit: 'Green',
@@ -61,19 +61,19 @@ export const getUnshuffledDeck = (): Card[] => [
     },
     {
         suit: 'Green',
-        value: 'B',
+        value: 'Jack',
     },
     {
         suit: 'Green',
-        value: 'T',
+        value: 'Queen',
     },
     {
         suit: 'Green',
-        value: 'K',
+        value: 'King',
     },
     {
         suit: 'Green',
-        value: 'A',
+        value: 'Ace',
     },
     {
         suit: 'Dick',
@@ -93,19 +93,19 @@ export const getUnshuffledDeck = (): Card[] => [
     },
     {
         suit: 'Dick',
-        value: 'B',
+        value: 'Jack',
     },
     {
         suit: 'Dick',
-        value: 'T',
+        value: 'Queen',
     },
     {
         suit: 'Dick',
-        value: 'K',
+        value: 'King',
     },
     {
         suit: 'Dick',
-        value: 'A',
+        value: 'Ace',
     },
     {
         suit: 'Ball',
@@ -125,18 +125,18 @@ export const getUnshuffledDeck = (): Card[] => [
     },
     {
         suit: 'Ball',
-        value: 'B',
+        value: 'Jack',
     },
     {
         suit: 'Ball',
-        value: 'T',
+        value: 'Queen',
     },
     {
         suit: 'Ball',
-        value: 'K',
+        value: 'King',
     },
     {
         suit: 'Ball',
-        value: 'A',
+        value: 'Ace',
     },
 ]

@@ -1,0 +1,59 @@
+<div id="table" class="ion-padding ion-margin-horizontal"
+     [class.active-table]="gameActive && playerOnTurn && playerOnTurn === playerName">
+  <ion-grid>
+    <ion-row class="ion-justify-content-center decks">
+      <ion-col class="ion-padding-end ion-margin-end" size="auto">
+        <div class="deck-overlay-container"
+             [class.empty-deck]="cardsInDeck === '0'"
+             [style.background-image]="'url(assets/cards/back/' + ((cardBack | async) || 1) + '.svg)'"
+             role="button"
+             (click)="handleDeckClick()"
+        >
+          <div *ngIf="cardsInDeck" class="card-count">{{cardsInDeck}}</div>
+          <div *ngIf="isSkippingTurn && !canShuffle; else canDraw" class="action-overlay">{{'Game.skip' | translate}}<br/>
+            <ion-icon name="arrow-redo-sharp"></ion-icon>
+          </div>
+          <ng-template #canDraw>
+            <div *ngIf="shouldDraw !== 0 && !canShuffle; else canBeShuffled" class="action-overlay">
+              {{'Game.draw' | translate}}<br/>{{shouldDraw}}</div>
+          </ng-template>
+          <ng-template #canBeShuffled>
+            <div *ngIf="canShuffle" class="action-overlay">{{'Game.shuffle' | translate}}<br/>
+              <ion-icon name="shuffle"></ion-icon>
+            </div>
+          </ng-template>
+        </div>
+      </ion-col>
+      <ion-col class="ion-padding-start ion-margin-start" size="auto">
+        <div *ngIf="reversedDeck; else deckOutline">
+          <app-deck-card
+            [card]="reversedDeck[0]"
+            [noTransform]="true"
+            [colorChangedTo]="reversedDeck[0].value === 'Queen' ? colorChangedTo : undefined"
+          ></app-deck-card>
+          <app-deck-card
+            *ngFor="let card of reversedDeck | slice:1; trackBy: trackByCard"
+            [card]="card"
+            [colorChangedTo]="card.value === 'Queen' ? colorChangedTo : undefined"
+          ></app-deck-card>
+        </div>
+        <ng-template #deckOutline>
+          <div class="deck-outline"></div>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <app-cards
+    [participating]="participating"
+    [gameActive]="gameActive"
+    [cards]="cards"
+    [playerName]="playerName"
+    [playerOnTurn]="playerOnTurn"
+    [isWinner]="isWinner"
+    [isLoser]="isLoser"
+    [isSkippingTurn]="isSkippingTurn"
+    [shouldDraw]="shouldDraw"
+    [playersCount]="playersCount"
+    (nameChange)="nameChange.emit($event)"
+  ></app-cards>
+</div>

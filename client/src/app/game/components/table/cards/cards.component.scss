@@ -1,0 +1,48 @@
+.cards-container {
+  min-height: 226px;
+  position: relative;
+
+  @media screen and (max-width: 576px) {
+    min-height: 144px;
+  }
+}
+
+.join-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.card-container {
+  --ion-grid-column-padding: 8px;
+}
+
+.card {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 8px black);
+  height: calc(500px / 3);
+  width: 100px;
+
+  @media screen and (max-width: 576px) {
+    height: calc(250px / 3);
+    width: 50px;
+  }
+}
+
+.card:hover {
+  cursor: pointer;
+  filter: drop-shadow(0 0 16px white)
+}
+
+::ng-deep .select-suit-modal {
+  --max-width: 480px;
+  --max-height: 240px;
+  --border-radius: 4px;
+
+  @media screen and (max-width: 576px) {
+    --max-height: 320px;
+  }
+}

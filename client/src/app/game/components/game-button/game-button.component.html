@@ -1,0 +1,6 @@
+<ion-button
+  color="danger"
+  (click)="canEndGame ? stopGame() : leaveGame()"
+>
+  {{canEndGame ? ('Game.end_game' | translate) : 'Game.leave_game' | translate}}
+</ion-button>

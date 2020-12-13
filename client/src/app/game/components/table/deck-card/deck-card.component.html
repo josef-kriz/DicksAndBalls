@@ -1,0 +1,11 @@
+<div class="deck-card-container">
+    <div *ngIf="card" [style.transform]="randomShift">
+        <div class="deck-card" [style.background-image]="cardBackground"></div>
+        <div *ngIf="colorChangedTo" class="color-overlay" [ngSwitch]="colorChangedTo">
+            <img *ngSwitchCase="'Ball'" class="overlay-suit-icon" src="assets/suits/ball.svg" [alt]="'Game.balls' | translate"/>
+            <img *ngSwitchCase="'Dick'" class="overlay-suit-icon" src="assets/suits/dick.svg" [alt]="'Game.dicks' | translate"/>
+            <img *ngSwitchCase="'Green'" class="overlay-suit-icon" src="assets/suits/green.svg" [alt]="'Game.greens' | translate"/>
+            <img *ngSwitchCase="'Heart'" class="overlay-suit-icon" src="assets/suits/heart.svg" [alt]="'Game.hearts' | translate"/>
+        </div>
+    </div>
+</div>

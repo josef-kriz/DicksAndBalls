@@ -1,0 +1,12 @@
+.suit-icon-container {
+  text-align: center;
+}
+
+.suit-icon {
+  max-height: 72px;
+}
+
+.suit-icon:hover {
+  cursor: pointer;
+  filter: drop-shadow(0 0 16px var(--ion-color-dark));
+}

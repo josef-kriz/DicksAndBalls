@@ -1,0 +1,19 @@
+<div class="cards-container ion-padding-vertical ion-margin-vertical">
+  <ion-grid *ngIf="showCards">
+    <ion-row class="ion-justify-content-center">
+      <ion-col *ngFor="let card of cardsWithBackgrounds; trackBy: trackByCard" class="card-container" size="auto">
+        <div class="card" [style.background-image]="card.background" (click)="playCard(card)"></div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-button
+          *ngIf="!participating"
+          class="join-button"
+          color="medium"
+          [disabled]="playersCount && playersCount >= 7"
+          (click)="joinGame()"
+  >
+    <ion-icon slot="start" name="person-add"></ion-icon>
+    {{'Game.join_game' | translate}}
+  </ion-button>
+</div>

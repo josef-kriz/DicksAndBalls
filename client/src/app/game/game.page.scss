@@ -1,0 +1,69 @@
+:host {
+  background-color: var(--ion-color-dark-contrast);
+}
+
+#game-button {
+  bottom: 8px;
+  position: absolute;
+  transform: translateX(-25%);
+}
+
+#game {
+  position: relative;
+  width: 100%;
+  --background: transparent;
+}
+
+#game::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  //noinspection CssUnknownTarget
+  background: url("/assets/background/wood1.jpg") repeat center / contain;
+  filter: brightness(200%) blur(3px);
+  // remove imperfect blur
+  transform: scale(1.03);
+  opacity: 0.5;
+}
+
+::ng-deep {
+  body.dark #game::before {
+    filter: brightness(15%) blur(3px);
+    opacity: 1;
+  }
+}
+
+#game-content {
+  position: relative;
+  text-align: center;
+}
+
+h1 ion-icon {
+  margin-right: 0.5em;
+}
+
+#table-name {
+  margin: 8px auto 0;
+  text-transform: capitalize;
+}
+
+.message {
+  font-style: italic;
+  min-height: 43px;
+  padding: 0 8px 24px;
+}
+
+.error-message {
+  font-weight: bold;
+}
+
+.unread-messages {
+  opacity: 0.9;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

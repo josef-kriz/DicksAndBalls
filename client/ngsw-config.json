@@ -1,0 +1,53 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js",
+          "/assets/background/wood1.jpg",
+          "/assets/cards/back/**",
+          "/assets/cards/single-headed/**",
+          "/assets/sounds/**",
+          "/assets/suits/**",
+          "/assets/icons/table.svg",
+          "/svg/close.svg",
+          "/svg/settings-sharp.svg",
+          "/svg/send.svg",
+          "/svg/add-outline.svg",
+          "/svg/add-sharp.svg",
+          "/svg/alert-circle-outline.svg",
+          "/svg/alert-circle-sharp.svg",
+          "/svg/help-circle-outline.svg",
+          "/svg/help-circle-sharp.svg",
+          "/svg/information-circle-outline.svg",
+          "/svg/information-circle-sharp.svg",
+          "/svg/chevron-back-outline.svg",
+          "/svg/chevron-back-sharp.svg",
+          "/svg/person.svg",
+          "/svg/person-add.svg",
+          "/svg/arrow-redo-sharp.svg",
+          "/svg/shuffle.svg",
+          "/svg/menu.svg",
+          "/svg/chatbubbles-sharp.svg"
+        ]
+      }
+    }, {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+.deck-card-container {
+  position: relative;
+  width: 100px;
+}
+
+.deck-card-container > div {
+  position: absolute;
+}
+
+.deck-card {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 8px black);
+  height: calc(500px / 3);
+  width: 100px;
+
+  @media screen and (max-width: 576px) {
+    height: calc(400px / 3);
+    width: 80px;
+  }
+}
+
+.color-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.overlay-suit-icon {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 8px;
+  box-shadow: 0 0 8px white;
+  border-radius: 40%;
+}

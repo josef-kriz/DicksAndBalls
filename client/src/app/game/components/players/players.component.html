@@ -1,0 +1,40 @@
+<section id="players">
+  <div *ngFor="let player of players; trackBy: trackByPlayerName" class="ion-padding-horizontal player-container" [id]="player.name">
+    <div
+      class="player-name"
+      [attr.id]="player.name === playerOnTurn && gameActive ? 'playerOnTurn' : null">
+      <ion-icon name="person"></ion-icon>
+      <span class="player-text">{{player.name}}</span>
+      <ion-badge *ngIf="player.name === playerName && participating" color="medium">{{'Game.me' | translate}}</ion-badge>
+    </div>
+    <div class="cards">
+      <ng-container *ngIf="player.place !== 0; else isLoser" [ngSwitch]="player.place">
+        <span *ngSwitchCase="1" role="img" aria-label="first place">🥇</span>
+        <span *ngSwitchCase="2" role="img" aria-label="second place">🥈</span>
+        <span *ngSwitchCase="3" role="img" aria-label="third place">🥉</span>
+        <span *ngSwitchDefault role="img" aria-label="ta-da">🎉</span>
+      </ng-container>
+      <ng-template #isLoser>
+        <span *ngIf="player.loser; else isPlaying" role="img" aria-label="loser">👎</span>
+      </ng-template>
+      <ng-template #isPlaying>
+        <span *ngIf="gameActive && player.cards; else isWaiting">
+          <img *ngFor="let card of [].constructor(player.cards)"
+               class="card-shell"
+               [alt]="'Game.card_back' | translate"
+               [src]="'assets/cards/back/' + cardBack + '.svg'"
+          />
+        </span>
+      </ng-template>
+      <ng-template #isWaiting>
+        <span>
+          <span role="img" aria-label="hourglass">⏳</span>
+          <span class="waiting">{{'Game.waiting' | translate}}</span>
+        </span>
+      </ng-template>
+    </div>
+  </div>
+  <div *ngIf="!players || players.length === 0" class="no-players">
+    {{'Game.no_players' | translate}}
+  </div>
+</section>
