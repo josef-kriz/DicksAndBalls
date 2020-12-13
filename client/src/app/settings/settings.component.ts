@@ -37,7 +37,12 @@ export class SettingsComponent {
   async setLanguage(event: CustomEvent): Promise<void> {
     if (event.detail.value !== null) {
       await this.settingsService.setLanguage(event.detail.value)
-      this.translateService.use(event.detail.value)
+      if (event.detail.value === 'default') {
+        const browserLang = this.translateService.getBrowserLang()
+        if (this.translateService.getLangs().includes(browserLang)) this.translateService.use(browserLang)
+        else this.translateService.use('en')
+      }
+      else this.translateService.use(event.detail.value)
     }
   }
 
