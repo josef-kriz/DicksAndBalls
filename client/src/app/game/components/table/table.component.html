@@ -10,15 +10,15 @@
              (click)="handleDeckClick()"
         >
           <div *ngIf="cardsInDeck" class="card-count">{{cardsInDeck}}</div>
-          <div *ngIf="isSkippingTurn && !canShuffle; else canDraw" class="action-overlay">Skip<br/>
+          <div *ngIf="isSkippingTurn && !canShuffle; else canDraw" class="action-overlay">{{'Game.skip' | translate}}<br/>
             <ion-icon name="arrow-redo-sharp"></ion-icon>
           </div>
           <ng-template #canDraw>
             <div *ngIf="shouldDraw !== 0 && !canShuffle; else canBeShuffled" class="action-overlay">
-              Draw<br/>{{shouldDraw}}</div>
+              {{'Game.draw' | translate}}<br/>{{shouldDraw}}</div>
           </ng-template>
           <ng-template #canBeShuffled>
-            <div *ngIf="canShuffle" class="action-overlay">Shuffle<br/>
+            <div *ngIf="canShuffle" class="action-overlay">{{'Game.shuffle' | translate}}<br/>
               <ion-icon name="shuffle"></ion-icon>
             </div>
           </ng-template>

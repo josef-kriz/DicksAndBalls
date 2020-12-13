@@ -3,19 +3,21 @@
     <ion-icon name="close"></ion-icon>
   </ion-button>
   <h2>Prší</h2>
-  <p>Prší is a traditional Czech card game similar to other Mau-Mau-style games in Central Europe.
-  This implementation was done during the spread of the Covid-19 disease in Europe when many countries shut down their borders and ordered home quarantine for coming citizens.
-  Thanks to a lot of time during that situation and as a result of closed pubs and restrictions regarding public gathering, we can now enjoy Prší in its web variant.</p>
-  <h3>Contribution</h3>
-  <p>This project is open source under the MIT license and <a href="https://github.com/josef-kriz/DicksAndBalls">hosted on GitHub</a>. The server for this app runs in Node.js runtime and the frontend was done using React and Angular&Ionic.
-  If you would like to contribute this project, please visit the project page on GitHub and feel free to fork the repository.</p>
-  <h3>Bug reporting</h3>
-  <p>If you have found a bug, have some comments or a feature request please use <a href="https://github.com/josef-kriz/DicksAndBalls/issues">GitHub issues</a> in the project's repository. There is a chance that somebody will actually read it eventually.</p>
-  <h3>Attributions</h3>
+  <p>{{'About.description' | translate}}</p>
+  <h3>{{'About.contribution' | translate}}</h3>
+  <p>{{'About.licence' | translate}}<a
+    href="https://github.com/josef-kriz/DicksAndBalls">{{'About.github_link_title' | translate}}</a>{{'About.repository' | translate}}
+  </p>
+  <h3>{{'About.bug_reporting_title' | translate}}</h3>
+  <p>{{'About.bug_reporting_intro' | translate}}<a
+    href="https://github.com/josef-kriz/DicksAndBalls/issues">{{'About.github_issues_link_title' | translate}}</a>{{'About.bug_reporting_outro' | translate}}
+  </p>
+  <h3>{{'About.attributions_title' | translate}}</h3>
   <ul>
-    <li>Playing card back vectors by <a href="https://www.vecteezy.com/free-vector/playing-card-back">Vecteezy</a></li>
-    <li>Background texture by <a href="https://creativetacos.com/3-free-wood-textures/">Creative Tacos</a></li>
-    <li>Table background by <a href="https://www.heropatterns.com/">Hero Patterns</a></li>
-    <li>Table icon made by <a href="https://www.flaticon.com/authors/cursor-creative" title="Cursor Creative">Cursor Creative</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></li>
+    <li>{{'About.card_vectors' | translate}}<a href="https://www.vecteezy.com/free-vector/playing-card-back">Vecteezy</a></li>
+    <li>{{'About.background' | translate}}<a href="https://creativetacos.com/3-free-wood-textures/">Creative Tacos</a></li>
+    <li>{{'About.table_background' | translate}}<a href="https://www.heropatterns.com/">Hero Patterns</a></li>
+    <li>{{'About.table_icon' | translate}}<a href="https://www.flaticon.com/authors/cursor-creative" title="Cursor Creative">Cursor
+      Creative</a>{{'About.table_icon_from' | translate}}<a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></li>
   </ul>
 </ion-content>

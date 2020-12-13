@@ -12,6 +12,7 @@ import { CardsComponent } from './components/table/cards/cards.component'
 import { SelectSuitComponent } from './components/table/select-suit/select-suit.component'
 import { GameButtonComponent } from './components/game-button/game-button.component'
 import { LeaveGameGuard } from './helpers/leave-game.guard'
+import { TranslateModule } from '@ngx-translate/core'
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { LeaveGameGuard } from './helpers/leave-game.guard'
     FormsModule,
     IonicModule,
     GamePageRoutingModule,
+    TranslateModule,
   ],
   providers: [
     GameService,

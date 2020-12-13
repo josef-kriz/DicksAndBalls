@@ -8,6 +8,8 @@ import { AlertController, ModalController } from '@ionic/angular'
 import { SelectSuitComponent } from '../select-suit/select-suit.component'
 import { SettingsService } from '../../../../settings/settings.service'
 import { focusOnAlertInput } from '../../../../util/helpers'
+import { TranslateService } from '@ngx-translate/core'
+import { forkJoin } from 'rxjs'
 
 interface CardWithBackground extends Card {
   background: SafeStyle
@@ -41,7 +43,8 @@ export class CardsComponent implements OnChanges {
     private modalController: ModalController,
     private sanitizer: DomSanitizer,
     private settingsService: SettingsService,
-    ) {
+    private translateService: TranslateService,
+  ) {
     this.settingsService.getCardType().subscribe(type => this.cardType = type)
   }
 
@@ -64,7 +67,7 @@ export class CardsComponent implements OnChanges {
     if (this.gameActive) {
       return true
     }
-    return !!(this.isWinner || this.isLoser);
+    return !!(this.isWinner || this.isLoser)
   }
 
   async joinGame(): Promise<void> {
@@ -84,6 +87,7 @@ export class CardsComponent implements OnChanges {
         }
       })
     } catch (e) {
+      if (e.message !== 'cancelled') await this.showErrorAlert(e.message)
     }
   }
 
@@ -126,28 +130,36 @@ export class CardsComponent implements OnChanges {
   }
 
   private async askForName(): Promise<string> {
+    const [header, message, placeholder, cancelText, joinText, noNameGivenText] = await forkJoin([
+      this.translateService.get('Game.choose_name'),
+      this.translateService.get('Game.choose_name_description'),
+      this.translateService.get('Game.choose_name_placeholder'),
+      this.translateService.get('cancel'),
+      this.translateService.get('Game.join_game'),
+      this.translateService.get('Game.no_name_given'),
+    ]).toPromise()
+
     const alert = await this.alertController.create({
-      header: 'Choose a Name',
-      message: 'Insert a name that will be seen by your opponents.',
+      header,
+      message,
       inputs: [
         {
           name: 'name',
           type: 'text',
-          placeholder: 'Put your name here',
-          value: await this.settingsService.getPlayerName()
+          placeholder,
+          value: await this.settingsService.getPlayerName(),
         },
       ],
       buttons: [
         {
-          text: 'Join Game',
-          role: 'submit',
+          text: cancelText,
+          role: 'cancel',
         },
         {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'alertCancelButton',
-        }
-      ]
+          text: joinText,
+          role: 'submit',
+        },
+      ],
     })
 
     await alert.present()
@@ -160,23 +172,31 @@ export class CardsComponent implements OnChanges {
       dismiss &&
       dismiss.role === 'submit' &&
       dismiss.data &&
-      dismiss.data.values
+      dismiss.data.values &&
+      typeof dismiss.data.values.name === 'string'
     ) {
+      if (dismiss.data.values.name.length === 0) throw new Error(noNameGivenText)
       return dismiss.data.values.name
-    } else {
-      throw new Error('No name given')
-    }
+    } else throw new Error('cancelled')
   }
 
-  private async showErrorAlert(message = 'The server rejected your username'): Promise<void> {
+  private async showErrorAlert(message?: string): Promise<void> {
+    const [rejectedText, header, text] = await forkJoin([
+      this.translateService.get('Game.rejected_user_name'),
+      this.translateService.get('Game.invalid_name'),
+      this.translateService.get('ok'),
+    ]).toPromise()
+
+    if (!message) message = rejectedText
+
     const alert = await this.alertController.create({
-      header: 'Invalid Name',
+      header,
       message,
       buttons: [
         {
-          text: 'OK',
+          text,
         },
-      ]
+      ],
     })
 
     await alert.present()
@@ -194,9 +214,11 @@ export class CardsComponent implements OnChanges {
     const modal = await this.modalController.create({
       component: SelectSuitComponent,
       cssClass: 'select-suit-modal',
-    });
-    await modal.present();
+    })
+    await modal.present()
     const dismiss = await modal.onWillDismiss()
-    if (dismiss.role === 'submit' && dismiss.data) { return dismiss.data }
+    if (dismiss.role === 'submit' && dismiss.data) {
+      return dismiss.data
+    }
   }
 }

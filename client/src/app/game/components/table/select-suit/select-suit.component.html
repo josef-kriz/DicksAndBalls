@@ -1,22 +1,22 @@
 <div class="ion-padding-horizontal">
     <ion-text color="dark">
-        <h2>Pick a Suit</h2>
+        <h2>{{'Game.pick_suit' | translate}}</h2>
     </ion-text>
     <ion-grid class="ion-padding">
         <ion-row class="ion-justify-content-between ion-align-items-center">
             <ion-col class="suit-icon-container" size="6" size-sm="auto">
-                <img class="suit-icon" src="assets/suits/dick.svg" alt="dicks" (click)="selectSuit('Dick')"/>
+                <img class="suit-icon" src="assets/suits/dick.svg" [alt]="'Game.dicks' | translate" (click)="selectSuit('Dick')"/>
             </ion-col>
             <ion-col class="suit-icon-container" size="6" size-sm="auto">
-                <img class="suit-icon" src="assets/suits/ball.svg" alt="balls" (click)="selectSuit('Ball')"/>
+                <img class="suit-icon" src="assets/suits/ball.svg" [alt]="'Game.balls' | translate" (click)="selectSuit('Ball')"/>
             </ion-col>
             <ion-col class="suit-icon-container" size="6" size-sm="auto">
-                <img class="suit-icon" src="assets/suits/heart.svg" alt="hearts" (click)="selectSuit('Heart')"/>
+                <img class="suit-icon" src="assets/suits/heart.svg" [alt]="'Game.hearts' | translate" (click)="selectSuit('Heart')"/>
             </ion-col>
             <ion-col class="suit-icon-container" size="6" size-sm="auto">
-                <img class="suit-icon" src="assets/suits/green.svg" alt="greens" (click)="selectSuit('Green')"/>
+                <img class="suit-icon" src="assets/suits/green.svg" [alt]="'Game.greens' | translate" (click)="selectSuit('Green')"/>
             </ion-col>
         </ion-row>
     </ion-grid>
-    <ion-button class="ion-float-end" color="danger" fill="clear" (click)="cancel()">Cancel</ion-button>
+    <ion-button class="ion-float-end" color="danger" fill="clear" (click)="cancel()">{{'cancel' | translate}}</ion-button>
 </div>

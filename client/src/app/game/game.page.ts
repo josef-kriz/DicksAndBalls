@@ -13,18 +13,20 @@ import {
   PlayerUpdateMessage,
   RemovePlayerMessage,
   ServerMessage,
+  TextMessage,
 } from '../models/message'
 import inactivityDetection from './helpers/inactivity-detection'
 import { MenuController, Platform } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
 import { Title } from '@angular/platform-browser'
 import { ComponentCanDeactivate } from './helpers/leave-game.guard'
-import { Observable } from 'rxjs'
+import { forkJoin, Observable } from 'rxjs'
 import { ActivatedRoute } from '@angular/router'
 import { TableService } from '../services/table.service'
 import { MenuService } from '../services/menu.service'
 import { ChatService } from '../chat/chat.service'
 import { GamePromptsService } from './helpers/game-prompts.service'
+import { TranslateService } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-game',
@@ -51,9 +53,9 @@ export class GamePage implements ComponentCanDeactivate {
   isLoser = false
   cardsInDeck?: string
 
+  currentTable$ = this.tableService.currentTable$
   isMenuEnabled$ = this.menuService.menuEnabled$
   unreadChatMessages$ = this.chatService.unread$
-  currentTable$ = this.tableService.currentTable$
 
   private error = false
 
@@ -68,6 +70,7 @@ export class GamePage implements ComponentCanDeactivate {
     private settingsService: SettingsService,
     private tableService: TableService,
     private titleService: Title,
+    private translateService: TranslateService,
   ) {
   }
 
@@ -121,9 +124,9 @@ export class GamePage implements ComponentCanDeactivate {
       this.error = false
     }
     if (isErrorMessage(message)) {
-      this.handleErrorMessage(message)
+      await this.handleErrorMessage(message)
     } else if (isGameStateMessage(message)) {
-      this.handleGameStateUpdate(message)
+      await this.handleGameStateUpdate(message)
     } else if (isGameUpdateMessage(message)) {
       await this.handleGameUpdate(message)
     } else if (isPlayerUpdateMessage(message)) {
@@ -131,28 +134,37 @@ export class GamePage implements ComponentCanDeactivate {
     }
   }
 
-  private handleErrorMessage(message: ErrorMessage): void {
+  private async handleErrorMessage(message: ErrorMessage): Promise<void> {
+    const translatedMessage = await this.translateService.get(message.message).toPromise()
     this.message = {
       error: true,
-      text: message.message,
+      text: translatedMessage,
     }
   }
 
-  private handleGameStateUpdate(message: GameStateMessage): void {
+  private async handleGameStateUpdate(message: GameStateMessage): Promise<void> {
     const {active, players} = message
     this.active = active
     this.players = players
     this.participating = players.some(player => player.name === this.playerName)
+
     if (this.participating && !this.active) {
+      const [shuffleMessage, notEnoughPlayersMessage] = await forkJoin([
+        this.translateService.get('Messages.shuffle_deck'),
+        this.translateService.get('Messages.not_enough_players'),
+      ]).toPromise()
+
       this.message = {
         error: false,
-        text: this.players.length >= 2 ? 'Start the game by shuffling the deck' : 'There must be at least two players to start the game',
+        text: this.players.length >= 2 ? shuffleMessage : notEnoughPlayersMessage,
       }
     }
+
     if (!active) {
       inactivityDetection.stopDetecting()
-      if (this.titleService.getTitle().startsWith('*ON TURN*')) {
-        this.titleService.setTitle(this.titleService.getTitle().slice(10))
+      const onTurnText = `*${await this.translateService.get('Game.on_turn').toPromise()}*`
+      if (this.titleService.getTitle().startsWith(onTurnText)) {
+        this.titleService.setTitle(this.titleService.getTitle().slice(onTurnText.length + 1))
       }
     }
   }
@@ -174,20 +186,21 @@ export class GamePage implements ComponentCanDeactivate {
     this.playerOnTurn = playerOnTurn
     this.message = {
       error: false,
-      text: message.message.join(''),
+      text: await this.parseTextMessage(message.message),
     }
     this.isSkippingTurn = this.participating && skippingNextPlayer && playerOnTurn === this.playerName
     this.shouldDraw = playerOnTurn === this.playerName ? shouldDraw : 0
     this.cardsInDeck = cardsInDeck
 
+    const onTurnText = `*${await this.translateService.get('Game.on_turn').toPromise()}*`
     if (playerOnTurn === this.playerName && this.active) { // update page title and start inactivity detection (if sounds are allowed)
-      this.titleService.setTitle(`*ON TURN* ${this.titleService.getTitle()}`)
+      this.titleService.setTitle(`${onTurnText} ${this.titleService.getTitle()}`)
       if (await this.settingsService.getSounds()) {
         const inactivityTimeout = await this.platform.is('mobile') ? 10000 : undefined
         inactivityDetection.startDetecting(inactivityTimeout)
       }
-    } else if (this.titleService.getTitle().startsWith('*ON TURN*')) {
-      this.titleService.setTitle(this.titleService.getTitle().slice(10))
+    } else if (this.titleService.getTitle().startsWith(onTurnText)) {
+      this.titleService.setTitle(this.titleService.getTitle().slice(onTurnText.length + 1))
     }
 
     if (playerOnTurn) {
@@ -211,6 +224,22 @@ export class GamePage implements ComponentCanDeactivate {
     this.cards = cards
     this.isWinner = place > 0
     this.isLoser = loser
+  }
+
+  private async translateTextMessage(message: TextMessage): Promise<string> {
+    if (message.values) {
+      // translate nested values
+      for (let [key, value] of Object.entries(message.values)) {
+        if (typeof value !== 'string') message.values[key] = await this.translateTextMessage(value)
+      }
+    }
+
+    return await this.translateService.get(message.translationId, message.values).toPromise()
+  }
+
+  private async parseTextMessage(messages: TextMessage[]): Promise<string> {
+    const translations = await Promise.all(messages.map(async (message) => await this.translateTextMessage(message)))
+    return translations.join('')
   }
 
   private handleServerDisconnect = (): void => {

@@ -2,12 +2,12 @@
   <ion-button class="ion-float-right" fill="clear" color="dark" size="large" (click)="closeModal()">
     <ion-icon name="close"></ion-icon>
   </ion-button>
-  <h2>Settings</h2>
+  <h2>{{'Settings.settings_title' | translate}}</h2>
   <ion-grid>
     <ion-row>
       <ion-col size="12">
         <ion-item>
-          <ion-label position="floating">Preferred Name</ion-label>
+          <ion-label position="floating">{{'Settings.preferred_name' | translate}}</ion-label>
           <ion-input
                   maxlength="50"
                   [value]="playerName | async"
@@ -17,17 +17,16 @@
       </ion-col>
       <ion-col size="12">
         <ion-item>
-          <ion-label position="stacked">Language</ion-label>
+          <ion-label position="stacked">{{'Settings.language' | translate}}</ion-label>
           <ion-select okText="Select" [value]="language | async" (ionChange)="setLanguage($event)">
-            <ion-select-option value="default">System's default</ion-select-option>
-            <ion-select-option value="english">English</ion-select-option>
-            <ion-select-option value="czech">Česky</ion-select-option>
+            <ion-select-option value="default">{{'Settings.browser_default_language' | translate}}</ion-select-option>
+            <ion-select-option *ngFor="let language of availableLanguages" [value]="language.id">{{language.displayText}}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
       <ion-col size="12">
         <ion-item>
-          <ion-label>Sounds</ion-label>
+          <ion-label>{{'Settings.sounds' | translate}}</ion-label>
           <ion-toggle
                   slot="end"
                   [checked]="sounds | async"
@@ -37,7 +36,7 @@
       </ion-col>
       <ion-col size="12">
         <ion-item>
-          <ion-label>Pop-up windows</ion-label>
+          <ion-label>{{'Settings.popup_windows' | translate}}</ion-label>
           <ion-toggle
                   slot="end"
                   [checked]="popUps | async"
@@ -46,19 +45,19 @@
         </ion-item>
       </ion-col>
       <ion-col size="12">
-        <h3>Dark Theme</h3>
+        <h3>{{'Settings.dark_theme' | translate}}</h3>
         <ion-item>
-          <ion-label>Use system's default</ion-label>
+          <ion-label>{{'Settings.use_system_theme' | translate}}</ion-label>
           <ion-checkbox slot="end" [checked]="systemTheme | async" (ionChange)="setSystemTheme($event)"></ion-checkbox>
         </ion-item>
         <ion-item>
-          <ion-label>Use dark theme</ion-label>
+          <ion-label>{{'Settings.use_dark_theme' | translate}}</ion-label>
           <ion-toggle slot="end" [disabled]="systemTheme | async" [checked]="darkTheme | async" (ionChange)="setDarkTheme($event)"></ion-toggle>
         </ion-item>
       </ion-col>
       <ion-col size="12">
-        <h3>Cards</h3>
-        <ion-label class="ion-padding-start">Card back</ion-label>
+        <h3>{{'Settings.cards' | translate}}</h3>
+        <ion-label class="ion-padding-start">{{'Settings.card_back' | translate}}</ion-label>
         <ion-grid>
           <ion-row>
             <ion-col *ngFor="let back of cardBacks" size="2">
@@ -67,17 +66,17 @@
                       [class.selected-card]="(cardBack | async) === back"
                       role="button"
                       [src]="'assets/cards/back/' + back + '.svg'"
-                      [alt]="'card back ' + back"
+                      [alt]="('Game.card_back' | translate) + ' ' + back"
                       (click)="setCardBack(back)"
               />
             </ion-col>
           </ion-row>
         </ion-grid>
         <ion-item>
-          <ion-label position="floating">Type</ion-label>
+          <ion-label position="floating">{{'Settings.type' | translate}}</ion-label>
           <ion-select (ionChange)="setCardType($event)" [value]="cardType | async">
-            <ion-select-option value="single-headed">Single-headed</ion-select-option>
-            <ion-select-option value="double-headed">Double-headed</ion-select-option>
+            <ion-select-option value="single-headed">{{'Settings.single_headed' | translate}}</ion-select-option>
+            <ion-select-option value="double-headed">{{'Settings.double_headed' | translate}}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>

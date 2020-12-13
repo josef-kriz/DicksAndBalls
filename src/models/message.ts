@@ -74,10 +74,15 @@ export interface GameStateMessage extends Message {
     players: Opponent[]
 }
 
+export interface TextMessage {
+    translationId: string
+    values?: {[key: string]: string | TextMessage}
+}
+
 export interface GameUpdateMessage extends Message {
     type: 'game_update'
     deckTop: Card[]
-    message: string[]
+    message: TextMessage[]
     cardsInDeck: string
     playerOnTurn?: string
     colorChangedTo?: Suit

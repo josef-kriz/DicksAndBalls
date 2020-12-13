@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { MainSocket } from '../sockets/main.socket'
-import { Observable, BehaviorSubject } from 'rxjs'
+import { Observable, BehaviorSubject, forkJoin } from 'rxjs'
 import { JoinTableMessage, TableInfo, TableUpdateMessage } from '../models/message'
 import { AddTableMessage } from '../../../../src/models/message'
 import { ChatService } from '../chat/chat.service'
@@ -8,6 +8,7 @@ import { Router } from '@angular/router'
 import { tap } from 'rxjs/operators'
 import { AlertController, LoadingController, MenuController } from '@ionic/angular'
 import { focusOnAlertInput } from '../util/helpers'
+import { TranslateService } from '@ngx-translate/core'
 
 const DEFAULT_TABLE: TableInfo = {
   id: 'main',
@@ -31,6 +32,7 @@ export class TableService {
     private menuController: MenuController,
     private router: Router,
     private socket: MainSocket,
+    private translateService: TranslateService,
   ) {
     this.socket.on('disconnect', async () => {
       await this.showConnectionError()
@@ -80,12 +82,13 @@ export class TableService {
       name: tableName,
     }
 
-    this.socket.emit('table_event', message, (error?: string, id?: string) => {
+    this.socket.emit('table_event', message, async (error?: string, id?: string) => {
       if (error) {
-        this.showErrorAlert(error)
+        const translatedErrorMessage = await this.translateService.get(error).toPromise()
+        await this.showErrorAlert(translatedErrorMessage)
       } else if (id) {
-        this.router.navigate(['table', id])
-        this.menuController.close('main-menu')
+        await this.router.navigate(['table', id])
+        await this.menuController.close('main-menu')
         this.chatService.changeContext()
       }
     })
@@ -96,25 +99,32 @@ export class TableService {
   }
 
   private async askForTableName(): Promise<string | undefined> {
+    const [header, message, placeholder, cancelText, createTableText] = await forkJoin([
+      this.translateService.get('Main.table_name_header'),
+      this.translateService.get('Main.table_name_message'),
+      this.translateService.get('Main.table_name_placeholder'),
+      this.translateService.get('cancel'),
+      this.translateService.get('Main.table_name_submit'),
+    ]).toPromise()
+
     const alert = await this.alertController.create({
-      header: 'Table Name',
-      message: 'Insert a short table name.',
+      header,
+      message,
       inputs: [
         {
           name: 'name',
           type: 'text',
-          placeholder: 'Put the name here',
+          placeholder,
         },
       ],
       buttons: [
         {
-          text: 'Create',
-          role: 'submit',
+          text: cancelText,
+          role: 'cancel',
         },
         {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'alertCancelButton',
+          text: createTableText,
+          role: 'submit',
         }
       ]
     })
@@ -135,13 +145,21 @@ export class TableService {
     }
   }
 
-  async showErrorAlert(message = 'Cannot create a new table now'): Promise<void> {
+  async showErrorAlert(message?: string): Promise<void> {
+    const [header, defaultText, okText] = await forkJoin([
+      this.translateService.get('error'),
+      this.translateService.get('Main.table_name_error'),
+      this.translateService.get('ok'),
+    ]).toPromise()
+
+    if (!message) message = defaultText
+
     const alert = await this.alertController.create({
-      header: 'Error',
+      header,
       message,
       buttons: [
         {
-          text: 'OK',
+          text: okText,
         },
       ]
     })
@@ -153,8 +171,9 @@ export class TableService {
     this.reconnecting = true
 
     if (!(await this.loadingController.getTop())) {
+      const messageText = await this.translateService.get('Main.connection_error').toPromise()
       const message = await this.loadingController.create({
-        message: 'Either you or the server went offline. Reconnecting...',
+        message: messageText,
       })
       await message.present()
 

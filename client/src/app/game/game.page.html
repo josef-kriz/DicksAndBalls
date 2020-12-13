@@ -1,55 +1,62 @@
 <ion-content id="game" fullscreen>
-    <div id="game-content">
-        <h1 id="table-name">
-            <ion-icon src="assets/icons/table.svg"></ion-icon>
-            {{(currentTable$ | async)?.name}}</h1>
-        <app-players
-                [players]="players"
-                [gameActive]="active"
-                [participating]="participating"
-                [playerName]="playerName"
-                [playerOnTurn]="playerOnTurn"
-        ></app-players>
-        <div class="message" [class.error-message]="message?.error">
-            <ion-text *ngIf="message"
-                      [color]="message.error ? 'danger' : null">{{message.text}}</ion-text>
-        </div>
-        <app-table
-                [gameActive]="active"
-                [playerName]="playerName"
-                [participating]="participating"
-                [deckTop]="deckTop"
-                [playerOnTurn]="playerOnTurn"
-                [cards]="cards"
-                [colorChangedTo]="colorChangedTo"
-                [isSkippingTurn]="isSkippingTurn"
-                [isWinner]="isWinner"
-                [isLoser]="isLoser"
-                [shouldDraw]="shouldDraw"
-                [cardsInDeck]="cardsInDeck"
-                [playersCount]="players?.length"
-                (nameChange)="playerName = $event"
-        ></app-table>
+  <div id="game-content">
+    <h1 id="table-name">
+      <ion-icon src="assets/icons/table.svg"></ion-icon>
+      <ng-container *ngIf="currentTable$ | async as table">
+        <ion-text *ngIf="table.id === 'main'; else noTranslation">{{'Main.main' | translate}}</ion-text>
+        <ng-template #noTranslation>
+          <ion-text>{{ table.name }}</ion-text>
+        </ng-template>
+      </ng-container>
+    </h1>
+    <app-players
+      [players]="players"
+      [gameActive]="active"
+      [participating]="participating"
+      [playerName]="playerName"
+      [playerOnTurn]="playerOnTurn"
+    ></app-players>
+    <div class="message" [class.error-message]="message?.error">
+      <ion-text *ngIf="message"
+                [color]="message.error ? 'danger' : null">{{message.text}}</ion-text>
     </div>
+    <app-table
+      [gameActive]="active"
+      [playerName]="playerName"
+      [participating]="participating"
+      [deckTop]="deckTop"
+      [playerOnTurn]="playerOnTurn"
+      [cards]="cards"
+      [colorChangedTo]="colorChangedTo"
+      [isSkippingTurn]="isSkippingTurn"
+      [isWinner]="isWinner"
+      [isLoser]="isLoser"
+      [shouldDraw]="shouldDraw"
+      [cardsInDeck]="cardsInDeck"
+      [playersCount]="players?.length"
+      (nameChange)="playerName = $event"
+    ></app-table>
+  </div>
 </ion-content>
 <ion-fab [class.ion-hide-lg-up]="isMenuEnabled$ | async" vertical="bottom" horizontal="start" slot="fixed">
-    <ion-fab-button color="light" (click)="showMenu()">
-        <ion-icon name="menu"></ion-icon>
-    </ion-fab-button>
+  <ion-fab-button color="light" (click)="showMenu()">
+    <ion-icon name="menu"></ion-icon>
+  </ion-fab-button>
 </ion-fab>
 <ion-fab *ngIf="participating" vertical="bottom" horizontal="center" slot="fixed">
-    <app-game-button
-            id="game-button"
-            [tableId]="tableId"
-            [gameActive]="active"
-            [isWinner]="isWinner"
-            [cardsCount]="cards?.length"
-            (playerName)="playerName = $event"
-    ></app-game-button>
+  <app-game-button
+    id="game-button"
+    [tableId]="tableId"
+    [gameActive]="active"
+    [isWinner]="isWinner"
+    [cardsCount]="cards?.length"
+    (playerName)="playerName = $event"
+  ></app-game-button>
 </ion-fab>
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="light" (click)="openChat()">
-        <ion-icon name="chatbubbles-sharp"></ion-icon>
-    </ion-fab-button>
-    <ion-badge *ngIf="(unreadChatMessages$ | async) as unreadCount" class="unread-messages" color="danger">{{unreadCount}}</ion-badge>
+  <ion-fab-button color="light" (click)="openChat()">
+    <ion-icon name="chatbubbles-sharp"></ion-icon>
+  </ion-fab-button>
+  <ion-badge *ngIf="(unreadChatMessages$ | async) as unreadCount" class="unread-messages"
+             color="danger">{{unreadCount}}</ion-badge>
 </ion-fab>

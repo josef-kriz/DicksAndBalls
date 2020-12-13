@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage'
 import { Subject } from 'rxjs'
+import { Language } from '../models/language'
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,16 @@ export class SettingsService {
   async getPlayerName(): Promise<string | null> {
     await this.storage.ready()
     return this.storage.get('playerName')
+  }
+
+  getAvailableLanguages(): Language[] {
+    return [{
+      id: 'en',
+      displayText: 'English',
+    }, {
+      id: 'cs',
+      displayText: 'Česky',
+    }]
   }
 
   async setLanguage(language: string): Promise<void> {

@@ -57,7 +57,7 @@ export function gameListener(socket: Socket): void {
         console.log(`* Message from ${clientId} (${author}) [${tableId}]: ${text}`)
     })
 
-    const getErrorMessage = (error: Error): ErrorMessage => {
+    const createErrorMessage = (error: Error): ErrorMessage => {
         console.log('! An error occurred: ', error.message)
         return {
             type: 'error',
@@ -74,7 +74,7 @@ export function gameListener(socket: Socket): void {
             socket.join(tableId)
             socket.emit('server_event', tables.getGame(tableId).getGameStateMessage())
         } catch (e) {
-            socket.emit('server_event', getErrorMessage(e))
+            socket.emit('server_event', createErrorMessage(e))
             callback && callback(true)
         }
     }
@@ -124,7 +124,7 @@ export function gameListener(socket: Socket): void {
             io.to(tableId).emit('server_event', tables.getGame(tableId).getGameStateMessage())
             io.to(tableId).emit('server_event', tables.getGame(tableId).getGameUpdateMessage())
         } catch (e) {
-            socket.emit('server_event', getErrorMessage(e))
+            socket.emit('server_event', createErrorMessage(e))
         }
     }
 
@@ -141,7 +141,7 @@ export function gameListener(socket: Socket): void {
             for (const playerMessage of message.players)
                 io.to(`${playerMessage.player}`).emit('server_event', playerMessage.playerUpdate)
         } catch (e) {
-            socket.emit('server_event', getErrorMessage(e))
+            socket.emit('server_event', createErrorMessage(e))
         }
     }
 

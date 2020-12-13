@@ -1,20 +1,29 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 import { SettingsService } from '../../settings/settings.service'
 import { AlertController } from '@ionic/angular'
+import { TranslateService } from '@ngx-translate/core'
+import { forkJoin } from 'rxjs'
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GamePromptsService {
 
-  constructor(private alertController: AlertController, private settingsService: SettingsService) { }
+  constructor(private alertController: AlertController, private settingsService: SettingsService, private translateService: TranslateService) {
+  }
 
   async handleWin(): Promise<void> {
     if (await this.settingsService.getPopUps()) {
+      const [header, message, buttonText] = await forkJoin([
+        this.translateService.get('Game.you_won_header'),
+        this.translateService.get('Game.you_won_message'),
+        this.translateService.get('Game.you_won_submit'),
+      ]).toPromise()
+
       const alert = await this.alertController.create({
-        header: 'You won!',
-        message: 'You\'re a winner! <span role="img" aria-label="ta-da">🎉</span>\n',
-        buttons: ['I\'m awesome!']
+        header,
+        message: `${message} <span role="img" aria-label="ta-da">🎉</span>\n`,
+        buttons: [buttonText],
       })
       await alert.present()
     }
@@ -27,10 +36,16 @@ export class GamePromptsService {
 
   async handleLoss(): Promise<void> {
     if (await this.settingsService.getPopUps()) {
+      const [header, message, buttonText] = await forkJoin([
+        this.translateService.get('Game.you_lost_header'),
+        this.translateService.get('Game.you_lost_message'),
+        this.translateService.get('Game.you_lost_submit'),
+      ]).toPromise()
+
       const alert = await this.alertController.create({
-        header: 'You lost!',
-        message: 'You\'re a loser! <span role="img" aria-label="thumb-down">👎</span>',
-        buttons: ['I suck']
+        header,
+        message: `${message} <span role="img" aria-label="thumb-down">👎</span>`,
+        buttons: [buttonText],
       })
       await alert.present()
     }
@@ -48,10 +63,16 @@ export class GamePromptsService {
     }
 
     if (me && await this.settingsService.getPopUps()) {
+      const [header, message, buttonText] = await forkJoin([
+        this.translateService.get('Game.brought_back_header'),
+        this.translateService.get('Game.brought_back_message'),
+        this.translateService.get('Game.brought_back_submit'),
+      ]).toPromise()
+
       const alert = await this.alertController.create({
-        header: 'You\'ve been brought back to the game!',
-        message: 'Another player has brought you back to the game with the 7 of Hearts!',
-        buttons: ['Back to Game']
+        header,
+        message,
+        buttons: [buttonText],
       })
 
       await alert.present()

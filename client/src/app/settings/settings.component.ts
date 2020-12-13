@@ -1,6 +1,8 @@
 import { Component } from '@angular/core'
 import { ModalController } from '@ionic/angular'
 import { SettingsService } from './settings.service'
+import { Language } from '../models/language'
+import { TranslateService } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-settings',
@@ -8,12 +10,15 @@ import { SettingsService } from './settings.service'
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent {
-  public cardBacks = ['1', '2', '3', '4', '5', '6']
+  cardBacks = ['1', '2', '3', '4', '5', '6']
+  availableLanguages: Language[]
 
   constructor(
     private modalController: ModalController,
     private settingsService: SettingsService,
+    private translateService: TranslateService,
   ) {
+    this.availableLanguages = this.settingsService.getAvailableLanguages()
   }
 
   playerName = this.settingsService.getPlayerName()
@@ -30,9 +35,9 @@ export class SettingsComponent {
   }
 
   async setLanguage(event: CustomEvent): Promise<void> {
-    if (event.detail.value !== null && event.detail.value !== await this.language) {
+    if (event.detail.value !== null) {
       await this.settingsService.setLanguage(event.detail.value)
-      alert('Will be available in Prší 2.0, hold on!') // TODO
+      this.translateService.use(event.detail.value)
     }
   }
 

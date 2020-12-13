@@ -12,6 +12,7 @@ import { isTableUpdateMessage, TableInfo, TableUpdateMessage } from './models/me
 import { Router } from '@angular/router'
 import { MenuService } from './services/menu.service'
 import { UpdateService } from './services/update.service'
+import { TranslateService } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-root',
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private tableService: TableService,
+    private translateService: TranslateService,
     private updateService: UpdateService,
   ) {
     this.init = this.initializeApp()
@@ -54,22 +56,13 @@ export class AppComponent implements OnInit, OnDestroy {
     // subscribe to tables changes
     this.tableService.getTables().subscribe(this.handleTablesMessage) // TODO error handling
 
-    // set correct theme based on settings
+    const [isMenuEnabled] = await Promise.all([
+      this.menuController.isEnabled('main-menu'),
+      this.setLanguage(),
+      this.setTheme(),
+    ])
 
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
-    // if user wants to use system's theme, update it (and register a listener)
-    if (await this.settingsService.getSystemTheme()) {
-      await this.settingsService.setDarkTheme(prefersDark.matches)
-    } else {
-      await this.settingsService.setDarkTheme(await this.settingsService.getDarkTheme())
-    }
-    prefersDark.addEventListener('change', async (mediaQuery) => {
-      if (await this.settingsService.getSystemTheme()) {
-        await this.settingsService.setDarkTheme(mediaQuery.matches)
-      }
-    })
-
-    this.isMenuEnabled$.next(await this.menuController.isEnabled('main-menu'))
+    this.isMenuEnabled$.next(isMenuEnabled)
   }
 
   ngOnDestroy(): void {
@@ -108,6 +101,34 @@ export class AppComponent implements OnInit, OnDestroy {
 
   async showUpdateAlert(): Promise<void> {
     await this.updateService.showUpdateAlert()
+  }
+
+  private async setTheme(): Promise<void> {
+    // if user wants to use system's theme, update it (and register a listener)
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
+
+    if (await this.settingsService.getSystemTheme()) {
+      await this.settingsService.setDarkTheme(prefersDark.matches)
+    } else {
+      await this.settingsService.setDarkTheme(await this.settingsService.getDarkTheme())
+    }
+    prefersDark.addEventListener('change', async (mediaQuery) => {
+      if (await this.settingsService.getSystemTheme()) {
+        await this.settingsService.setDarkTheme(mediaQuery.matches)
+      }
+    })
+  }
+
+  private async setLanguage(): Promise<void> {
+    const availableLanguages = this.settingsService.getAvailableLanguages().map(l => l.id)
+    this.translateService.addLangs(availableLanguages)
+
+    const preferred = await this.settingsService.getLanguage()
+    if (!preferred || preferred === 'default') {
+      const browserLang = this.translateService.getBrowserLang()
+      if (this.translateService.getLangs().includes(browserLang)) this.translateService.use(browserLang)
+      else this.translateService.use('en')
+    } else this.translateService.use(preferred)
   }
 
   private handleTablesMessage = async (message: TableUpdateMessage): Promise<void> => {

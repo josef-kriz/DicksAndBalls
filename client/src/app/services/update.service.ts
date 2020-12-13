@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
-import { Subject } from 'rxjs'
+import { forkJoin, Subject } from 'rxjs'
 import { AlertController } from '@ionic/angular'
+import { TranslateService } from '@ngx-translate/core'
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { AlertController } from '@ionic/angular'
 export class UpdateService {
   updateAvailable$ = new Subject<boolean>()
 
-  constructor(private alertController: AlertController, private updates: SwUpdate) {
+  constructor(private alertController: AlertController, private translateService: TranslateService, private updates: SwUpdate) {
     if (updates.isEnabled) {
       updates.available.subscribe(async (event) => {
         if (event.current.hash !== event.available.hash) {
@@ -21,23 +22,30 @@ export class UpdateService {
   }
 
   async showUpdateAlert(): Promise<void> {
+    const [header, message, cancelText, submitText] = await forkJoin([
+      this.translateService.get('Main.new_version_available'),
+      this.translateService.get('Main.new_version_message'),
+      this.translateService.get('Main.new_version_cancel'),
+      this.translateService.get('Main.new_version_submit'),
+    ]).toPromise()
+
     const alert = await this.alertController.create({
-      header: 'New version available!',
-      message: 'Would you like to refresh Prší to update?',
+      header,
+      message,
       buttons: [
         {
-          text: 'Not now',
+          text: cancelText,
           role: 'cancel',
         },
         {
-          text: 'Refresh',
+          text: submitText,
           role: 'submit',
         },
       ],
     })
 
     await alert.present()
-    const { role } = await alert.onWillDismiss()
+    const {role} = await alert.onWillDismiss()
 
     if (role === 'submit') {
       await this.updates.activateUpdate()

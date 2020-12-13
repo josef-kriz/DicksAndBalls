@@ -39,12 +39,12 @@ class Tables {
   }
 
   addTable(name: string): TableInfo {
-    if (this.tables.length >= MAX_TABLES) throw new Error('The maximum number of tables was reached')
-    if (!name) throw new Error('The name must not be empty')
+    if (this.tables.length >= MAX_TABLES) throw new Error('Messages.table_error_limit_reached')
+    if (!name) throw new Error('Messages.table_error_empty_name')
     const trimmed = name.trim().toLowerCase()
-    if (trimmed.length > 10) throw new Error('The maximum name length is 10 non-space characters')
-    if (!trimmed.match(/^[0-9a-zA-Z ]+$/)) throw new Error('The name can only contain non-accented letters or numbers')
-    if (this.tables.some(table => table.name === trimmed)) throw new Error('A table with this name already exists')
+    if (trimmed.length > 10) throw new Error('Messages.table_error_name_too_long')
+    if (!trimmed.match(/^[0-9a-zA-Z ]+$/)) throw new Error('Messages.table_error_unsupported_character')
+    if (this.tables.some(table => table.name === trimmed)) throw new Error('Messages.table_error_table_already_exists')
 
     const id = uuidv4()
     const newTable = {
@@ -67,7 +67,7 @@ class Tables {
 
   getGame(id: string): Game | never {
     const table = this.tables.find(table => table.id === id)
-    if (!table) throw new Error('Non-existent table')
+    if (!table) throw new Error('Messages.table_error_not_found')
     if (table.expires) {
       clearTimeout(table.expires)
       table.expires = setTimeout(() => this.removeTable(id), TABLE_DESTROY_TIMEOUT)
