@@ -18,7 +18,6 @@ import {
 import inactivityDetection from './helpers/inactivity-detection'
 import { MenuController, Platform } from '@ionic/angular'
 import { SettingsService } from '../settings/settings.service'
-import { Title } from '@angular/platform-browser'
 import { ComponentCanDeactivate } from './helpers/leave-game.guard'
 import { forkJoin, Observable } from 'rxjs'
 import { ActivatedRoute } from '@angular/router'
@@ -27,6 +26,7 @@ import { MenuService } from '../services/menu.service'
 import { ChatService } from '../chat/chat.service'
 import { GamePromptsService } from './helpers/game-prompts.service'
 import { TranslateService } from '@ngx-translate/core'
+import { OnTurnTitleService } from './helpers/on-turn-title.service'
 
 @Component({
   selector: 'app-game',
@@ -63,13 +63,13 @@ export class GamePage implements ComponentCanDeactivate {
     private chatService: ChatService,
     private gamePromptsService: GamePromptsService,
     private gameService: GameService,
+    private onTurnTitleService: OnTurnTitleService,
     private menuController: MenuController,
     private menuService: MenuService,
     private platform: Platform,
     private route: ActivatedRoute,
     private settingsService: SettingsService,
     private tableService: TableService,
-    private titleService: Title,
     private translateService: TranslateService,
   ) {
   }
@@ -162,10 +162,7 @@ export class GamePage implements ComponentCanDeactivate {
 
     if (!active) {
       inactivityDetection.stopDetecting()
-      const onTurnText = `*${await this.translateService.get('Game.on_turn').toPromise()}*`
-      if (this.titleService.getTitle().startsWith(onTurnText)) {
-        this.titleService.setTitle(this.titleService.getTitle().slice(onTurnText.length + 1))
-      }
+      this.onTurnTitleService.removeText()
     }
   }
 
@@ -192,16 +189,13 @@ export class GamePage implements ComponentCanDeactivate {
     this.shouldDraw = playerOnTurn === this.playerName ? shouldDraw : 0
     this.cardsInDeck = cardsInDeck
 
-    const onTurnText = `*${await this.translateService.get('Game.on_turn').toPromise()}*`
     if (playerOnTurn === this.playerName && this.active) { // update page title and start inactivity detection (if sounds are allowed)
-      this.titleService.setTitle(`${onTurnText} ${this.titleService.getTitle()}`)
+      await this.onTurnTitleService.addText()
       if (await this.settingsService.getSounds()) {
         const inactivityTimeout = await this.platform.is('mobile') ? 10000 : undefined
         inactivityDetection.startDetecting(inactivityTimeout)
       }
-    } else if (this.titleService.getTitle().startsWith(onTurnText)) {
-      this.titleService.setTitle(this.titleService.getTitle().slice(onTurnText.length + 1))
-    }
+    } else this.onTurnTitleService.removeText()
 
     if (playerOnTurn) {
       this.scrollToCards(playerOnTurn)
