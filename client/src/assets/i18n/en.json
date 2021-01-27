@@ -148,5 +148,143 @@
     "type": "Type",
     "single_headed": "Single-headed",
     "double_headed": "Double-headed"
+  },
+  "Card": {
+    "Heart": {
+      "7": {
+        "nominative": "seven of hearts",
+        "accusative": "seven of hearts"
+      },
+      "8": {
+        "nominative": "eight of hearts",
+        "accusative": "eight of hearts"
+      },
+      "9": {
+        "nominative": "nine of hearts",
+        "accusative": "nine of hearts"
+      },
+      "10": {
+        "nominative": "ten of hearts",
+        "accusative": "ten of hearts"
+      },
+      "Jack": {
+        "nominative": "jack of hearts",
+        "accusative": "jack of hearts"
+      },
+      "Queen": {
+        "nominative": "queen hearts",
+        "accusative": "queen hearts"
+      },
+      "King": {
+        "nominative": "king of hearts",
+        "accusative": "king of hearts"
+      },
+      "Ace": {
+        "nominative": "ace of hearts",
+        "accusative": "ace of hearts"
+      }
+    },
+    "Green": {
+      "7": {
+        "nominative": "seven of greens",
+        "accusative": "seven of greens"
+      },
+      "8": {
+        "nominative": "eight of greens",
+        "accusative": "eight of greens"
+      },
+      "9": {
+        "nominative": "nine of greens",
+        "accusative": "nine of greens"
+      },
+      "10": {
+        "nominative": "ten of greens",
+        "accusative": "ten of greens"
+      },
+      "Jack": {
+        "nominative": "jack of greens",
+        "accusative": "jack of greens"
+      },
+      "Queen": {
+        "nominative": "queen of greens",
+        "accusative": "queen of greens"
+      },
+      "King": {
+        "nominative": "king of greens",
+        "accusative": "king of greens"
+      },
+      "Ace": {
+        "nominative": "ace of greens",
+        "accusative": "ace of greens"
+      }
+    },
+    "Dick": {
+      "7": {
+        "nominative": "seven of dicks",
+        "accusative": "seven of dicks"
+      },
+      "8": {
+        "nominative": "eight of dicks",
+        "accusative": "eight of dicks"
+      },
+      "9": {
+        "nominative": "nine of dicks",
+        "accusative": "nine of dicks"
+      },
+      "10": {
+        "nominative": "ten of dicks",
+        "accusative": "ten of dicks"
+      },
+      "Jack": {
+        "nominative": "jack of dicks",
+        "accusative": "jack of dicks"
+      },
+      "Queen": {
+        "nominative": "queen of dicks",
+        "accusative": "queen of dicks"
+      },
+      "King": {
+        "nominative": "king of dicks",
+        "accusative": "king of dicks"
+      },
+      "Ace": {
+        "nominative": "ace of dicks",
+        "accusative": "ace of dicks"
+      }
+    },
+    "Ball": {
+      "7": {
+        "nominative": "seven of balls",
+        "accusative": "seven of balls"
+      },
+      "8": {
+        "nominative": "eight of balls",
+        "accusative": "eight of balls"
+      },
+      "9": {
+        "nominative": "nine of balls",
+        "accusative": "nine of balls"
+      },
+      "10": {
+        "nominative": "ten of balls",
+        "accusative": "ten of balls"
+      },
+      "Jack": {
+        "nominative": "jack of balls",
+        "accusative": "jack of balls"
+      },
+      "Queen": {
+        "nominative": "queen of balls",
+        "accusative": "queen of balls"
+      },
+      "King": {
+        "nominative": "king of balls",
+        "accusative": "king of balls"
+      },
+      "Ace": {
+        "nominative": "ace of balls",
+        "accusative": "ace of balls"
+      }
+    }
   }
 }

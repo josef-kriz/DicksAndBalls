@@ -169,7 +169,9 @@ export class Game {
         translationId: 'Messages.player_played_card',
         values: {
           value1: player.name,
-          value2: `${action.card.value} of ${action.card.suit}s`, // TODO proper translation
+          value2: {
+            translationId: `Card.${action.card.suit}.${action.card.value}.accusative`,
+          },
         },
       })
 
