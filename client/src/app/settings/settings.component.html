@@ -18,7 +18,7 @@
       <ion-col size="12">
         <ion-item>
           <ion-label position="stacked">{{'Settings.language' | translate}}</ion-label>
-          <ion-select okText="Select" [value]="language | async" (ionChange)="setLanguage($event)">
+          <ion-select [cancelText]="'cancel' | translate" [okText]="'select' | translate" [value]="language | async" (ionChange)="setLanguage($event)">
             <ion-select-option value="default">{{'Settings.browser_default_language' | translate}}</ion-select-option>
             <ion-select-option *ngFor="let language of availableLanguages" [value]="language.id">{{language.displayText}}</ion-select-option>
           </ion-select>
@@ -74,7 +74,7 @@
         </ion-grid>
         <ion-item>
           <ion-label position="floating">{{'Settings.type' | translate}}</ion-label>
-          <ion-select (ionChange)="setCardType($event)" [value]="cardType | async">
+          <ion-select [cancelText]="'cancel' | translate" [okText]="'select' | translate" (ionChange)="setCardType($event)">
             <ion-select-option value="single-headed">{{'Settings.single_headed' | translate}}</ion-select-option>
             <ion-select-option value="double-headed">{{'Settings.double_headed' | translate}}</ion-select-option>
           </ion-select>
