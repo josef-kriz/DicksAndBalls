@@ -45,7 +45,13 @@ export class CardsComponent implements OnChanges {
     private settingsService: SettingsService,
     private translateService: TranslateService,
   ) {
-    this.settingsService.getCardType().subscribe(type => this.cardType = type)
+    this.settingsService.getCardType().subscribe(type => {
+      this.cardType = type
+      this.cardsWithBackgrounds = this.cards?.map((card: Card) => ({
+        ...card,
+        background: this.getCardUrl(card),
+      }))
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
