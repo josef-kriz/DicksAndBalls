@@ -21,7 +21,10 @@ export class DeckCardComponent implements OnInit, OnChanges {
     private sanitizer: DomSanitizer,
     private settingsService: SettingsService,
   ) {
-    this.settingsService.getCardType().subscribe(type => this.cardType = type)
+    this.settingsService.getCardType().subscribe(type => {
+      this.cardType = type
+      if (this.card) this.cardBackground = this.getCardUrl(this.card)
+    })
   }
 
   ngOnInit(): void {

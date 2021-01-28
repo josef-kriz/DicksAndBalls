@@ -91,8 +91,8 @@
     "table_error_invalid_player_name": "Tvoje jméno musí mít alespoň jeden znak",
     "game_started": "Hra začala!",
     "players_turn": " Na řadě je {{value1}}",
-    "player_played_card": "{{value1}} zahrál {{value2}}",
-    "player_brought_back_to_game": " a vrátil {{value1}} zpět do hry",
+    "player_played_card": "{{value1}} zahrál(a) {{value2}}",
+    "player_brought_back_to_game": " a vrátil(a) {{value1}} zpět do hry",
     "player_changed_color": " a změnil barvu na {{value1}}",
     "player_won": " a vyhrál(a)!",
     "player_drew_cards": "{{value1}} si líznul(a) {{value2}} karty/karet",
@@ -148,5 +148,143 @@
     "type": "Typ",
     "single_headed": "Jednohlavé",
     "double_headed": "Dvouhlavé"
+  },
+  "Card": {
+    "Heart": {
+      "7": {
+        "nominative": "červená sedmička",
+        "accusative": "červenou sedmičku"
+      },
+      "8": {
+        "nominative": "červená osmička",
+        "accusative": "červenou osmičku"
+      },
+      "9": {
+        "nominative": "červená devítka",
+        "accusative": "červenou devítku"
+      },
+      "10": {
+        "nominative": "červená desítka",
+        "accusative": "červenou desítku"
+      },
+      "Jack": {
+        "nominative": "červený spodek",
+        "accusative": "červeného spodka"
+      },
+      "Queen": {
+        "nominative": "červená svršek",
+        "accusative": "červenou svrška"
+      },
+      "King": {
+        "nominative": "červený král",
+        "accusative": "červeného krále"
+      },
+      "Ace": {
+        "nominative": "červené eso",
+        "accusative": "červené eso"
+      }
+    },
+    "Green": {
+      "7": {
+        "nominative": "zelená sedmička",
+        "accusative": "zelenou sedmičku"
+      },
+      "8": {
+        "nominative": "zelená osmička",
+        "accusative": "zelenou osmičku"
+      },
+      "9": {
+        "nominative": "zelená devítka",
+        "accusative": "zelenou devítku"
+      },
+      "10": {
+        "nominative": "zelená desítka",
+        "accusative": "zelenou desítku"
+      },
+      "Jack": {
+        "nominative": "zelený spodek",
+        "accusative": "zeleného spodka"
+      },
+      "Queen": {
+        "nominative": "zelený svršek",
+        "accusative": "zeleného svrška"
+      },
+      "King": {
+        "nominative": "zelený král",
+        "accusative": "zeleného krále"
+      },
+      "Ace": {
+        "nominative": "zelené eso",
+        "accusative": "zelené eso"
+      }
+    },
+    "Dick": {
+      "7": {
+        "nominative": "žaludová sedmička",
+        "accusative": "žaludovou sedmičku"
+      },
+      "8": {
+        "nominative": "žaludová osmička",
+        "accusative": "žaludovou osmičku"
+      },
+      "9": {
+        "nominative": "žaludová devítka",
+        "accusative": "žaludovou devítku"
+      },
+      "10": {
+        "nominative": "žaludová desítka",
+        "accusative": "žaludovou desítku"
+      },
+      "Jack": {
+        "nominative": "žaludový spodek",
+        "accusative": "žaludového spodka"
+      },
+      "Queen": {
+        "nominative": "žaludový svršek",
+        "accusative": "žaludového svrška"
+      },
+      "King": {
+        "nominative": "žaludový král",
+        "accusative": "žaludového krále"
+      },
+      "Ace": {
+        "nominative": "žaludové eso",
+        "accusative": "žaludové eso"
+      }
+    },
+    "Ball": {
+      "7": {
+        "nominative": "kulová sedmička",
+        "accusative": "kulovou sedmičku"
+      },
+      "8": {
+        "nominative": "kulová osmička",
+        "accusative": "kulovou osmičku"
+      },
+      "9": {
+        "nominative": "kulová devítka",
+        "accusative": "kulovou devítku"
+      },
+      "10": {
+        "nominative": "kulová desítka",
+        "accusative": "kulovou desítku"
+      },
+      "Jack": {
+        "nominative": "kulový spodek",
+        "accusative": "kulového spodka"
+      },
+      "Queen": {
+        "nominative": "kulový svršek",
+        "accusative": "kulového svrška"
+      },
+      "King": {
+        "nominative": "kulový král",
+        "accusative": "kulového krále"
+      },
+      "Ace": {
+        "nominative": "kulové eso",
+        "accusative": "kulové eso"
+      }
+    }
   }
 }

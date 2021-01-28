@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular'
 import { SettingsService } from './settings.service'
 import { Language } from '../models/language'
 import { TranslateService } from '@ngx-translate/core'
+import { OnTurnTitleService } from '../game/helpers/on-turn-title.service'
 
 @Component({
   selector: 'app-settings',
@@ -14,6 +15,7 @@ export class SettingsComponent {
   availableLanguages: Language[]
 
   constructor(
+    private onTurnTitleService: OnTurnTitleService,
     private modalController: ModalController,
     private settingsService: SettingsService,
     private translateService: TranslateService,
@@ -36,6 +38,9 @@ export class SettingsComponent {
 
   async setLanguage(event: CustomEvent): Promise<void> {
     if (event.detail.value !== null) {
+      // remove old *ON TURN* translation (if present)
+      this.onTurnTitleService.removeText()
+
       await this.settingsService.setLanguage(event.detail.value)
       if (event.detail.value === 'default') {
         const browserLang = this.translateService.getBrowserLang()

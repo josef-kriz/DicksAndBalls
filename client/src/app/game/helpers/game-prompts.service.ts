@@ -88,7 +88,7 @@ export class GamePromptsService {
         audioFile = 'assets/sounds/crack_the_whip.mp3'
         break
       case 6:
-        audioFile = 'assets/sounds/drama.mp3'
+        audioFile = 'assets/sounds/tam_tam.mp3'
         break
       case 8:
         audioFile = 'assets/sounds/holy_shit.mp3'
