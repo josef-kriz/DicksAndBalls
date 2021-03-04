@@ -15,7 +15,6 @@ import { SettingsComponent } from './settings/settings.component'
 import { ServiceWorkerModule } from '@angular/service-worker'
 import { environment } from '../environments/environment'
 import { MainSocket } from './sockets/main.socket'
-import { SocketIoModule } from 'ngx-socket-io'
 import { ChatComponent } from './chat/chat.component'
 import { FormsModule } from '@angular/forms'
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs'
@@ -48,7 +47,6 @@ export function createTranslateLoader(http: HttpClient) {
       enabled: environment.production,
       registrationStrategy: 'registerWithDelay:5000',
     }), // TODO register via observable
-    SocketIoModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       loader: {
