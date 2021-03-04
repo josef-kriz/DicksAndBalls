@@ -21,6 +21,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
+import { DomService } from './services/dom.service'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -57,6 +58,7 @@ export function createTranslateLoader(http: HttpClient) {
     }),
   ],
   providers: [
+    DomService,
     StatusBar,
     SplashScreen,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},

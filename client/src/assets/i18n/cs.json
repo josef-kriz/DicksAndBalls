@@ -36,7 +36,8 @@
     "background": "Pozadí od ",
     "table_background": "Pozadí stolu ",
     "table_icon": "Ikona stolu od ",
-    "table_icon_from": " z "
+    "table_icon_from": " z ",
+    "fireworks": "Zvuk ohňostroje od "
   },
   "Chat": {
     "chat": "Chat",

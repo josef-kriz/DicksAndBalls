@@ -36,7 +36,8 @@
     "background": "Background texture by ",
     "table_background": "Table background by ",
     "table_icon": "Table icon made by ",
-    "table_icon_from": " from "
+    "table_icon_from": " from ",
+    "fireworks": "Fireworks sound effect from "
   },
   "Chat": {
     "chat": "Chat",
