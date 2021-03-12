@@ -1,5 +1,5 @@
 <div class="deck-card-container">
-    <div *ngIf="card" [style.transform]="randomShift">
+    <div *ngIf="card" [@enterAnimation]="{value: 'enterAnimation', params: {randomShift: randomShift || 'rotate(5000deg)'}}" [style.transform]="randomShift">
         <div class="deck-card" [style.background-image]="cardBackground"></div>
         <div *ngIf="colorChangedTo" class="color-overlay" [ngSwitch]="colorChangedTo">
             <img *ngSwitchCase="'Ball'" class="overlay-suit-icon" src="assets/suits/ball.svg" [alt]="'Game.balls' | translate"/>

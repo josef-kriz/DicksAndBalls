@@ -2,11 +2,20 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { Card, getCardsAssetNumber, Suit } from '../../../../models/card'
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser'
 import { SettingsService } from '../../../../settings/settings.service'
+import { animate, style, transition, trigger } from '@angular/animations'
 
 @Component({
   selector: 'app-deck-card',
   templateUrl: './deck-card.component.html',
   styleUrls: ['./deck-card.component.scss'],
+  animations: [
+    trigger('enterAnimation', [
+      transition(':enter', [
+        style({opacity: 0, transform: 'rotate(0)'}),
+        animate('300ms ease-out', style({opacity: 1, transform: '{{randomShift}}'})),
+      ]),
+    ]),
+  ],
 })
 export class DeckCardComponent implements OnInit, OnChanges {
   @Input() readonly card?: Card
