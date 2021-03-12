@@ -10,6 +10,7 @@ import { SettingsService } from '../../../../settings/settings.service'
 import { focusOnAlertInput } from '../../../../util/helpers'
 import { TranslateService } from '@ngx-translate/core'
 import { forkJoin } from 'rxjs'
+import { animate, style, transition, trigger } from '@angular/animations'
 
 interface CardWithBackground extends Card {
   background: SafeStyle
@@ -19,6 +20,17 @@ interface CardWithBackground extends Card {
   selector: 'app-cards',
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.scss'],
+  animations: [
+    trigger('enterLeaveTrigger', [
+      transition(':enter', [
+        style({opacity: 0, transform: 'translateX(100%)'}),
+        animate('300ms', style({opacity: 1, transform: 'translateX(0)'})),
+      ]),
+      transition(':leave', [
+        animate('400ms', style({opacity: 0, transform: 'translateY(-100%)'})),
+      ]),
+    ]),
+  ],
 })
 export class CardsComponent implements OnChanges {
   @Input() readonly participating?: boolean
