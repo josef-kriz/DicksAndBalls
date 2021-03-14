@@ -9,7 +9,7 @@ import { SelectSuitComponent } from '../select-suit/select-suit.component'
 import { SettingsService } from '../../../../settings/settings.service'
 import { focusOnAlertInput } from '../../../../util/helpers'
 import { TranslateService } from '@ngx-translate/core'
-import { forkJoin } from 'rxjs'
+import { forkJoin, of } from 'rxjs'
 import { animate, style, transition, trigger } from '@angular/animations'
 
 interface CardWithBackground extends Card {
@@ -199,17 +199,16 @@ export class CardsComponent implements OnChanges {
   }
 
   private async showErrorAlert(message?: string): Promise<void> {
-    const [rejectedText, header, text] = await forkJoin([
+    const [rejectedText, header, text, translatedMessage] = await forkJoin([
       this.translateService.get('Game.rejected_user_name'),
       this.translateService.get('Game.invalid_name'),
       this.translateService.get('ok'),
+      message ? this.translateService.get(message) : of(undefined),
     ]).toPromise()
-
-    if (!message) message = rejectedText
 
     const alert = await this.alertController.create({
       header,
-      message,
+      message: translatedMessage ?? rejectedText,
       buttons: [
         {
           text,

@@ -64,7 +64,7 @@
     "choose_name_description": "Napiš jméno, které se zobrazí tvým oponentům.",
     "choose_name_placeholder": "Sem vlož jméno",
     "no_name_given": "Nebylo vloženo žádné jméno",
-    "rejected_user_name": "Nebylo vloženo žádné jméno",
+    "rejected_user_name": "Vaše jméno bylo odmítnuto",
     "invalid_name": "Neplatné jméno",
     "you_won_header": "Vyhrál(a)s!",
     "you_won_message": "Jsi vítěz!",
