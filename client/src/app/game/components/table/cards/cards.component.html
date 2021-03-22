@@ -1,7 +1,7 @@
 <div class="cards-container ion-padding-vertical ion-margin-vertical">
   <ion-grid *ngIf="showCards">
-    <ion-row class="ion-justify-content-center">
-      <ion-col @enterLeaveTrigger *ngFor="let card of cardsWithBackgrounds; trackBy: trackByCard" class="card-container"
+    <ion-row @cardAnimations class="ion-justify-content-center">
+      <ion-col @enterLeaveAnimation *ngFor="let card of cardsWithBackgrounds; trackBy: trackByCard" class="card-container"
                size="auto">
         <div class="card" [style.background-image]="card.background" (click)="playCard(card)"></div>
       </ion-col>

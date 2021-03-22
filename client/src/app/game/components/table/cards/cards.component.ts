@@ -10,7 +10,7 @@ import { SettingsService } from '../../../../settings/settings.service'
 import { focusOnAlertInput } from '../../../../util/helpers'
 import { TranslateService } from '@ngx-translate/core'
 import { forkJoin, of } from 'rxjs'
-import { animate, style, transition, trigger } from '@angular/animations'
+import { animate, animateChild, query, stagger, style, transition, trigger } from '@angular/animations'
 
 interface CardWithBackground extends Card {
   background: SafeStyle
@@ -21,13 +21,20 @@ interface CardWithBackground extends Card {
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.scss'],
   animations: [
-    trigger('enterLeaveTrigger', [
+    trigger('cardAnimations', [
+      transition(':enter', [
+        query('@enterLeaveAnimation', [
+          stagger(250, animateChild()),
+        ]),
+      ]),
+    ]),
+    trigger('enterLeaveAnimation', [
       transition(':enter', [
         style({opacity: 0, transform: 'translateX(100%)'}),
-        animate('300ms', style({opacity: 1, transform: 'translateX(0)'})),
+        animate('250ms', style({opacity: 1, transform: 'translateX(0)'})),
       ]),
       transition(':leave', [
-        animate('400ms', style({opacity: 0, transform: 'translateY(-100%)'})),
+        animate('300ms', style({opacity: 0, transform: 'translateY(-100%)'})),
       ]),
     ]),
   ],
@@ -66,7 +73,7 @@ export class CardsComponent implements OnChanges {
     })
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes.participating || changes.gameActive || changes.isWinner || changes.isLoser) {
       this.showCards = this.shouldShowCards()
     }
@@ -75,6 +82,14 @@ export class CardsComponent implements OnChanges {
         ...card,
         background: this.getCardUrl(card),
       }))
+
+      if (await this.settingsService.getSounds() && changes.cards.currentValue && changes.cards.previousValue) {
+        const cardsDrawn = changes.cards.currentValue?.length - changes.cards.previousValue?.length
+        if (cardsDrawn > 0 && cardsDrawn < 4) {
+          const audio = new Audio('assets/sounds/card_draw.mp3')
+          await audio.play()
+        }
+      }
     }
   }
 
