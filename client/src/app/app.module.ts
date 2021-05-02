@@ -15,13 +15,14 @@ import { SettingsComponent } from './settings/settings.component'
 import { ServiceWorkerModule } from '@angular/service-worker'
 import { environment } from '../environments/environment'
 import { MainSocket } from './sockets/main.socket'
-import { SocketIoModule } from 'ngx-socket-io'
 import { ChatComponent } from './chat/chat.component'
 import { FormsModule } from '@angular/forms'
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
+import { DomService } from './services/dom.service'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -39,6 +40,7 @@ export function createTranslateLoader(http: HttpClient) {
   imports: [
     AppRoutingModule,
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
     IonicModule.forRoot(),
@@ -48,7 +50,6 @@ export function createTranslateLoader(http: HttpClient) {
       enabled: environment.production,
       registrationStrategy: 'registerWithDelay:5000',
     }), // TODO register via observable
-    SocketIoModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       loader: {
@@ -59,6 +60,7 @@ export function createTranslateLoader(http: HttpClient) {
     }),
   ],
   providers: [
+    DomService,
     StatusBar,
     SplashScreen,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},

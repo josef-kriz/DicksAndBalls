@@ -3,13 +3,15 @@ import { SettingsService } from '../../settings/settings.service'
 import { AlertController } from '@ionic/angular'
 import { TranslateService } from '@ngx-translate/core'
 import { forkJoin } from 'rxjs'
+import { DomService } from '../../services/dom.service'
+import { FireworksComponent } from '../components/fireworks/fireworks.component'
 
 @Injectable({
   providedIn: 'root',
 })
 export class GamePromptsService {
 
-  constructor(private alertController: AlertController, private settingsService: SettingsService, private translateService: TranslateService) {
+  constructor(private alertController: AlertController, private domService: DomService, private settingsService: SettingsService, private translateService: TranslateService) {
   }
 
   async handleWin(): Promise<void> {
@@ -31,7 +33,11 @@ export class GamePromptsService {
     if (await this.settingsService.getSounds()) {
       const audio = new Audio('assets/sounds/win31.mp3')
       await audio.play()
+      const fireworks = new Audio('assets/sounds/fireworks.mp3')
+      await fireworks.play()
     }
+
+    this.domService.appendComponentToBody(FireworksComponent)
   }
 
   async handleLoss(): Promise<void> {

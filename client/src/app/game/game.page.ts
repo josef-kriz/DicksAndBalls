@@ -209,15 +209,17 @@ export class GamePage implements ComponentCanDeactivate {
 
   private async handlePlayerUpdate(message: PlayerUpdateMessage): Promise<void> {
     const {cards, place, loser} = message
+
+    this.cards = cards
+    this.isWinner = place > 0
+    this.isLoser = loser
+
     if (place > 0) {
       await this.gamePromptsService.handleWin()
     } else if (loser) {
       await this.gamePromptsService.handleLoss()
     }
 
-    this.cards = cards
-    this.isWinner = place > 0
-    this.isLoser = loser
   }
 
   private async translateTextMessage(message: TextMessage): Promise<string> {

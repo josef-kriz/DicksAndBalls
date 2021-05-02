@@ -9,7 +9,8 @@ import { SelectSuitComponent } from '../select-suit/select-suit.component'
 import { SettingsService } from '../../../../settings/settings.service'
 import { focusOnAlertInput } from '../../../../util/helpers'
 import { TranslateService } from '@ngx-translate/core'
-import { forkJoin } from 'rxjs'
+import { forkJoin, of } from 'rxjs'
+import { animate, animateChild, query, stagger, style, transition, trigger } from '@angular/animations'
 
 interface CardWithBackground extends Card {
   background: SafeStyle
@@ -19,6 +20,24 @@ interface CardWithBackground extends Card {
   selector: 'app-cards',
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.scss'],
+  animations: [
+    trigger('cardAnimations', [
+      transition(':enter', [
+        query('@enterLeaveAnimation', [
+          stagger(250, animateChild()),
+        ]),
+      ]),
+    ]),
+    trigger('enterLeaveAnimation', [
+      transition(':enter', [
+        style({opacity: 0, transform: 'translateX(100%)'}),
+        animate('250ms', style({opacity: 1, transform: 'translateX(0)'})),
+      ]),
+      transition(':leave', [
+        animate('300ms', style({opacity: 0, transform: 'translateY(-100%)'})),
+      ]),
+    ]),
+  ],
 })
 export class CardsComponent implements OnChanges {
   @Input() readonly participating?: boolean
@@ -54,7 +73,7 @@ export class CardsComponent implements OnChanges {
     })
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes.participating || changes.gameActive || changes.isWinner || changes.isLoser) {
       this.showCards = this.shouldShowCards()
     }
@@ -63,6 +82,14 @@ export class CardsComponent implements OnChanges {
         ...card,
         background: this.getCardUrl(card),
       }))
+
+      if (await this.settingsService.getSounds() && changes.cards.currentValue && changes.cards.previousValue) {
+        const cardsDrawn = changes.cards.currentValue?.length - changes.cards.previousValue?.length
+        if (cardsDrawn > 0 && cardsDrawn < 4) {
+          const audio = new Audio('assets/sounds/card_draw.mp3')
+          await audio.play()
+        }
+      }
     }
   }
 
@@ -187,17 +214,16 @@ export class CardsComponent implements OnChanges {
   }
 
   private async showErrorAlert(message?: string): Promise<void> {
-    const [rejectedText, header, text] = await forkJoin([
+    const [rejectedText, header, text, translatedMessage] = await forkJoin([
       this.translateService.get('Game.rejected_user_name'),
       this.translateService.get('Game.invalid_name'),
       this.translateService.get('ok'),
+      message ? this.translateService.get(message) : of(undefined),
     ]).toPromise()
-
-    if (!message) message = rejectedText
 
     const alert = await this.alertController.create({
       header,
-      message,
+      message: translatedMessage ?? rejectedText,
       buttons: [
         {
           text,

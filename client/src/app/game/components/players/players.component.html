@@ -18,8 +18,8 @@
         <span *ngIf="player.loser; else isPlaying" role="img" aria-label="loser">👎</span>
       </ng-template>
       <ng-template #isPlaying>
-        <span *ngIf="gameActive && player.cards; else isWaiting">
-          <img *ngFor="let card of [].constructor(player.cards)"
+        <span @cardAnimations *ngIf="gameActive && player.cards; else isWaiting">
+          <img @enterLeaveAnimation *ngFor="let card of [].constructor(player.cards)"
                class="card-shell"
                [alt]="'Game.card_back' | translate"
                [src]="'assets/cards/back/' + cardBack + '.svg'"
